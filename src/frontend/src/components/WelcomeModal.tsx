@@ -15,8 +15,8 @@ interface WelcomeModalProps {
 }
 
 export default function WelcomeModal({ open, onClose }: WelcomeModalProps) {
-  const [name1, setName1] = useState("");
-  const [name2, setName2] = useState("");
+  const [name1, setName1] = useState("Diana");
+  const [name2, setName2] = useState("David");
 
   const handleSave = () => {
     if (!name1.trim()) return;
@@ -48,7 +48,7 @@ export default function WelcomeModal({ open, onClose }: WelcomeModalProps) {
             <Label htmlFor="name1">Tu nombre</Label>
             <Input
               id="name1"
-              placeholder="Ej: María"
+              placeholder="Diana"
               value={name1}
               onChange={(e) => setName1(e.target.value)}
               data-ocid="welcome.input"
@@ -59,7 +59,7 @@ export default function WelcomeModal({ open, onClose }: WelcomeModalProps) {
             <Label htmlFor="name2">Nombre de tu pareja</Label>
             <Input
               id="name2"
-              placeholder="Ej: Carlos"
+              placeholder="David"
               value={name2}
               onChange={(e) => setName2(e.target.value)}
               data-ocid="welcome.input"

@@ -10,6 +10,8 @@ import Int "mo:core/Int";
 import Principal "mo:core/Principal";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
+import Storage "blob-storage/Storage";
+import MixinStorage "blob-storage/Mixin";
 
 actor {
   type Id = Nat;
@@ -73,7 +75,7 @@ actor {
 
   // MealMenu module
   public type MealMenu = {
-    date : Int;
+    date : Int; // timestamp, truncated to day
     breakfast : Text;
     lunch : Text;
     dinner : Text;
@@ -91,6 +93,121 @@ actor {
   // Authorization
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+
+  // Storage
+  include MixinStorage();
+
+  type BlobId = Text;
+
+  // AlbumEntry
+  public type AlbumEntry = {
+    id : Id;
+    date : Int; // timestamp, truncated to day (serves as day key)
+    description : Text;
+    blobIds : [BlobId];
+  };
+
+  module AlbumEntry {
+    public func compare(a : AlbumEntry, b : AlbumEntry) : Order.Order {
+      Int.compare(a.date, b.date);
+    };
+  };
+
+  let albumEntries = Map.empty<Int, AlbumEntry>(); // Map day timestamp to AlbumEntry
+
+  // AlbumEntry creation
+  public shared ({ caller }) func createAlbumEntry(date : Int, description : Text) : async Id {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create album entries");
+    };
+    let id = generateId();
+    let newEntry : AlbumEntry = {
+      id;
+      date;
+      description;
+      blobIds = [];
+    };
+
+    albumEntries.add(date, newEntry);
+    lastUpdated := Time.now();
+    id;
+  };
+
+  // Add photo to album entry
+  public shared ({ caller }) func addPhotoToAlbumEntry(date : Int, blobId : BlobId) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can add photos to album entries");
+    };
+    switch (albumEntries.get(date)) {
+      case (null) {
+        Runtime.trap("Album entry not found for the given date");
+      };
+      case (?entry) {
+        if (entry.blobIds.find(func(id) { id == blobId }) != null) {
+          Runtime.trap("Photo already exists in album entry");
+        };
+        let updatedBlobIds = entry.blobIds.concat([blobId]);
+        let updatedEntry = {
+          entry with
+          blobIds = updatedBlobIds;
+        };
+        albumEntries.add(date, updatedEntry);
+        lastUpdated := Time.now();
+      };
+    };
+  };
+
+  // Remove photo from album entry
+  public shared ({ caller }) func removePhotoFromAlbumEntry(date : Int, blobId : BlobId) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can remove photos from album entries");
+    };
+    switch (albumEntries.get(date)) {
+      case (null) {
+        Runtime.trap("Album entry not found for the given date");
+      };
+      case (?entry) {
+        let updatedBlobIds = entry.blobIds.filter(func(id) { id != blobId });
+        if (updatedBlobIds.size() == entry.blobIds.size()) {
+          Runtime.trap("Photo not found in album entry");
+        };
+        let updatedEntry = {
+          entry with
+          blobIds = updatedBlobIds;
+        };
+        albumEntries.add(date, updatedEntry);
+        lastUpdated := Time.now();
+      };
+    };
+  };
+
+  // Delete album entry
+  public shared ({ caller }) func deleteAlbumEntry(date : Int) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can delete album entries");
+    };
+    if (not albumEntries.containsKey(date)) {
+      Runtime.trap("Album entry not found for the given date");
+    };
+    albumEntries.remove(date);
+    lastUpdated := Time.now();
+  };
+
+  // Get all album entries
+  public query ({ caller }) func getAllAlbumEntries() : async [AlbumEntry] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view album entries");
+    };
+    albumEntries.values().toArray().sort();
+  };
+
+  // Get album entry by date
+  public query ({ caller }) func getAlbumEntryByDate(date : Int) : async ?AlbumEntry {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view album entries");
+    };
+    albumEntries.get(date);
+  };
 
   // User Profile
   public type UserProfile = {
@@ -280,4 +397,21 @@ actor {
     };
     lastUpdated;
   };
+
+  // Photo Album (interacting with blob storage)
+  public shared ({ caller }) func uploadPhoto(blobId : BlobId) : async BlobId {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can upload photos");
+    };
+    lastUpdated := Time.now();
+    blobId;
+  };
+
+  public shared ({ caller }) func deletePhoto(blobId : BlobId) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can delete photos");
+    };
+    lastUpdated := Time.now();
+  };
 };
+

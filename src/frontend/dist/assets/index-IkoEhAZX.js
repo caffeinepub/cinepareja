@@ -3853,16 +3853,16 @@ var isArrayImpl = Array.isArray, ReactSharedInternals = React.__CLIENT_INTERNALS
   data: null,
   method: null,
   action: null
-}, valueStack = [], index = -1;
+}, valueStack = [], index$1 = -1;
 function createCursor(defaultValue) {
   return { current: defaultValue };
 }
 function pop(cursor) {
-  0 > index || (cursor.current = valueStack[index], valueStack[index] = null, index--);
+  0 > index$1 || (cursor.current = valueStack[index$1], valueStack[index$1] = null, index$1--);
 }
 function push(cursor, value) {
-  index++;
-  valueStack[index] = cursor.current;
+  index$1++;
+  valueStack[index$1] = cursor.current;
   cursor.current = value;
 }
 var contextStackCursor = createCursor(null), contextFiberStackCursor = createCursor(null), rootInstanceStackCursor = createCursor(null), hostTransitionProviderCursor = createCursor(null);
@@ -15172,18 +15172,51 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$c = [
+const __iconNode$f = [
   ["path", { d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", key: "1fy3hk" }]
 ];
-const Bookmark = createLucideIcon("bookmark", __iconNode$c);
+const Bookmark = createLucideIcon("bookmark", __iconNode$f);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$b = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$b);
+const __iconNode$e = [
+  [
+    "path",
+    {
+      d: "M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z",
+      key: "1tc9qg"
+    }
+  ],
+  ["circle", { cx: "12", cy: "13", r: "3", key: "1vg3eu" }]
+];
+const Camera = createLucideIcon("camera", __iconNode$e);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$d = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$d);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$c = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$c);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$b = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -23221,81 +23254,70 @@ const featureBundle = {
   ...layout
 };
 const motion = /* @__PURE__ */ createMotionProxy(featureBundle, createDomVisualElement);
-function createContext2(rootComponentName, defaultContext) {
-  const Context = reactExports.createContext(defaultContext);
-  const Provider = (props) => {
-    const { children, ...context } = props;
-    const value = reactExports.useMemo(() => context, Object.values(context));
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Context.Provider, { value, children });
-  };
-  Provider.displayName = rootComponentName + "Provider";
-  function useContext2(consumerName) {
-    const context = reactExports.useContext(Context);
-    if (context) return context;
-    if (defaultContext !== void 0) return defaultContext;
-    throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+const scriptRel = "modulepreload";
+const assetsURL = function(dep) {
+  return "/" + dep;
+};
+const seen = {};
+const __vitePreload = function preload2(baseModule, deps, importerUrl) {
+  let promise = Promise.resolve();
+  if (deps && deps.length > 0) {
+    document.getElementsByTagName("link");
+    const cspNonceMeta = document.querySelector(
+      "meta[property=csp-nonce]"
+    );
+    const cspNonce = (cspNonceMeta == null ? void 0 : cspNonceMeta.nonce) || (cspNonceMeta == null ? void 0 : cspNonceMeta.getAttribute("nonce"));
+    promise = Promise.allSettled(
+      deps.map((dep) => {
+        dep = assetsURL(dep);
+        if (dep in seen) return;
+        seen[dep] = true;
+        const isCss = dep.endsWith(".css");
+        const cssSelector = isCss ? '[rel="stylesheet"]' : "";
+        if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
+          return;
+        }
+        const link = document.createElement("link");
+        link.rel = isCss ? "stylesheet" : scriptRel;
+        if (!isCss) {
+          link.as = "script";
+        }
+        link.crossOrigin = "";
+        link.href = dep;
+        if (cspNonce) {
+          link.setAttribute("nonce", cspNonce);
+        }
+        document.head.appendChild(link);
+        if (isCss) {
+          return new Promise((res, rej) => {
+            link.addEventListener("load", res);
+            link.addEventListener(
+              "error",
+              () => rej(new Error(`Unable to preload CSS for ${dep}`))
+            );
+          });
+        }
+      })
+    );
   }
-  return [Provider, useContext2];
-}
-function createContextScope(scopeName, createContextScopeDeps = []) {
-  let defaultContexts = [];
-  function createContext3(rootComponentName, defaultContext) {
-    const BaseContext = reactExports.createContext(defaultContext);
-    const index2 = defaultContexts.length;
-    defaultContexts = [...defaultContexts, defaultContext];
-    const Provider = (props) => {
-      var _a3;
-      const { scope, children, ...context } = props;
-      const Context = ((_a3 = scope == null ? void 0 : scope[scopeName]) == null ? void 0 : _a3[index2]) || BaseContext;
-      const value = reactExports.useMemo(() => context, Object.values(context));
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(Context.Provider, { value, children });
-    };
-    Provider.displayName = rootComponentName + "Provider";
-    function useContext2(consumerName, scope) {
-      var _a3;
-      const Context = ((_a3 = scope == null ? void 0 : scope[scopeName]) == null ? void 0 : _a3[index2]) || BaseContext;
-      const context = reactExports.useContext(Context);
-      if (context) return context;
-      if (defaultContext !== void 0) return defaultContext;
-      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-    }
-    return [Provider, useContext2];
-  }
-  const createScope = () => {
-    const scopeContexts = defaultContexts.map((defaultContext) => {
-      return reactExports.createContext(defaultContext);
+  function handlePreloadError(err) {
+    const e = new Event("vite:preloadError", {
+      cancelable: true
     });
-    return function useScope(scope) {
-      const contexts = (scope == null ? void 0 : scope[scopeName]) || scopeContexts;
-      return reactExports.useMemo(
-        () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
-        [scope, contexts]
-      );
-    };
-  };
-  createScope.scopeName = scopeName;
-  return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
-}
-function composeContextScopes(...scopes) {
-  const baseScope = scopes[0];
-  if (scopes.length === 1) return baseScope;
-  const createScope = () => {
-    const scopeHooks = scopes.map((createScope2) => ({
-      useScope: createScope2(),
-      scopeName: createScope2.scopeName
-    }));
-    return function useComposedScopes(overrideScopes) {
-      const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
-        const scopeProps = useScope(overrideScopes);
-        const currentScope = scopeProps[`__scope${scopeName}`];
-        return { ...nextScopes2, ...currentScope };
-      }, {});
-      return reactExports.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
-    };
-  };
-  createScope.scopeName = baseScope.scopeName;
-  return createScope;
-}
+    e.payload = err;
+    window.dispatchEvent(e);
+    if (!e.defaultPrevented) {
+      throw err;
+    }
+  }
+  return promise.then((res) => {
+    for (const item of res || []) {
+      if (item.status !== "rejected") continue;
+      handlePreloadError(item.reason);
+    }
+    return baseModule().catch(handlePreloadError);
+  });
+};
 function setRef(ref, value) {
   if (typeof ref === "function") {
     return ref(value);
@@ -23329,91 +23351,6 @@ function composeRefs(...refs) {
 }
 function useComposedRefs(...refs) {
   return reactExports.useCallback(composeRefs(...refs), refs);
-}
-function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
-  return function handleEvent(event) {
-    originalEventHandler == null ? void 0 : originalEventHandler(event);
-    if (checkForDefaultPrevented === false || !event.defaultPrevented) {
-      return ourEventHandler == null ? void 0 : ourEventHandler(event);
-    }
-  };
-}
-var useLayoutEffect2 = (globalThis == null ? void 0 : globalThis.document) ? reactExports.useLayoutEffect : () => {
-};
-var useReactId = React$2[" useId ".trim().toString()] || (() => void 0);
-var count$1 = 0;
-function useId(deterministicId) {
-  const [id2, setId] = reactExports.useState(useReactId());
-  useLayoutEffect2(() => {
-    setId((reactId) => reactId ?? String(count$1++));
-  }, [deterministicId]);
-  return deterministicId || (id2 ? `radix-${id2}` : "");
-}
-var useInsertionEffect = React$2[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
-function useControllableState({
-  prop,
-  defaultProp,
-  onChange = () => {
-  },
-  caller
-}) {
-  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
-    defaultProp,
-    onChange
-  });
-  const isControlled = prop !== void 0;
-  const value = isControlled ? prop : uncontrolledProp;
-  {
-    const isControlledRef = reactExports.useRef(prop !== void 0);
-    reactExports.useEffect(() => {
-      const wasControlled = isControlledRef.current;
-      if (wasControlled !== isControlled) {
-        const from = wasControlled ? "controlled" : "uncontrolled";
-        const to = isControlled ? "controlled" : "uncontrolled";
-        console.warn(
-          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
-        );
-      }
-      isControlledRef.current = isControlled;
-    }, [isControlled, caller]);
-  }
-  const setValue = reactExports.useCallback(
-    (nextValue) => {
-      var _a3;
-      if (isControlled) {
-        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
-        if (value2 !== prop) {
-          (_a3 = onChangeRef.current) == null ? void 0 : _a3.call(onChangeRef, value2);
-        }
-      } else {
-        setUncontrolledProp(nextValue);
-      }
-    },
-    [isControlled, prop, setUncontrolledProp, onChangeRef]
-  );
-  return [value, setValue];
-}
-function useUncontrolledState({
-  defaultProp,
-  onChange
-}) {
-  const [value, setValue] = reactExports.useState(defaultProp);
-  const prevValueRef = reactExports.useRef(value);
-  const onChangeRef = reactExports.useRef(onChange);
-  useInsertionEffect(() => {
-    onChangeRef.current = onChange;
-  }, [onChange]);
-  reactExports.useEffect(() => {
-    var _a3;
-    if (prevValueRef.current !== value) {
-      (_a3 = onChangeRef.current) == null ? void 0 : _a3.call(onChangeRef, value);
-      prevValueRef.current = value;
-    }
-  }, [value, prevValueRef]);
-  return [value, setValue, onChangeRef];
-}
-function isFunction(value) {
-  return typeof value === "function";
 }
 // @__NO_SIDE_EFFECTS__
 function createSlot(ownerName) {
@@ -23507,6 +23444,2723 @@ function getElementRef$1(element) {
     return element.props.ref;
   }
   return element.props.ref || element.ref;
+}
+function r$1(e) {
+  var t, f, n = "";
+  if ("string" == typeof e || "number" == typeof e) n += e;
+  else if ("object" == typeof e) if (Array.isArray(e)) {
+    var o2 = e.length;
+    for (t = 0; t < o2; t++) e[t] && (f = r$1(e[t])) && (n && (n += " "), n += f);
+  } else for (f in e) e[f] && (n && (n += " "), n += f);
+  return n;
+}
+function clsx() {
+  for (var e, t, f = 0, n = "", o2 = arguments.length; f < o2; f++) (e = arguments[f]) && (t = r$1(e)) && (n && (n += " "), n += t);
+  return n;
+}
+const falsyToString = (value) => typeof value === "boolean" ? `${value}` : value === 0 ? "0" : value;
+const cx = clsx;
+const cva = (base, config) => (props) => {
+  var _config_compoundVariants;
+  if ((config === null || config === void 0 ? void 0 : config.variants) == null) return cx(base, props === null || props === void 0 ? void 0 : props.class, props === null || props === void 0 ? void 0 : props.className);
+  const { variants, defaultVariants } = config;
+  const getVariantClassNames = Object.keys(variants).map((variant) => {
+    const variantProp = props === null || props === void 0 ? void 0 : props[variant];
+    const defaultVariantProp = defaultVariants === null || defaultVariants === void 0 ? void 0 : defaultVariants[variant];
+    if (variantProp === null) return null;
+    const variantKey = falsyToString(variantProp) || falsyToString(defaultVariantProp);
+    return variants[variant][variantKey];
+  });
+  const propsWithoutUndefined = props && Object.entries(props).reduce((acc, param) => {
+    let [key, value] = param;
+    if (value === void 0) {
+      return acc;
+    }
+    acc[key] = value;
+    return acc;
+  }, {});
+  const getCompoundVariantClassNames = config === null || config === void 0 ? void 0 : (_config_compoundVariants = config.compoundVariants) === null || _config_compoundVariants === void 0 ? void 0 : _config_compoundVariants.reduce((acc, param) => {
+    let { class: cvClass, className: cvClassName, ...compoundVariantOptions } = param;
+    return Object.entries(compoundVariantOptions).every((param2) => {
+      let [key, value] = param2;
+      return Array.isArray(value) ? value.includes({
+        ...defaultVariants,
+        ...propsWithoutUndefined
+      }[key]) : {
+        ...defaultVariants,
+        ...propsWithoutUndefined
+      }[key] === value;
+    }) ? [
+      ...acc,
+      cvClass,
+      cvClassName
+    ] : acc;
+  }, []);
+  return cx(base, getVariantClassNames, getCompoundVariantClassNames, props === null || props === void 0 ? void 0 : props.class, props === null || props === void 0 ? void 0 : props.className);
+};
+const CLASS_PART_SEPARATOR = "-";
+const createClassGroupUtils = (config) => {
+  const classMap = createClassMap(config);
+  const {
+    conflictingClassGroups,
+    conflictingClassGroupModifiers
+  } = config;
+  const getClassGroupId = (className) => {
+    const classParts = className.split(CLASS_PART_SEPARATOR);
+    if (classParts[0] === "" && classParts.length !== 1) {
+      classParts.shift();
+    }
+    return getGroupRecursive(classParts, classMap) || getGroupIdForArbitraryProperty(className);
+  };
+  const getConflictingClassGroupIds = (classGroupId, hasPostfixModifier) => {
+    const conflicts = conflictingClassGroups[classGroupId] || [];
+    if (hasPostfixModifier && conflictingClassGroupModifiers[classGroupId]) {
+      return [...conflicts, ...conflictingClassGroupModifiers[classGroupId]];
+    }
+    return conflicts;
+  };
+  return {
+    getClassGroupId,
+    getConflictingClassGroupIds
+  };
+};
+const getGroupRecursive = (classParts, classPartObject) => {
+  var _a3;
+  if (classParts.length === 0) {
+    return classPartObject.classGroupId;
+  }
+  const currentClassPart = classParts[0];
+  const nextClassPartObject = classPartObject.nextPart.get(currentClassPart);
+  const classGroupFromNextClassPart = nextClassPartObject ? getGroupRecursive(classParts.slice(1), nextClassPartObject) : void 0;
+  if (classGroupFromNextClassPart) {
+    return classGroupFromNextClassPart;
+  }
+  if (classPartObject.validators.length === 0) {
+    return void 0;
+  }
+  const classRest = classParts.join(CLASS_PART_SEPARATOR);
+  return (_a3 = classPartObject.validators.find(({
+    validator
+  }) => validator(classRest))) == null ? void 0 : _a3.classGroupId;
+};
+const arbitraryPropertyRegex = /^\[(.+)\]$/;
+const getGroupIdForArbitraryProperty = (className) => {
+  if (arbitraryPropertyRegex.test(className)) {
+    const arbitraryPropertyClassName = arbitraryPropertyRegex.exec(className)[1];
+    const property = arbitraryPropertyClassName == null ? void 0 : arbitraryPropertyClassName.substring(0, arbitraryPropertyClassName.indexOf(":"));
+    if (property) {
+      return "arbitrary.." + property;
+    }
+  }
+};
+const createClassMap = (config) => {
+  const {
+    theme,
+    prefix: prefix2
+  } = config;
+  const classMap = {
+    nextPart: /* @__PURE__ */ new Map(),
+    validators: []
+  };
+  const prefixedClassGroupEntries = getPrefixedClassGroupEntries(Object.entries(config.classGroups), prefix2);
+  prefixedClassGroupEntries.forEach(([classGroupId, classGroup]) => {
+    processClassesRecursively(classGroup, classMap, classGroupId, theme);
+  });
+  return classMap;
+};
+const processClassesRecursively = (classGroup, classPartObject, classGroupId, theme) => {
+  classGroup.forEach((classDefinition) => {
+    if (typeof classDefinition === "string") {
+      const classPartObjectToEdit = classDefinition === "" ? classPartObject : getPart(classPartObject, classDefinition);
+      classPartObjectToEdit.classGroupId = classGroupId;
+      return;
+    }
+    if (typeof classDefinition === "function") {
+      if (isThemeGetter(classDefinition)) {
+        processClassesRecursively(classDefinition(theme), classPartObject, classGroupId, theme);
+        return;
+      }
+      classPartObject.validators.push({
+        validator: classDefinition,
+        classGroupId
+      });
+      return;
+    }
+    Object.entries(classDefinition).forEach(([key, classGroup2]) => {
+      processClassesRecursively(classGroup2, getPart(classPartObject, key), classGroupId, theme);
+    });
+  });
+};
+const getPart = (classPartObject, path) => {
+  let currentClassPartObject = classPartObject;
+  path.split(CLASS_PART_SEPARATOR).forEach((pathPart) => {
+    if (!currentClassPartObject.nextPart.has(pathPart)) {
+      currentClassPartObject.nextPart.set(pathPart, {
+        nextPart: /* @__PURE__ */ new Map(),
+        validators: []
+      });
+    }
+    currentClassPartObject = currentClassPartObject.nextPart.get(pathPart);
+  });
+  return currentClassPartObject;
+};
+const isThemeGetter = (func) => func.isThemeGetter;
+const getPrefixedClassGroupEntries = (classGroupEntries, prefix2) => {
+  if (!prefix2) {
+    return classGroupEntries;
+  }
+  return classGroupEntries.map(([classGroupId, classGroup]) => {
+    const prefixedClassGroup = classGroup.map((classDefinition) => {
+      if (typeof classDefinition === "string") {
+        return prefix2 + classDefinition;
+      }
+      if (typeof classDefinition === "object") {
+        return Object.fromEntries(Object.entries(classDefinition).map(([key, value]) => [prefix2 + key, value]));
+      }
+      return classDefinition;
+    });
+    return [classGroupId, prefixedClassGroup];
+  });
+};
+const createLruCache = (maxCacheSize) => {
+  if (maxCacheSize < 1) {
+    return {
+      get: () => void 0,
+      set: () => {
+      }
+    };
+  }
+  let cacheSize = 0;
+  let cache = /* @__PURE__ */ new Map();
+  let previousCache = /* @__PURE__ */ new Map();
+  const update = (key, value) => {
+    cache.set(key, value);
+    cacheSize++;
+    if (cacheSize > maxCacheSize) {
+      cacheSize = 0;
+      previousCache = cache;
+      cache = /* @__PURE__ */ new Map();
+    }
+  };
+  return {
+    get(key) {
+      let value = cache.get(key);
+      if (value !== void 0) {
+        return value;
+      }
+      if ((value = previousCache.get(key)) !== void 0) {
+        update(key, value);
+        return value;
+      }
+    },
+    set(key, value) {
+      if (cache.has(key)) {
+        cache.set(key, value);
+      } else {
+        update(key, value);
+      }
+    }
+  };
+};
+const IMPORTANT_MODIFIER = "!";
+const createParseClassName = (config) => {
+  const {
+    separator,
+    experimentalParseClassName
+  } = config;
+  const isSeparatorSingleCharacter = separator.length === 1;
+  const firstSeparatorCharacter = separator[0];
+  const separatorLength = separator.length;
+  const parseClassName = (className) => {
+    const modifiers = [];
+    let bracketDepth = 0;
+    let modifierStart = 0;
+    let postfixModifierPosition;
+    for (let index2 = 0; index2 < className.length; index2++) {
+      let currentCharacter = className[index2];
+      if (bracketDepth === 0) {
+        if (currentCharacter === firstSeparatorCharacter && (isSeparatorSingleCharacter || className.slice(index2, index2 + separatorLength) === separator)) {
+          modifiers.push(className.slice(modifierStart, index2));
+          modifierStart = index2 + separatorLength;
+          continue;
+        }
+        if (currentCharacter === "/") {
+          postfixModifierPosition = index2;
+          continue;
+        }
+      }
+      if (currentCharacter === "[") {
+        bracketDepth++;
+      } else if (currentCharacter === "]") {
+        bracketDepth--;
+      }
+    }
+    const baseClassNameWithImportantModifier = modifiers.length === 0 ? className : className.substring(modifierStart);
+    const hasImportantModifier = baseClassNameWithImportantModifier.startsWith(IMPORTANT_MODIFIER);
+    const baseClassName = hasImportantModifier ? baseClassNameWithImportantModifier.substring(1) : baseClassNameWithImportantModifier;
+    const maybePostfixModifierPosition = postfixModifierPosition && postfixModifierPosition > modifierStart ? postfixModifierPosition - modifierStart : void 0;
+    return {
+      modifiers,
+      hasImportantModifier,
+      baseClassName,
+      maybePostfixModifierPosition
+    };
+  };
+  if (experimentalParseClassName) {
+    return (className) => experimentalParseClassName({
+      className,
+      parseClassName
+    });
+  }
+  return parseClassName;
+};
+const sortModifiers = (modifiers) => {
+  if (modifiers.length <= 1) {
+    return modifiers;
+  }
+  const sortedModifiers = [];
+  let unsortedModifiers = [];
+  modifiers.forEach((modifier) => {
+    const isArbitraryVariant = modifier[0] === "[";
+    if (isArbitraryVariant) {
+      sortedModifiers.push(...unsortedModifiers.sort(), modifier);
+      unsortedModifiers = [];
+    } else {
+      unsortedModifiers.push(modifier);
+    }
+  });
+  sortedModifiers.push(...unsortedModifiers.sort());
+  return sortedModifiers;
+};
+const createConfigUtils = (config) => ({
+  cache: createLruCache(config.cacheSize),
+  parseClassName: createParseClassName(config),
+  ...createClassGroupUtils(config)
+});
+const SPLIT_CLASSES_REGEX = /\s+/;
+const mergeClassList = (classList, configUtils) => {
+  const {
+    parseClassName,
+    getClassGroupId,
+    getConflictingClassGroupIds
+  } = configUtils;
+  const classGroupsInConflict = [];
+  const classNames = classList.trim().split(SPLIT_CLASSES_REGEX);
+  let result = "";
+  for (let index2 = classNames.length - 1; index2 >= 0; index2 -= 1) {
+    const originalClassName = classNames[index2];
+    const {
+      modifiers,
+      hasImportantModifier,
+      baseClassName,
+      maybePostfixModifierPosition
+    } = parseClassName(originalClassName);
+    let hasPostfixModifier = Boolean(maybePostfixModifierPosition);
+    let classGroupId = getClassGroupId(hasPostfixModifier ? baseClassName.substring(0, maybePostfixModifierPosition) : baseClassName);
+    if (!classGroupId) {
+      if (!hasPostfixModifier) {
+        result = originalClassName + (result.length > 0 ? " " + result : result);
+        continue;
+      }
+      classGroupId = getClassGroupId(baseClassName);
+      if (!classGroupId) {
+        result = originalClassName + (result.length > 0 ? " " + result : result);
+        continue;
+      }
+      hasPostfixModifier = false;
+    }
+    const variantModifier = sortModifiers(modifiers).join(":");
+    const modifierId = hasImportantModifier ? variantModifier + IMPORTANT_MODIFIER : variantModifier;
+    const classId = modifierId + classGroupId;
+    if (classGroupsInConflict.includes(classId)) {
+      continue;
+    }
+    classGroupsInConflict.push(classId);
+    const conflictGroups = getConflictingClassGroupIds(classGroupId, hasPostfixModifier);
+    for (let i = 0; i < conflictGroups.length; ++i) {
+      const group = conflictGroups[i];
+      classGroupsInConflict.push(modifierId + group);
+    }
+    result = originalClassName + (result.length > 0 ? " " + result : result);
+  }
+  return result;
+};
+function twJoin() {
+  let index2 = 0;
+  let argument;
+  let resolvedValue;
+  let string = "";
+  while (index2 < arguments.length) {
+    if (argument = arguments[index2++]) {
+      if (resolvedValue = toValue(argument)) {
+        string && (string += " ");
+        string += resolvedValue;
+      }
+    }
+  }
+  return string;
+}
+const toValue = (mix2) => {
+  if (typeof mix2 === "string") {
+    return mix2;
+  }
+  let resolvedValue;
+  let string = "";
+  for (let k2 = 0; k2 < mix2.length; k2++) {
+    if (mix2[k2]) {
+      if (resolvedValue = toValue(mix2[k2])) {
+        string && (string += " ");
+        string += resolvedValue;
+      }
+    }
+  }
+  return string;
+};
+function createTailwindMerge(createConfigFirst, ...createConfigRest) {
+  let configUtils;
+  let cacheGet;
+  let cacheSet;
+  let functionToCall = initTailwindMerge;
+  function initTailwindMerge(classList) {
+    const config = createConfigRest.reduce((previousConfig, createConfigCurrent) => createConfigCurrent(previousConfig), createConfigFirst());
+    configUtils = createConfigUtils(config);
+    cacheGet = configUtils.cache.get;
+    cacheSet = configUtils.cache.set;
+    functionToCall = tailwindMerge;
+    return tailwindMerge(classList);
+  }
+  function tailwindMerge(classList) {
+    const cachedResult = cacheGet(classList);
+    if (cachedResult) {
+      return cachedResult;
+    }
+    const result = mergeClassList(classList, configUtils);
+    cacheSet(classList, result);
+    return result;
+  }
+  return function callTailwindMerge() {
+    return functionToCall(twJoin.apply(null, arguments));
+  };
+}
+const fromTheme = (key) => {
+  const themeGetter = (theme) => theme[key] || [];
+  themeGetter.isThemeGetter = true;
+  return themeGetter;
+};
+const arbitraryValueRegex = /^\[(?:([a-z-]+):)?(.+)\]$/i;
+const fractionRegex = /^\d+\/\d+$/;
+const stringLengths = /* @__PURE__ */ new Set(["px", "full", "screen"]);
+const tshirtUnitRegex = /^(\d+(\.\d+)?)?(xs|sm|md|lg|xl)$/;
+const lengthUnitRegex = /\d+(%|px|r?em|[sdl]?v([hwib]|min|max)|pt|pc|in|cm|mm|cap|ch|ex|r?lh|cq(w|h|i|b|min|max))|\b(calc|min|max|clamp)\(.+\)|^0$/;
+const colorFunctionRegex = /^(rgba?|hsla?|hwb|(ok)?(lab|lch))\(.+\)$/;
+const shadowRegex = /^(inset_)?-?((\d+)?\.?(\d+)[a-z]+|0)_-?((\d+)?\.?(\d+)[a-z]+|0)/;
+const imageRegex = /^(url|image|image-set|cross-fade|element|(repeating-)?(linear|radial|conic)-gradient)\(.+\)$/;
+const isLength = (value) => isNumber$1(value) || stringLengths.has(value) || fractionRegex.test(value);
+const isArbitraryLength = (value) => getIsArbitraryValue(value, "length", isLengthOnly);
+const isNumber$1 = (value) => Boolean(value) && !Number.isNaN(Number(value));
+const isArbitraryNumber = (value) => getIsArbitraryValue(value, "number", isNumber$1);
+const isInteger = (value) => Boolean(value) && Number.isInteger(Number(value));
+const isPercent = (value) => value.endsWith("%") && isNumber$1(value.slice(0, -1));
+const isArbitraryValue = (value) => arbitraryValueRegex.test(value);
+const isTshirtSize = (value) => tshirtUnitRegex.test(value);
+const sizeLabels = /* @__PURE__ */ new Set(["length", "size", "percentage"]);
+const isArbitrarySize = (value) => getIsArbitraryValue(value, sizeLabels, isNever);
+const isArbitraryPosition = (value) => getIsArbitraryValue(value, "position", isNever);
+const imageLabels = /* @__PURE__ */ new Set(["image", "url"]);
+const isArbitraryImage = (value) => getIsArbitraryValue(value, imageLabels, isImage);
+const isArbitraryShadow = (value) => getIsArbitraryValue(value, "", isShadow);
+const isAny = () => true;
+const getIsArbitraryValue = (value, label, testValue) => {
+  const result = arbitraryValueRegex.exec(value);
+  if (result) {
+    if (result[1]) {
+      return typeof label === "string" ? result[1] === label : label.has(result[1]);
+    }
+    return testValue(result[2]);
+  }
+  return false;
+};
+const isLengthOnly = (value) => (
+  // `colorFunctionRegex` check is necessary because color functions can have percentages in them which which would be incorrectly classified as lengths.
+  // For example, `hsl(0 0% 0%)` would be classified as a length without this check.
+  // I could also use lookbehind assertion in `lengthUnitRegex` but that isn't supported widely enough.
+  lengthUnitRegex.test(value) && !colorFunctionRegex.test(value)
+);
+const isNever = () => false;
+const isShadow = (value) => shadowRegex.test(value);
+const isImage = (value) => imageRegex.test(value);
+const getDefaultConfig = () => {
+  const colors = fromTheme("colors");
+  const spacing = fromTheme("spacing");
+  const blur = fromTheme("blur");
+  const brightness = fromTheme("brightness");
+  const borderColor = fromTheme("borderColor");
+  const borderRadius = fromTheme("borderRadius");
+  const borderSpacing = fromTheme("borderSpacing");
+  const borderWidth = fromTheme("borderWidth");
+  const contrast = fromTheme("contrast");
+  const grayscale = fromTheme("grayscale");
+  const hueRotate = fromTheme("hueRotate");
+  const invert2 = fromTheme("invert");
+  const gap = fromTheme("gap");
+  const gradientColorStops = fromTheme("gradientColorStops");
+  const gradientColorStopPositions = fromTheme("gradientColorStopPositions");
+  const inset = fromTheme("inset");
+  const margin = fromTheme("margin");
+  const opacity = fromTheme("opacity");
+  const padding = fromTheme("padding");
+  const saturate = fromTheme("saturate");
+  const scale2 = fromTheme("scale");
+  const sepia = fromTheme("sepia");
+  const skew = fromTheme("skew");
+  const space = fromTheme("space");
+  const translate = fromTheme("translate");
+  const getOverscroll = () => ["auto", "contain", "none"];
+  const getOverflow = () => ["auto", "hidden", "clip", "visible", "scroll"];
+  const getSpacingWithAutoAndArbitrary = () => ["auto", isArbitraryValue, spacing];
+  const getSpacingWithArbitrary = () => [isArbitraryValue, spacing];
+  const getLengthWithEmptyAndArbitrary = () => ["", isLength, isArbitraryLength];
+  const getNumberWithAutoAndArbitrary = () => ["auto", isNumber$1, isArbitraryValue];
+  const getPositions = () => ["bottom", "center", "left", "left-bottom", "left-top", "right", "right-bottom", "right-top", "top"];
+  const getLineStyles = () => ["solid", "dashed", "dotted", "double", "none"];
+  const getBlendModes = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
+  const getAlign = () => ["start", "end", "center", "between", "around", "evenly", "stretch"];
+  const getZeroAndEmpty = () => ["", "0", isArbitraryValue];
+  const getBreaks = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"];
+  const getNumberAndArbitrary = () => [isNumber$1, isArbitraryValue];
+  return {
+    cacheSize: 500,
+    separator: ":",
+    theme: {
+      colors: [isAny],
+      spacing: [isLength, isArbitraryLength],
+      blur: ["none", "", isTshirtSize, isArbitraryValue],
+      brightness: getNumberAndArbitrary(),
+      borderColor: [colors],
+      borderRadius: ["none", "", "full", isTshirtSize, isArbitraryValue],
+      borderSpacing: getSpacingWithArbitrary(),
+      borderWidth: getLengthWithEmptyAndArbitrary(),
+      contrast: getNumberAndArbitrary(),
+      grayscale: getZeroAndEmpty(),
+      hueRotate: getNumberAndArbitrary(),
+      invert: getZeroAndEmpty(),
+      gap: getSpacingWithArbitrary(),
+      gradientColorStops: [colors],
+      gradientColorStopPositions: [isPercent, isArbitraryLength],
+      inset: getSpacingWithAutoAndArbitrary(),
+      margin: getSpacingWithAutoAndArbitrary(),
+      opacity: getNumberAndArbitrary(),
+      padding: getSpacingWithArbitrary(),
+      saturate: getNumberAndArbitrary(),
+      scale: getNumberAndArbitrary(),
+      sepia: getZeroAndEmpty(),
+      skew: getNumberAndArbitrary(),
+      space: getSpacingWithArbitrary(),
+      translate: getSpacingWithArbitrary()
+    },
+    classGroups: {
+      // Layout
+      /**
+       * Aspect Ratio
+       * @see https://tailwindcss.com/docs/aspect-ratio
+       */
+      aspect: [{
+        aspect: ["auto", "square", "video", isArbitraryValue]
+      }],
+      /**
+       * Container
+       * @see https://tailwindcss.com/docs/container
+       */
+      container: ["container"],
+      /**
+       * Columns
+       * @see https://tailwindcss.com/docs/columns
+       */
+      columns: [{
+        columns: [isTshirtSize]
+      }],
+      /**
+       * Break After
+       * @see https://tailwindcss.com/docs/break-after
+       */
+      "break-after": [{
+        "break-after": getBreaks()
+      }],
+      /**
+       * Break Before
+       * @see https://tailwindcss.com/docs/break-before
+       */
+      "break-before": [{
+        "break-before": getBreaks()
+      }],
+      /**
+       * Break Inside
+       * @see https://tailwindcss.com/docs/break-inside
+       */
+      "break-inside": [{
+        "break-inside": ["auto", "avoid", "avoid-page", "avoid-column"]
+      }],
+      /**
+       * Box Decoration Break
+       * @see https://tailwindcss.com/docs/box-decoration-break
+       */
+      "box-decoration": [{
+        "box-decoration": ["slice", "clone"]
+      }],
+      /**
+       * Box Sizing
+       * @see https://tailwindcss.com/docs/box-sizing
+       */
+      box: [{
+        box: ["border", "content"]
+      }],
+      /**
+       * Display
+       * @see https://tailwindcss.com/docs/display
+       */
+      display: ["block", "inline-block", "inline", "flex", "inline-flex", "table", "inline-table", "table-caption", "table-cell", "table-column", "table-column-group", "table-footer-group", "table-header-group", "table-row-group", "table-row", "flow-root", "grid", "inline-grid", "contents", "list-item", "hidden"],
+      /**
+       * Floats
+       * @see https://tailwindcss.com/docs/float
+       */
+      float: [{
+        float: ["right", "left", "none", "start", "end"]
+      }],
+      /**
+       * Clear
+       * @see https://tailwindcss.com/docs/clear
+       */
+      clear: [{
+        clear: ["left", "right", "both", "none", "start", "end"]
+      }],
+      /**
+       * Isolation
+       * @see https://tailwindcss.com/docs/isolation
+       */
+      isolation: ["isolate", "isolation-auto"],
+      /**
+       * Object Fit
+       * @see https://tailwindcss.com/docs/object-fit
+       */
+      "object-fit": [{
+        object: ["contain", "cover", "fill", "none", "scale-down"]
+      }],
+      /**
+       * Object Position
+       * @see https://tailwindcss.com/docs/object-position
+       */
+      "object-position": [{
+        object: [...getPositions(), isArbitraryValue]
+      }],
+      /**
+       * Overflow
+       * @see https://tailwindcss.com/docs/overflow
+       */
+      overflow: [{
+        overflow: getOverflow()
+      }],
+      /**
+       * Overflow X
+       * @see https://tailwindcss.com/docs/overflow
+       */
+      "overflow-x": [{
+        "overflow-x": getOverflow()
+      }],
+      /**
+       * Overflow Y
+       * @see https://tailwindcss.com/docs/overflow
+       */
+      "overflow-y": [{
+        "overflow-y": getOverflow()
+      }],
+      /**
+       * Overscroll Behavior
+       * @see https://tailwindcss.com/docs/overscroll-behavior
+       */
+      overscroll: [{
+        overscroll: getOverscroll()
+      }],
+      /**
+       * Overscroll Behavior X
+       * @see https://tailwindcss.com/docs/overscroll-behavior
+       */
+      "overscroll-x": [{
+        "overscroll-x": getOverscroll()
+      }],
+      /**
+       * Overscroll Behavior Y
+       * @see https://tailwindcss.com/docs/overscroll-behavior
+       */
+      "overscroll-y": [{
+        "overscroll-y": getOverscroll()
+      }],
+      /**
+       * Position
+       * @see https://tailwindcss.com/docs/position
+       */
+      position: ["static", "fixed", "absolute", "relative", "sticky"],
+      /**
+       * Top / Right / Bottom / Left
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      inset: [{
+        inset: [inset]
+      }],
+      /**
+       * Right / Left
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      "inset-x": [{
+        "inset-x": [inset]
+      }],
+      /**
+       * Top / Bottom
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      "inset-y": [{
+        "inset-y": [inset]
+      }],
+      /**
+       * Start
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      start: [{
+        start: [inset]
+      }],
+      /**
+       * End
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      end: [{
+        end: [inset]
+      }],
+      /**
+       * Top
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      top: [{
+        top: [inset]
+      }],
+      /**
+       * Right
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      right: [{
+        right: [inset]
+      }],
+      /**
+       * Bottom
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      bottom: [{
+        bottom: [inset]
+      }],
+      /**
+       * Left
+       * @see https://tailwindcss.com/docs/top-right-bottom-left
+       */
+      left: [{
+        left: [inset]
+      }],
+      /**
+       * Visibility
+       * @see https://tailwindcss.com/docs/visibility
+       */
+      visibility: ["visible", "invisible", "collapse"],
+      /**
+       * Z-Index
+       * @see https://tailwindcss.com/docs/z-index
+       */
+      z: [{
+        z: ["auto", isInteger, isArbitraryValue]
+      }],
+      // Flexbox and Grid
+      /**
+       * Flex Basis
+       * @see https://tailwindcss.com/docs/flex-basis
+       */
+      basis: [{
+        basis: getSpacingWithAutoAndArbitrary()
+      }],
+      /**
+       * Flex Direction
+       * @see https://tailwindcss.com/docs/flex-direction
+       */
+      "flex-direction": [{
+        flex: ["row", "row-reverse", "col", "col-reverse"]
+      }],
+      /**
+       * Flex Wrap
+       * @see https://tailwindcss.com/docs/flex-wrap
+       */
+      "flex-wrap": [{
+        flex: ["wrap", "wrap-reverse", "nowrap"]
+      }],
+      /**
+       * Flex
+       * @see https://tailwindcss.com/docs/flex
+       */
+      flex: [{
+        flex: ["1", "auto", "initial", "none", isArbitraryValue]
+      }],
+      /**
+       * Flex Grow
+       * @see https://tailwindcss.com/docs/flex-grow
+       */
+      grow: [{
+        grow: getZeroAndEmpty()
+      }],
+      /**
+       * Flex Shrink
+       * @see https://tailwindcss.com/docs/flex-shrink
+       */
+      shrink: [{
+        shrink: getZeroAndEmpty()
+      }],
+      /**
+       * Order
+       * @see https://tailwindcss.com/docs/order
+       */
+      order: [{
+        order: ["first", "last", "none", isInteger, isArbitraryValue]
+      }],
+      /**
+       * Grid Template Columns
+       * @see https://tailwindcss.com/docs/grid-template-columns
+       */
+      "grid-cols": [{
+        "grid-cols": [isAny]
+      }],
+      /**
+       * Grid Column Start / End
+       * @see https://tailwindcss.com/docs/grid-column
+       */
+      "col-start-end": [{
+        col: ["auto", {
+          span: ["full", isInteger, isArbitraryValue]
+        }, isArbitraryValue]
+      }],
+      /**
+       * Grid Column Start
+       * @see https://tailwindcss.com/docs/grid-column
+       */
+      "col-start": [{
+        "col-start": getNumberWithAutoAndArbitrary()
+      }],
+      /**
+       * Grid Column End
+       * @see https://tailwindcss.com/docs/grid-column
+       */
+      "col-end": [{
+        "col-end": getNumberWithAutoAndArbitrary()
+      }],
+      /**
+       * Grid Template Rows
+       * @see https://tailwindcss.com/docs/grid-template-rows
+       */
+      "grid-rows": [{
+        "grid-rows": [isAny]
+      }],
+      /**
+       * Grid Row Start / End
+       * @see https://tailwindcss.com/docs/grid-row
+       */
+      "row-start-end": [{
+        row: ["auto", {
+          span: [isInteger, isArbitraryValue]
+        }, isArbitraryValue]
+      }],
+      /**
+       * Grid Row Start
+       * @see https://tailwindcss.com/docs/grid-row
+       */
+      "row-start": [{
+        "row-start": getNumberWithAutoAndArbitrary()
+      }],
+      /**
+       * Grid Row End
+       * @see https://tailwindcss.com/docs/grid-row
+       */
+      "row-end": [{
+        "row-end": getNumberWithAutoAndArbitrary()
+      }],
+      /**
+       * Grid Auto Flow
+       * @see https://tailwindcss.com/docs/grid-auto-flow
+       */
+      "grid-flow": [{
+        "grid-flow": ["row", "col", "dense", "row-dense", "col-dense"]
+      }],
+      /**
+       * Grid Auto Columns
+       * @see https://tailwindcss.com/docs/grid-auto-columns
+       */
+      "auto-cols": [{
+        "auto-cols": ["auto", "min", "max", "fr", isArbitraryValue]
+      }],
+      /**
+       * Grid Auto Rows
+       * @see https://tailwindcss.com/docs/grid-auto-rows
+       */
+      "auto-rows": [{
+        "auto-rows": ["auto", "min", "max", "fr", isArbitraryValue]
+      }],
+      /**
+       * Gap
+       * @see https://tailwindcss.com/docs/gap
+       */
+      gap: [{
+        gap: [gap]
+      }],
+      /**
+       * Gap X
+       * @see https://tailwindcss.com/docs/gap
+       */
+      "gap-x": [{
+        "gap-x": [gap]
+      }],
+      /**
+       * Gap Y
+       * @see https://tailwindcss.com/docs/gap
+       */
+      "gap-y": [{
+        "gap-y": [gap]
+      }],
+      /**
+       * Justify Content
+       * @see https://tailwindcss.com/docs/justify-content
+       */
+      "justify-content": [{
+        justify: ["normal", ...getAlign()]
+      }],
+      /**
+       * Justify Items
+       * @see https://tailwindcss.com/docs/justify-items
+       */
+      "justify-items": [{
+        "justify-items": ["start", "end", "center", "stretch"]
+      }],
+      /**
+       * Justify Self
+       * @see https://tailwindcss.com/docs/justify-self
+       */
+      "justify-self": [{
+        "justify-self": ["auto", "start", "end", "center", "stretch"]
+      }],
+      /**
+       * Align Content
+       * @see https://tailwindcss.com/docs/align-content
+       */
+      "align-content": [{
+        content: ["normal", ...getAlign(), "baseline"]
+      }],
+      /**
+       * Align Items
+       * @see https://tailwindcss.com/docs/align-items
+       */
+      "align-items": [{
+        items: ["start", "end", "center", "baseline", "stretch"]
+      }],
+      /**
+       * Align Self
+       * @see https://tailwindcss.com/docs/align-self
+       */
+      "align-self": [{
+        self: ["auto", "start", "end", "center", "stretch", "baseline"]
+      }],
+      /**
+       * Place Content
+       * @see https://tailwindcss.com/docs/place-content
+       */
+      "place-content": [{
+        "place-content": [...getAlign(), "baseline"]
+      }],
+      /**
+       * Place Items
+       * @see https://tailwindcss.com/docs/place-items
+       */
+      "place-items": [{
+        "place-items": ["start", "end", "center", "baseline", "stretch"]
+      }],
+      /**
+       * Place Self
+       * @see https://tailwindcss.com/docs/place-self
+       */
+      "place-self": [{
+        "place-self": ["auto", "start", "end", "center", "stretch"]
+      }],
+      // Spacing
+      /**
+       * Padding
+       * @see https://tailwindcss.com/docs/padding
+       */
+      p: [{
+        p: [padding]
+      }],
+      /**
+       * Padding X
+       * @see https://tailwindcss.com/docs/padding
+       */
+      px: [{
+        px: [padding]
+      }],
+      /**
+       * Padding Y
+       * @see https://tailwindcss.com/docs/padding
+       */
+      py: [{
+        py: [padding]
+      }],
+      /**
+       * Padding Start
+       * @see https://tailwindcss.com/docs/padding
+       */
+      ps: [{
+        ps: [padding]
+      }],
+      /**
+       * Padding End
+       * @see https://tailwindcss.com/docs/padding
+       */
+      pe: [{
+        pe: [padding]
+      }],
+      /**
+       * Padding Top
+       * @see https://tailwindcss.com/docs/padding
+       */
+      pt: [{
+        pt: [padding]
+      }],
+      /**
+       * Padding Right
+       * @see https://tailwindcss.com/docs/padding
+       */
+      pr: [{
+        pr: [padding]
+      }],
+      /**
+       * Padding Bottom
+       * @see https://tailwindcss.com/docs/padding
+       */
+      pb: [{
+        pb: [padding]
+      }],
+      /**
+       * Padding Left
+       * @see https://tailwindcss.com/docs/padding
+       */
+      pl: [{
+        pl: [padding]
+      }],
+      /**
+       * Margin
+       * @see https://tailwindcss.com/docs/margin
+       */
+      m: [{
+        m: [margin]
+      }],
+      /**
+       * Margin X
+       * @see https://tailwindcss.com/docs/margin
+       */
+      mx: [{
+        mx: [margin]
+      }],
+      /**
+       * Margin Y
+       * @see https://tailwindcss.com/docs/margin
+       */
+      my: [{
+        my: [margin]
+      }],
+      /**
+       * Margin Start
+       * @see https://tailwindcss.com/docs/margin
+       */
+      ms: [{
+        ms: [margin]
+      }],
+      /**
+       * Margin End
+       * @see https://tailwindcss.com/docs/margin
+       */
+      me: [{
+        me: [margin]
+      }],
+      /**
+       * Margin Top
+       * @see https://tailwindcss.com/docs/margin
+       */
+      mt: [{
+        mt: [margin]
+      }],
+      /**
+       * Margin Right
+       * @see https://tailwindcss.com/docs/margin
+       */
+      mr: [{
+        mr: [margin]
+      }],
+      /**
+       * Margin Bottom
+       * @see https://tailwindcss.com/docs/margin
+       */
+      mb: [{
+        mb: [margin]
+      }],
+      /**
+       * Margin Left
+       * @see https://tailwindcss.com/docs/margin
+       */
+      ml: [{
+        ml: [margin]
+      }],
+      /**
+       * Space Between X
+       * @see https://tailwindcss.com/docs/space
+       */
+      "space-x": [{
+        "space-x": [space]
+      }],
+      /**
+       * Space Between X Reverse
+       * @see https://tailwindcss.com/docs/space
+       */
+      "space-x-reverse": ["space-x-reverse"],
+      /**
+       * Space Between Y
+       * @see https://tailwindcss.com/docs/space
+       */
+      "space-y": [{
+        "space-y": [space]
+      }],
+      /**
+       * Space Between Y Reverse
+       * @see https://tailwindcss.com/docs/space
+       */
+      "space-y-reverse": ["space-y-reverse"],
+      // Sizing
+      /**
+       * Width
+       * @see https://tailwindcss.com/docs/width
+       */
+      w: [{
+        w: ["auto", "min", "max", "fit", "svw", "lvw", "dvw", isArbitraryValue, spacing]
+      }],
+      /**
+       * Min-Width
+       * @see https://tailwindcss.com/docs/min-width
+       */
+      "min-w": [{
+        "min-w": [isArbitraryValue, spacing, "min", "max", "fit"]
+      }],
+      /**
+       * Max-Width
+       * @see https://tailwindcss.com/docs/max-width
+       */
+      "max-w": [{
+        "max-w": [isArbitraryValue, spacing, "none", "full", "min", "max", "fit", "prose", {
+          screen: [isTshirtSize]
+        }, isTshirtSize]
+      }],
+      /**
+       * Height
+       * @see https://tailwindcss.com/docs/height
+       */
+      h: [{
+        h: [isArbitraryValue, spacing, "auto", "min", "max", "fit", "svh", "lvh", "dvh"]
+      }],
+      /**
+       * Min-Height
+       * @see https://tailwindcss.com/docs/min-height
+       */
+      "min-h": [{
+        "min-h": [isArbitraryValue, spacing, "min", "max", "fit", "svh", "lvh", "dvh"]
+      }],
+      /**
+       * Max-Height
+       * @see https://tailwindcss.com/docs/max-height
+       */
+      "max-h": [{
+        "max-h": [isArbitraryValue, spacing, "min", "max", "fit", "svh", "lvh", "dvh"]
+      }],
+      /**
+       * Size
+       * @see https://tailwindcss.com/docs/size
+       */
+      size: [{
+        size: [isArbitraryValue, spacing, "auto", "min", "max", "fit"]
+      }],
+      // Typography
+      /**
+       * Font Size
+       * @see https://tailwindcss.com/docs/font-size
+       */
+      "font-size": [{
+        text: ["base", isTshirtSize, isArbitraryLength]
+      }],
+      /**
+       * Font Smoothing
+       * @see https://tailwindcss.com/docs/font-smoothing
+       */
+      "font-smoothing": ["antialiased", "subpixel-antialiased"],
+      /**
+       * Font Style
+       * @see https://tailwindcss.com/docs/font-style
+       */
+      "font-style": ["italic", "not-italic"],
+      /**
+       * Font Weight
+       * @see https://tailwindcss.com/docs/font-weight
+       */
+      "font-weight": [{
+        font: ["thin", "extralight", "light", "normal", "medium", "semibold", "bold", "extrabold", "black", isArbitraryNumber]
+      }],
+      /**
+       * Font Family
+       * @see https://tailwindcss.com/docs/font-family
+       */
+      "font-family": [{
+        font: [isAny]
+      }],
+      /**
+       * Font Variant Numeric
+       * @see https://tailwindcss.com/docs/font-variant-numeric
+       */
+      "fvn-normal": ["normal-nums"],
+      /**
+       * Font Variant Numeric
+       * @see https://tailwindcss.com/docs/font-variant-numeric
+       */
+      "fvn-ordinal": ["ordinal"],
+      /**
+       * Font Variant Numeric
+       * @see https://tailwindcss.com/docs/font-variant-numeric
+       */
+      "fvn-slashed-zero": ["slashed-zero"],
+      /**
+       * Font Variant Numeric
+       * @see https://tailwindcss.com/docs/font-variant-numeric
+       */
+      "fvn-figure": ["lining-nums", "oldstyle-nums"],
+      /**
+       * Font Variant Numeric
+       * @see https://tailwindcss.com/docs/font-variant-numeric
+       */
+      "fvn-spacing": ["proportional-nums", "tabular-nums"],
+      /**
+       * Font Variant Numeric
+       * @see https://tailwindcss.com/docs/font-variant-numeric
+       */
+      "fvn-fraction": ["diagonal-fractions", "stacked-fractions"],
+      /**
+       * Letter Spacing
+       * @see https://tailwindcss.com/docs/letter-spacing
+       */
+      tracking: [{
+        tracking: ["tighter", "tight", "normal", "wide", "wider", "widest", isArbitraryValue]
+      }],
+      /**
+       * Line Clamp
+       * @see https://tailwindcss.com/docs/line-clamp
+       */
+      "line-clamp": [{
+        "line-clamp": ["none", isNumber$1, isArbitraryNumber]
+      }],
+      /**
+       * Line Height
+       * @see https://tailwindcss.com/docs/line-height
+       */
+      leading: [{
+        leading: ["none", "tight", "snug", "normal", "relaxed", "loose", isLength, isArbitraryValue]
+      }],
+      /**
+       * List Style Image
+       * @see https://tailwindcss.com/docs/list-style-image
+       */
+      "list-image": [{
+        "list-image": ["none", isArbitraryValue]
+      }],
+      /**
+       * List Style Type
+       * @see https://tailwindcss.com/docs/list-style-type
+       */
+      "list-style-type": [{
+        list: ["none", "disc", "decimal", isArbitraryValue]
+      }],
+      /**
+       * List Style Position
+       * @see https://tailwindcss.com/docs/list-style-position
+       */
+      "list-style-position": [{
+        list: ["inside", "outside"]
+      }],
+      /**
+       * Placeholder Color
+       * @deprecated since Tailwind CSS v3.0.0
+       * @see https://tailwindcss.com/docs/placeholder-color
+       */
+      "placeholder-color": [{
+        placeholder: [colors]
+      }],
+      /**
+       * Placeholder Opacity
+       * @see https://tailwindcss.com/docs/placeholder-opacity
+       */
+      "placeholder-opacity": [{
+        "placeholder-opacity": [opacity]
+      }],
+      /**
+       * Text Alignment
+       * @see https://tailwindcss.com/docs/text-align
+       */
+      "text-alignment": [{
+        text: ["left", "center", "right", "justify", "start", "end"]
+      }],
+      /**
+       * Text Color
+       * @see https://tailwindcss.com/docs/text-color
+       */
+      "text-color": [{
+        text: [colors]
+      }],
+      /**
+       * Text Opacity
+       * @see https://tailwindcss.com/docs/text-opacity
+       */
+      "text-opacity": [{
+        "text-opacity": [opacity]
+      }],
+      /**
+       * Text Decoration
+       * @see https://tailwindcss.com/docs/text-decoration
+       */
+      "text-decoration": ["underline", "overline", "line-through", "no-underline"],
+      /**
+       * Text Decoration Style
+       * @see https://tailwindcss.com/docs/text-decoration-style
+       */
+      "text-decoration-style": [{
+        decoration: [...getLineStyles(), "wavy"]
+      }],
+      /**
+       * Text Decoration Thickness
+       * @see https://tailwindcss.com/docs/text-decoration-thickness
+       */
+      "text-decoration-thickness": [{
+        decoration: ["auto", "from-font", isLength, isArbitraryLength]
+      }],
+      /**
+       * Text Underline Offset
+       * @see https://tailwindcss.com/docs/text-underline-offset
+       */
+      "underline-offset": [{
+        "underline-offset": ["auto", isLength, isArbitraryValue]
+      }],
+      /**
+       * Text Decoration Color
+       * @see https://tailwindcss.com/docs/text-decoration-color
+       */
+      "text-decoration-color": [{
+        decoration: [colors]
+      }],
+      /**
+       * Text Transform
+       * @see https://tailwindcss.com/docs/text-transform
+       */
+      "text-transform": ["uppercase", "lowercase", "capitalize", "normal-case"],
+      /**
+       * Text Overflow
+       * @see https://tailwindcss.com/docs/text-overflow
+       */
+      "text-overflow": ["truncate", "text-ellipsis", "text-clip"],
+      /**
+       * Text Wrap
+       * @see https://tailwindcss.com/docs/text-wrap
+       */
+      "text-wrap": [{
+        text: ["wrap", "nowrap", "balance", "pretty"]
+      }],
+      /**
+       * Text Indent
+       * @see https://tailwindcss.com/docs/text-indent
+       */
+      indent: [{
+        indent: getSpacingWithArbitrary()
+      }],
+      /**
+       * Vertical Alignment
+       * @see https://tailwindcss.com/docs/vertical-align
+       */
+      "vertical-align": [{
+        align: ["baseline", "top", "middle", "bottom", "text-top", "text-bottom", "sub", "super", isArbitraryValue]
+      }],
+      /**
+       * Whitespace
+       * @see https://tailwindcss.com/docs/whitespace
+       */
+      whitespace: [{
+        whitespace: ["normal", "nowrap", "pre", "pre-line", "pre-wrap", "break-spaces"]
+      }],
+      /**
+       * Word Break
+       * @see https://tailwindcss.com/docs/word-break
+       */
+      break: [{
+        break: ["normal", "words", "all", "keep"]
+      }],
+      /**
+       * Hyphens
+       * @see https://tailwindcss.com/docs/hyphens
+       */
+      hyphens: [{
+        hyphens: ["none", "manual", "auto"]
+      }],
+      /**
+       * Content
+       * @see https://tailwindcss.com/docs/content
+       */
+      content: [{
+        content: ["none", isArbitraryValue]
+      }],
+      // Backgrounds
+      /**
+       * Background Attachment
+       * @see https://tailwindcss.com/docs/background-attachment
+       */
+      "bg-attachment": [{
+        bg: ["fixed", "local", "scroll"]
+      }],
+      /**
+       * Background Clip
+       * @see https://tailwindcss.com/docs/background-clip
+       */
+      "bg-clip": [{
+        "bg-clip": ["border", "padding", "content", "text"]
+      }],
+      /**
+       * Background Opacity
+       * @deprecated since Tailwind CSS v3.0.0
+       * @see https://tailwindcss.com/docs/background-opacity
+       */
+      "bg-opacity": [{
+        "bg-opacity": [opacity]
+      }],
+      /**
+       * Background Origin
+       * @see https://tailwindcss.com/docs/background-origin
+       */
+      "bg-origin": [{
+        "bg-origin": ["border", "padding", "content"]
+      }],
+      /**
+       * Background Position
+       * @see https://tailwindcss.com/docs/background-position
+       */
+      "bg-position": [{
+        bg: [...getPositions(), isArbitraryPosition]
+      }],
+      /**
+       * Background Repeat
+       * @see https://tailwindcss.com/docs/background-repeat
+       */
+      "bg-repeat": [{
+        bg: ["no-repeat", {
+          repeat: ["", "x", "y", "round", "space"]
+        }]
+      }],
+      /**
+       * Background Size
+       * @see https://tailwindcss.com/docs/background-size
+       */
+      "bg-size": [{
+        bg: ["auto", "cover", "contain", isArbitrarySize]
+      }],
+      /**
+       * Background Image
+       * @see https://tailwindcss.com/docs/background-image
+       */
+      "bg-image": [{
+        bg: ["none", {
+          "gradient-to": ["t", "tr", "r", "br", "b", "bl", "l", "tl"]
+        }, isArbitraryImage]
+      }],
+      /**
+       * Background Color
+       * @see https://tailwindcss.com/docs/background-color
+       */
+      "bg-color": [{
+        bg: [colors]
+      }],
+      /**
+       * Gradient Color Stops From Position
+       * @see https://tailwindcss.com/docs/gradient-color-stops
+       */
+      "gradient-from-pos": [{
+        from: [gradientColorStopPositions]
+      }],
+      /**
+       * Gradient Color Stops Via Position
+       * @see https://tailwindcss.com/docs/gradient-color-stops
+       */
+      "gradient-via-pos": [{
+        via: [gradientColorStopPositions]
+      }],
+      /**
+       * Gradient Color Stops To Position
+       * @see https://tailwindcss.com/docs/gradient-color-stops
+       */
+      "gradient-to-pos": [{
+        to: [gradientColorStopPositions]
+      }],
+      /**
+       * Gradient Color Stops From
+       * @see https://tailwindcss.com/docs/gradient-color-stops
+       */
+      "gradient-from": [{
+        from: [gradientColorStops]
+      }],
+      /**
+       * Gradient Color Stops Via
+       * @see https://tailwindcss.com/docs/gradient-color-stops
+       */
+      "gradient-via": [{
+        via: [gradientColorStops]
+      }],
+      /**
+       * Gradient Color Stops To
+       * @see https://tailwindcss.com/docs/gradient-color-stops
+       */
+      "gradient-to": [{
+        to: [gradientColorStops]
+      }],
+      // Borders
+      /**
+       * Border Radius
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      rounded: [{
+        rounded: [borderRadius]
+      }],
+      /**
+       * Border Radius Start
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-s": [{
+        "rounded-s": [borderRadius]
+      }],
+      /**
+       * Border Radius End
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-e": [{
+        "rounded-e": [borderRadius]
+      }],
+      /**
+       * Border Radius Top
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-t": [{
+        "rounded-t": [borderRadius]
+      }],
+      /**
+       * Border Radius Right
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-r": [{
+        "rounded-r": [borderRadius]
+      }],
+      /**
+       * Border Radius Bottom
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-b": [{
+        "rounded-b": [borderRadius]
+      }],
+      /**
+       * Border Radius Left
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-l": [{
+        "rounded-l": [borderRadius]
+      }],
+      /**
+       * Border Radius Start Start
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-ss": [{
+        "rounded-ss": [borderRadius]
+      }],
+      /**
+       * Border Radius Start End
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-se": [{
+        "rounded-se": [borderRadius]
+      }],
+      /**
+       * Border Radius End End
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-ee": [{
+        "rounded-ee": [borderRadius]
+      }],
+      /**
+       * Border Radius End Start
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-es": [{
+        "rounded-es": [borderRadius]
+      }],
+      /**
+       * Border Radius Top Left
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-tl": [{
+        "rounded-tl": [borderRadius]
+      }],
+      /**
+       * Border Radius Top Right
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-tr": [{
+        "rounded-tr": [borderRadius]
+      }],
+      /**
+       * Border Radius Bottom Right
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-br": [{
+        "rounded-br": [borderRadius]
+      }],
+      /**
+       * Border Radius Bottom Left
+       * @see https://tailwindcss.com/docs/border-radius
+       */
+      "rounded-bl": [{
+        "rounded-bl": [borderRadius]
+      }],
+      /**
+       * Border Width
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w": [{
+        border: [borderWidth]
+      }],
+      /**
+       * Border Width X
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w-x": [{
+        "border-x": [borderWidth]
+      }],
+      /**
+       * Border Width Y
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w-y": [{
+        "border-y": [borderWidth]
+      }],
+      /**
+       * Border Width Start
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w-s": [{
+        "border-s": [borderWidth]
+      }],
+      /**
+       * Border Width End
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w-e": [{
+        "border-e": [borderWidth]
+      }],
+      /**
+       * Border Width Top
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w-t": [{
+        "border-t": [borderWidth]
+      }],
+      /**
+       * Border Width Right
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w-r": [{
+        "border-r": [borderWidth]
+      }],
+      /**
+       * Border Width Bottom
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w-b": [{
+        "border-b": [borderWidth]
+      }],
+      /**
+       * Border Width Left
+       * @see https://tailwindcss.com/docs/border-width
+       */
+      "border-w-l": [{
+        "border-l": [borderWidth]
+      }],
+      /**
+       * Border Opacity
+       * @see https://tailwindcss.com/docs/border-opacity
+       */
+      "border-opacity": [{
+        "border-opacity": [opacity]
+      }],
+      /**
+       * Border Style
+       * @see https://tailwindcss.com/docs/border-style
+       */
+      "border-style": [{
+        border: [...getLineStyles(), "hidden"]
+      }],
+      /**
+       * Divide Width X
+       * @see https://tailwindcss.com/docs/divide-width
+       */
+      "divide-x": [{
+        "divide-x": [borderWidth]
+      }],
+      /**
+       * Divide Width X Reverse
+       * @see https://tailwindcss.com/docs/divide-width
+       */
+      "divide-x-reverse": ["divide-x-reverse"],
+      /**
+       * Divide Width Y
+       * @see https://tailwindcss.com/docs/divide-width
+       */
+      "divide-y": [{
+        "divide-y": [borderWidth]
+      }],
+      /**
+       * Divide Width Y Reverse
+       * @see https://tailwindcss.com/docs/divide-width
+       */
+      "divide-y-reverse": ["divide-y-reverse"],
+      /**
+       * Divide Opacity
+       * @see https://tailwindcss.com/docs/divide-opacity
+       */
+      "divide-opacity": [{
+        "divide-opacity": [opacity]
+      }],
+      /**
+       * Divide Style
+       * @see https://tailwindcss.com/docs/divide-style
+       */
+      "divide-style": [{
+        divide: getLineStyles()
+      }],
+      /**
+       * Border Color
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color": [{
+        border: [borderColor]
+      }],
+      /**
+       * Border Color X
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color-x": [{
+        "border-x": [borderColor]
+      }],
+      /**
+       * Border Color Y
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color-y": [{
+        "border-y": [borderColor]
+      }],
+      /**
+       * Border Color S
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color-s": [{
+        "border-s": [borderColor]
+      }],
+      /**
+       * Border Color E
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color-e": [{
+        "border-e": [borderColor]
+      }],
+      /**
+       * Border Color Top
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color-t": [{
+        "border-t": [borderColor]
+      }],
+      /**
+       * Border Color Right
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color-r": [{
+        "border-r": [borderColor]
+      }],
+      /**
+       * Border Color Bottom
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color-b": [{
+        "border-b": [borderColor]
+      }],
+      /**
+       * Border Color Left
+       * @see https://tailwindcss.com/docs/border-color
+       */
+      "border-color-l": [{
+        "border-l": [borderColor]
+      }],
+      /**
+       * Divide Color
+       * @see https://tailwindcss.com/docs/divide-color
+       */
+      "divide-color": [{
+        divide: [borderColor]
+      }],
+      /**
+       * Outline Style
+       * @see https://tailwindcss.com/docs/outline-style
+       */
+      "outline-style": [{
+        outline: ["", ...getLineStyles()]
+      }],
+      /**
+       * Outline Offset
+       * @see https://tailwindcss.com/docs/outline-offset
+       */
+      "outline-offset": [{
+        "outline-offset": [isLength, isArbitraryValue]
+      }],
+      /**
+       * Outline Width
+       * @see https://tailwindcss.com/docs/outline-width
+       */
+      "outline-w": [{
+        outline: [isLength, isArbitraryLength]
+      }],
+      /**
+       * Outline Color
+       * @see https://tailwindcss.com/docs/outline-color
+       */
+      "outline-color": [{
+        outline: [colors]
+      }],
+      /**
+       * Ring Width
+       * @see https://tailwindcss.com/docs/ring-width
+       */
+      "ring-w": [{
+        ring: getLengthWithEmptyAndArbitrary()
+      }],
+      /**
+       * Ring Width Inset
+       * @see https://tailwindcss.com/docs/ring-width
+       */
+      "ring-w-inset": ["ring-inset"],
+      /**
+       * Ring Color
+       * @see https://tailwindcss.com/docs/ring-color
+       */
+      "ring-color": [{
+        ring: [colors]
+      }],
+      /**
+       * Ring Opacity
+       * @see https://tailwindcss.com/docs/ring-opacity
+       */
+      "ring-opacity": [{
+        "ring-opacity": [opacity]
+      }],
+      /**
+       * Ring Offset Width
+       * @see https://tailwindcss.com/docs/ring-offset-width
+       */
+      "ring-offset-w": [{
+        "ring-offset": [isLength, isArbitraryLength]
+      }],
+      /**
+       * Ring Offset Color
+       * @see https://tailwindcss.com/docs/ring-offset-color
+       */
+      "ring-offset-color": [{
+        "ring-offset": [colors]
+      }],
+      // Effects
+      /**
+       * Box Shadow
+       * @see https://tailwindcss.com/docs/box-shadow
+       */
+      shadow: [{
+        shadow: ["", "inner", "none", isTshirtSize, isArbitraryShadow]
+      }],
+      /**
+       * Box Shadow Color
+       * @see https://tailwindcss.com/docs/box-shadow-color
+       */
+      "shadow-color": [{
+        shadow: [isAny]
+      }],
+      /**
+       * Opacity
+       * @see https://tailwindcss.com/docs/opacity
+       */
+      opacity: [{
+        opacity: [opacity]
+      }],
+      /**
+       * Mix Blend Mode
+       * @see https://tailwindcss.com/docs/mix-blend-mode
+       */
+      "mix-blend": [{
+        "mix-blend": [...getBlendModes(), "plus-lighter", "plus-darker"]
+      }],
+      /**
+       * Background Blend Mode
+       * @see https://tailwindcss.com/docs/background-blend-mode
+       */
+      "bg-blend": [{
+        "bg-blend": getBlendModes()
+      }],
+      // Filters
+      /**
+       * Filter
+       * @deprecated since Tailwind CSS v3.0.0
+       * @see https://tailwindcss.com/docs/filter
+       */
+      filter: [{
+        filter: ["", "none"]
+      }],
+      /**
+       * Blur
+       * @see https://tailwindcss.com/docs/blur
+       */
+      blur: [{
+        blur: [blur]
+      }],
+      /**
+       * Brightness
+       * @see https://tailwindcss.com/docs/brightness
+       */
+      brightness: [{
+        brightness: [brightness]
+      }],
+      /**
+       * Contrast
+       * @see https://tailwindcss.com/docs/contrast
+       */
+      contrast: [{
+        contrast: [contrast]
+      }],
+      /**
+       * Drop Shadow
+       * @see https://tailwindcss.com/docs/drop-shadow
+       */
+      "drop-shadow": [{
+        "drop-shadow": ["", "none", isTshirtSize, isArbitraryValue]
+      }],
+      /**
+       * Grayscale
+       * @see https://tailwindcss.com/docs/grayscale
+       */
+      grayscale: [{
+        grayscale: [grayscale]
+      }],
+      /**
+       * Hue Rotate
+       * @see https://tailwindcss.com/docs/hue-rotate
+       */
+      "hue-rotate": [{
+        "hue-rotate": [hueRotate]
+      }],
+      /**
+       * Invert
+       * @see https://tailwindcss.com/docs/invert
+       */
+      invert: [{
+        invert: [invert2]
+      }],
+      /**
+       * Saturate
+       * @see https://tailwindcss.com/docs/saturate
+       */
+      saturate: [{
+        saturate: [saturate]
+      }],
+      /**
+       * Sepia
+       * @see https://tailwindcss.com/docs/sepia
+       */
+      sepia: [{
+        sepia: [sepia]
+      }],
+      /**
+       * Backdrop Filter
+       * @deprecated since Tailwind CSS v3.0.0
+       * @see https://tailwindcss.com/docs/backdrop-filter
+       */
+      "backdrop-filter": [{
+        "backdrop-filter": ["", "none"]
+      }],
+      /**
+       * Backdrop Blur
+       * @see https://tailwindcss.com/docs/backdrop-blur
+       */
+      "backdrop-blur": [{
+        "backdrop-blur": [blur]
+      }],
+      /**
+       * Backdrop Brightness
+       * @see https://tailwindcss.com/docs/backdrop-brightness
+       */
+      "backdrop-brightness": [{
+        "backdrop-brightness": [brightness]
+      }],
+      /**
+       * Backdrop Contrast
+       * @see https://tailwindcss.com/docs/backdrop-contrast
+       */
+      "backdrop-contrast": [{
+        "backdrop-contrast": [contrast]
+      }],
+      /**
+       * Backdrop Grayscale
+       * @see https://tailwindcss.com/docs/backdrop-grayscale
+       */
+      "backdrop-grayscale": [{
+        "backdrop-grayscale": [grayscale]
+      }],
+      /**
+       * Backdrop Hue Rotate
+       * @see https://tailwindcss.com/docs/backdrop-hue-rotate
+       */
+      "backdrop-hue-rotate": [{
+        "backdrop-hue-rotate": [hueRotate]
+      }],
+      /**
+       * Backdrop Invert
+       * @see https://tailwindcss.com/docs/backdrop-invert
+       */
+      "backdrop-invert": [{
+        "backdrop-invert": [invert2]
+      }],
+      /**
+       * Backdrop Opacity
+       * @see https://tailwindcss.com/docs/backdrop-opacity
+       */
+      "backdrop-opacity": [{
+        "backdrop-opacity": [opacity]
+      }],
+      /**
+       * Backdrop Saturate
+       * @see https://tailwindcss.com/docs/backdrop-saturate
+       */
+      "backdrop-saturate": [{
+        "backdrop-saturate": [saturate]
+      }],
+      /**
+       * Backdrop Sepia
+       * @see https://tailwindcss.com/docs/backdrop-sepia
+       */
+      "backdrop-sepia": [{
+        "backdrop-sepia": [sepia]
+      }],
+      // Tables
+      /**
+       * Border Collapse
+       * @see https://tailwindcss.com/docs/border-collapse
+       */
+      "border-collapse": [{
+        border: ["collapse", "separate"]
+      }],
+      /**
+       * Border Spacing
+       * @see https://tailwindcss.com/docs/border-spacing
+       */
+      "border-spacing": [{
+        "border-spacing": [borderSpacing]
+      }],
+      /**
+       * Border Spacing X
+       * @see https://tailwindcss.com/docs/border-spacing
+       */
+      "border-spacing-x": [{
+        "border-spacing-x": [borderSpacing]
+      }],
+      /**
+       * Border Spacing Y
+       * @see https://tailwindcss.com/docs/border-spacing
+       */
+      "border-spacing-y": [{
+        "border-spacing-y": [borderSpacing]
+      }],
+      /**
+       * Table Layout
+       * @see https://tailwindcss.com/docs/table-layout
+       */
+      "table-layout": [{
+        table: ["auto", "fixed"]
+      }],
+      /**
+       * Caption Side
+       * @see https://tailwindcss.com/docs/caption-side
+       */
+      caption: [{
+        caption: ["top", "bottom"]
+      }],
+      // Transitions and Animation
+      /**
+       * Tranisition Property
+       * @see https://tailwindcss.com/docs/transition-property
+       */
+      transition: [{
+        transition: ["none", "all", "", "colors", "opacity", "shadow", "transform", isArbitraryValue]
+      }],
+      /**
+       * Transition Duration
+       * @see https://tailwindcss.com/docs/transition-duration
+       */
+      duration: [{
+        duration: getNumberAndArbitrary()
+      }],
+      /**
+       * Transition Timing Function
+       * @see https://tailwindcss.com/docs/transition-timing-function
+       */
+      ease: [{
+        ease: ["linear", "in", "out", "in-out", isArbitraryValue]
+      }],
+      /**
+       * Transition Delay
+       * @see https://tailwindcss.com/docs/transition-delay
+       */
+      delay: [{
+        delay: getNumberAndArbitrary()
+      }],
+      /**
+       * Animation
+       * @see https://tailwindcss.com/docs/animation
+       */
+      animate: [{
+        animate: ["none", "spin", "ping", "pulse", "bounce", isArbitraryValue]
+      }],
+      // Transforms
+      /**
+       * Transform
+       * @see https://tailwindcss.com/docs/transform
+       */
+      transform: [{
+        transform: ["", "gpu", "none"]
+      }],
+      /**
+       * Scale
+       * @see https://tailwindcss.com/docs/scale
+       */
+      scale: [{
+        scale: [scale2]
+      }],
+      /**
+       * Scale X
+       * @see https://tailwindcss.com/docs/scale
+       */
+      "scale-x": [{
+        "scale-x": [scale2]
+      }],
+      /**
+       * Scale Y
+       * @see https://tailwindcss.com/docs/scale
+       */
+      "scale-y": [{
+        "scale-y": [scale2]
+      }],
+      /**
+       * Rotate
+       * @see https://tailwindcss.com/docs/rotate
+       */
+      rotate: [{
+        rotate: [isInteger, isArbitraryValue]
+      }],
+      /**
+       * Translate X
+       * @see https://tailwindcss.com/docs/translate
+       */
+      "translate-x": [{
+        "translate-x": [translate]
+      }],
+      /**
+       * Translate Y
+       * @see https://tailwindcss.com/docs/translate
+       */
+      "translate-y": [{
+        "translate-y": [translate]
+      }],
+      /**
+       * Skew X
+       * @see https://tailwindcss.com/docs/skew
+       */
+      "skew-x": [{
+        "skew-x": [skew]
+      }],
+      /**
+       * Skew Y
+       * @see https://tailwindcss.com/docs/skew
+       */
+      "skew-y": [{
+        "skew-y": [skew]
+      }],
+      /**
+       * Transform Origin
+       * @see https://tailwindcss.com/docs/transform-origin
+       */
+      "transform-origin": [{
+        origin: ["center", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left", "top-left", isArbitraryValue]
+      }],
+      // Interactivity
+      /**
+       * Accent Color
+       * @see https://tailwindcss.com/docs/accent-color
+       */
+      accent: [{
+        accent: ["auto", colors]
+      }],
+      /**
+       * Appearance
+       * @see https://tailwindcss.com/docs/appearance
+       */
+      appearance: [{
+        appearance: ["none", "auto"]
+      }],
+      /**
+       * Cursor
+       * @see https://tailwindcss.com/docs/cursor
+       */
+      cursor: [{
+        cursor: ["auto", "default", "pointer", "wait", "text", "move", "help", "not-allowed", "none", "context-menu", "progress", "cell", "crosshair", "vertical-text", "alias", "copy", "no-drop", "grab", "grabbing", "all-scroll", "col-resize", "row-resize", "n-resize", "e-resize", "s-resize", "w-resize", "ne-resize", "nw-resize", "se-resize", "sw-resize", "ew-resize", "ns-resize", "nesw-resize", "nwse-resize", "zoom-in", "zoom-out", isArbitraryValue]
+      }],
+      /**
+       * Caret Color
+       * @see https://tailwindcss.com/docs/just-in-time-mode#caret-color-utilities
+       */
+      "caret-color": [{
+        caret: [colors]
+      }],
+      /**
+       * Pointer Events
+       * @see https://tailwindcss.com/docs/pointer-events
+       */
+      "pointer-events": [{
+        "pointer-events": ["none", "auto"]
+      }],
+      /**
+       * Resize
+       * @see https://tailwindcss.com/docs/resize
+       */
+      resize: [{
+        resize: ["none", "y", "x", ""]
+      }],
+      /**
+       * Scroll Behavior
+       * @see https://tailwindcss.com/docs/scroll-behavior
+       */
+      "scroll-behavior": [{
+        scroll: ["auto", "smooth"]
+      }],
+      /**
+       * Scroll Margin
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-m": [{
+        "scroll-m": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Margin X
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-mx": [{
+        "scroll-mx": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Margin Y
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-my": [{
+        "scroll-my": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Margin Start
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-ms": [{
+        "scroll-ms": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Margin End
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-me": [{
+        "scroll-me": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Margin Top
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-mt": [{
+        "scroll-mt": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Margin Right
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-mr": [{
+        "scroll-mr": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Margin Bottom
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-mb": [{
+        "scroll-mb": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Margin Left
+       * @see https://tailwindcss.com/docs/scroll-margin
+       */
+      "scroll-ml": [{
+        "scroll-ml": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-p": [{
+        "scroll-p": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding X
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-px": [{
+        "scroll-px": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding Y
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-py": [{
+        "scroll-py": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding Start
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-ps": [{
+        "scroll-ps": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding End
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-pe": [{
+        "scroll-pe": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding Top
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-pt": [{
+        "scroll-pt": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding Right
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-pr": [{
+        "scroll-pr": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding Bottom
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-pb": [{
+        "scroll-pb": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Padding Left
+       * @see https://tailwindcss.com/docs/scroll-padding
+       */
+      "scroll-pl": [{
+        "scroll-pl": getSpacingWithArbitrary()
+      }],
+      /**
+       * Scroll Snap Align
+       * @see https://tailwindcss.com/docs/scroll-snap-align
+       */
+      "snap-align": [{
+        snap: ["start", "end", "center", "align-none"]
+      }],
+      /**
+       * Scroll Snap Stop
+       * @see https://tailwindcss.com/docs/scroll-snap-stop
+       */
+      "snap-stop": [{
+        snap: ["normal", "always"]
+      }],
+      /**
+       * Scroll Snap Type
+       * @see https://tailwindcss.com/docs/scroll-snap-type
+       */
+      "snap-type": [{
+        snap: ["none", "x", "y", "both"]
+      }],
+      /**
+       * Scroll Snap Type Strictness
+       * @see https://tailwindcss.com/docs/scroll-snap-type
+       */
+      "snap-strictness": [{
+        snap: ["mandatory", "proximity"]
+      }],
+      /**
+       * Touch Action
+       * @see https://tailwindcss.com/docs/touch-action
+       */
+      touch: [{
+        touch: ["auto", "none", "manipulation"]
+      }],
+      /**
+       * Touch Action X
+       * @see https://tailwindcss.com/docs/touch-action
+       */
+      "touch-x": [{
+        "touch-pan": ["x", "left", "right"]
+      }],
+      /**
+       * Touch Action Y
+       * @see https://tailwindcss.com/docs/touch-action
+       */
+      "touch-y": [{
+        "touch-pan": ["y", "up", "down"]
+      }],
+      /**
+       * Touch Action Pinch Zoom
+       * @see https://tailwindcss.com/docs/touch-action
+       */
+      "touch-pz": ["touch-pinch-zoom"],
+      /**
+       * User Select
+       * @see https://tailwindcss.com/docs/user-select
+       */
+      select: [{
+        select: ["none", "text", "all", "auto"]
+      }],
+      /**
+       * Will Change
+       * @see https://tailwindcss.com/docs/will-change
+       */
+      "will-change": [{
+        "will-change": ["auto", "scroll", "contents", "transform", isArbitraryValue]
+      }],
+      // SVG
+      /**
+       * Fill
+       * @see https://tailwindcss.com/docs/fill
+       */
+      fill: [{
+        fill: [colors, "none"]
+      }],
+      /**
+       * Stroke Width
+       * @see https://tailwindcss.com/docs/stroke-width
+       */
+      "stroke-w": [{
+        stroke: [isLength, isArbitraryLength, isArbitraryNumber]
+      }],
+      /**
+       * Stroke
+       * @see https://tailwindcss.com/docs/stroke
+       */
+      stroke: [{
+        stroke: [colors, "none"]
+      }],
+      // Accessibility
+      /**
+       * Screen Readers
+       * @see https://tailwindcss.com/docs/screen-readers
+       */
+      sr: ["sr-only", "not-sr-only"],
+      /**
+       * Forced Color Adjust
+       * @see https://tailwindcss.com/docs/forced-color-adjust
+       */
+      "forced-color-adjust": [{
+        "forced-color-adjust": ["auto", "none"]
+      }]
+    },
+    conflictingClassGroups: {
+      overflow: ["overflow-x", "overflow-y"],
+      overscroll: ["overscroll-x", "overscroll-y"],
+      inset: ["inset-x", "inset-y", "start", "end", "top", "right", "bottom", "left"],
+      "inset-x": ["right", "left"],
+      "inset-y": ["top", "bottom"],
+      flex: ["basis", "grow", "shrink"],
+      gap: ["gap-x", "gap-y"],
+      p: ["px", "py", "ps", "pe", "pt", "pr", "pb", "pl"],
+      px: ["pr", "pl"],
+      py: ["pt", "pb"],
+      m: ["mx", "my", "ms", "me", "mt", "mr", "mb", "ml"],
+      mx: ["mr", "ml"],
+      my: ["mt", "mb"],
+      size: ["w", "h"],
+      "font-size": ["leading"],
+      "fvn-normal": ["fvn-ordinal", "fvn-slashed-zero", "fvn-figure", "fvn-spacing", "fvn-fraction"],
+      "fvn-ordinal": ["fvn-normal"],
+      "fvn-slashed-zero": ["fvn-normal"],
+      "fvn-figure": ["fvn-normal"],
+      "fvn-spacing": ["fvn-normal"],
+      "fvn-fraction": ["fvn-normal"],
+      "line-clamp": ["display", "overflow"],
+      rounded: ["rounded-s", "rounded-e", "rounded-t", "rounded-r", "rounded-b", "rounded-l", "rounded-ss", "rounded-se", "rounded-ee", "rounded-es", "rounded-tl", "rounded-tr", "rounded-br", "rounded-bl"],
+      "rounded-s": ["rounded-ss", "rounded-es"],
+      "rounded-e": ["rounded-se", "rounded-ee"],
+      "rounded-t": ["rounded-tl", "rounded-tr"],
+      "rounded-r": ["rounded-tr", "rounded-br"],
+      "rounded-b": ["rounded-br", "rounded-bl"],
+      "rounded-l": ["rounded-tl", "rounded-bl"],
+      "border-spacing": ["border-spacing-x", "border-spacing-y"],
+      "border-w": ["border-w-s", "border-w-e", "border-w-t", "border-w-r", "border-w-b", "border-w-l"],
+      "border-w-x": ["border-w-r", "border-w-l"],
+      "border-w-y": ["border-w-t", "border-w-b"],
+      "border-color": ["border-color-s", "border-color-e", "border-color-t", "border-color-r", "border-color-b", "border-color-l"],
+      "border-color-x": ["border-color-r", "border-color-l"],
+      "border-color-y": ["border-color-t", "border-color-b"],
+      "scroll-m": ["scroll-mx", "scroll-my", "scroll-ms", "scroll-me", "scroll-mt", "scroll-mr", "scroll-mb", "scroll-ml"],
+      "scroll-mx": ["scroll-mr", "scroll-ml"],
+      "scroll-my": ["scroll-mt", "scroll-mb"],
+      "scroll-p": ["scroll-px", "scroll-py", "scroll-ps", "scroll-pe", "scroll-pt", "scroll-pr", "scroll-pb", "scroll-pl"],
+      "scroll-px": ["scroll-pr", "scroll-pl"],
+      "scroll-py": ["scroll-pt", "scroll-pb"],
+      touch: ["touch-x", "touch-y", "touch-pz"],
+      "touch-x": ["touch"],
+      "touch-y": ["touch"],
+      "touch-pz": ["touch"]
+    },
+    conflictingClassGroupModifiers: {
+      "font-size": ["leading"]
+    }
+  };
+};
+const twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
+function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        outline: "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+        secondary: "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        link: "text-primary underline-offset-4 hover:underline"
+      },
+      size: {
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        icon: "size-9"
+      }
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default"
+    }
+  }
+);
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}) {
+  const Comp = asChild ? Slot$1 : "button";
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Comp,
+    {
+      "data-slot": "button",
+      className: cn(buttonVariants({ variant, size, className })),
+      ...props
+    }
+  );
+}
+function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
+  return function handleEvent(event) {
+    originalEventHandler == null ? void 0 : originalEventHandler(event);
+    if (checkForDefaultPrevented === false || !event.defaultPrevented) {
+      return ourEventHandler == null ? void 0 : ourEventHandler(event);
+    }
+  };
+}
+function createContext2(rootComponentName, defaultContext) {
+  const Context = reactExports.createContext(defaultContext);
+  const Provider = (props) => {
+    const { children, ...context } = props;
+    const value = reactExports.useMemo(() => context, Object.values(context));
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Context.Provider, { value, children });
+  };
+  Provider.displayName = rootComponentName + "Provider";
+  function useContext2(consumerName) {
+    const context = reactExports.useContext(Context);
+    if (context) return context;
+    if (defaultContext !== void 0) return defaultContext;
+    throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+  }
+  return [Provider, useContext2];
+}
+function createContextScope(scopeName, createContextScopeDeps = []) {
+  let defaultContexts = [];
+  function createContext3(rootComponentName, defaultContext) {
+    const BaseContext = reactExports.createContext(defaultContext);
+    const index2 = defaultContexts.length;
+    defaultContexts = [...defaultContexts, defaultContext];
+    const Provider = (props) => {
+      var _a3;
+      const { scope, children, ...context } = props;
+      const Context = ((_a3 = scope == null ? void 0 : scope[scopeName]) == null ? void 0 : _a3[index2]) || BaseContext;
+      const value = reactExports.useMemo(() => context, Object.values(context));
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(Context.Provider, { value, children });
+    };
+    Provider.displayName = rootComponentName + "Provider";
+    function useContext2(consumerName, scope) {
+      var _a3;
+      const Context = ((_a3 = scope == null ? void 0 : scope[scopeName]) == null ? void 0 : _a3[index2]) || BaseContext;
+      const context = reactExports.useContext(Context);
+      if (context) return context;
+      if (defaultContext !== void 0) return defaultContext;
+      throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+    }
+    return [Provider, useContext2];
+  }
+  const createScope = () => {
+    const scopeContexts = defaultContexts.map((defaultContext) => {
+      return reactExports.createContext(defaultContext);
+    });
+    return function useScope(scope) {
+      const contexts = (scope == null ? void 0 : scope[scopeName]) || scopeContexts;
+      return reactExports.useMemo(
+        () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
+        [scope, contexts]
+      );
+    };
+  };
+  createScope.scopeName = scopeName;
+  return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
+}
+function composeContextScopes(...scopes) {
+  const baseScope = scopes[0];
+  if (scopes.length === 1) return baseScope;
+  const createScope = () => {
+    const scopeHooks = scopes.map((createScope2) => ({
+      useScope: createScope2(),
+      scopeName: createScope2.scopeName
+    }));
+    return function useComposedScopes(overrideScopes) {
+      const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
+        const scopeProps = useScope(overrideScopes);
+        const currentScope = scopeProps[`__scope${scopeName}`];
+        return { ...nextScopes2, ...currentScope };
+      }, {});
+      return reactExports.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
+    };
+  };
+  createScope.scopeName = baseScope.scopeName;
+  return createScope;
+}
+var useLayoutEffect2 = (globalThis == null ? void 0 : globalThis.document) ? reactExports.useLayoutEffect : () => {
+};
+var useReactId = React$2[" useId ".trim().toString()] || (() => void 0);
+var count$1 = 0;
+function useId(deterministicId) {
+  const [id2, setId] = reactExports.useState(useReactId());
+  useLayoutEffect2(() => {
+    setId((reactId) => reactId ?? String(count$1++));
+  }, [deterministicId]);
+  return deterministicId || (id2 ? `radix-${id2}` : "");
+}
+var useInsertionEffect = React$2[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
+function useControllableState({
+  prop,
+  defaultProp,
+  onChange = () => {
+  },
+  caller
+}) {
+  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
+    defaultProp,
+    onChange
+  });
+  const isControlled = prop !== void 0;
+  const value = isControlled ? prop : uncontrolledProp;
+  {
+    const isControlledRef = reactExports.useRef(prop !== void 0);
+    reactExports.useEffect(() => {
+      const wasControlled = isControlledRef.current;
+      if (wasControlled !== isControlled) {
+        const from = wasControlled ? "controlled" : "uncontrolled";
+        const to = isControlled ? "controlled" : "uncontrolled";
+        console.warn(
+          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+        );
+      }
+      isControlledRef.current = isControlled;
+    }, [isControlled, caller]);
+  }
+  const setValue = reactExports.useCallback(
+    (nextValue) => {
+      var _a3;
+      if (isControlled) {
+        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
+        if (value2 !== prop) {
+          (_a3 = onChangeRef.current) == null ? void 0 : _a3.call(onChangeRef, value2);
+        }
+      } else {
+        setUncontrolledProp(nextValue);
+      }
+    },
+    [isControlled, prop, setUncontrolledProp, onChangeRef]
+  );
+  return [value, setValue];
+}
+function useUncontrolledState({
+  defaultProp,
+  onChange
+}) {
+  const [value, setValue] = reactExports.useState(defaultProp);
+  const prevValueRef = reactExports.useRef(value);
+  const onChangeRef = reactExports.useRef(onChange);
+  useInsertionEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+  reactExports.useEffect(() => {
+    var _a3;
+    if (prevValueRef.current !== value) {
+      (_a3 = onChangeRef.current) == null ? void 0 : _a3.call(onChangeRef, value);
+      prevValueRef.current = value;
+    }
+  }, [value, prevValueRef]);
+  return [value, setValue, onChangeRef];
+}
+function isFunction(value) {
+  return typeof value === "function";
 }
 var NODES = [
   "a",
@@ -25195,7 +27849,7 @@ var DescriptionWarning$1 = ({ contentRef, descriptionId }) => {
   }, [MESSAGE, contentRef, descriptionId]);
   return null;
 };
-var Root$1 = Dialog$1;
+var Root$2 = Dialog$1;
 var Trigger = DialogTrigger;
 var Portal = DialogPortal$1;
 var Overlay = DialogOverlay$1;
@@ -25203,2719 +27857,24 @@ var Content = DialogContent$1;
 var Title = DialogTitle$1;
 var Description = DialogDescription;
 var Close = DialogClose;
-var ROOT_NAME = "AlertDialog";
-var [createAlertDialogContext] = createContextScope(ROOT_NAME, [
-  createDialogScope
-]);
-var useDialogScope = createDialogScope();
-var AlertDialog$1 = (props) => {
-  const { __scopeAlertDialog, ...alertDialogProps } = props;
-  const dialogScope = useDialogScope(__scopeAlertDialog);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$1, { ...dialogScope, ...alertDialogProps, modal: true });
-};
-AlertDialog$1.displayName = ROOT_NAME;
-var TRIGGER_NAME = "AlertDialogTrigger";
-var AlertDialogTrigger = reactExports.forwardRef(
-  (props, forwardedRef) => {
-    const { __scopeAlertDialog, ...triggerProps } = props;
-    const dialogScope = useDialogScope(__scopeAlertDialog);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Trigger, { ...dialogScope, ...triggerProps, ref: forwardedRef });
-  }
-);
-AlertDialogTrigger.displayName = TRIGGER_NAME;
-var PORTAL_NAME = "AlertDialogPortal";
-var AlertDialogPortal$1 = (props) => {
-  const { __scopeAlertDialog, ...portalProps } = props;
-  const dialogScope = useDialogScope(__scopeAlertDialog);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal, { ...dialogScope, ...portalProps });
-};
-AlertDialogPortal$1.displayName = PORTAL_NAME;
-var OVERLAY_NAME = "AlertDialogOverlay";
-var AlertDialogOverlay$1 = reactExports.forwardRef(
-  (props, forwardedRef) => {
-    const { __scopeAlertDialog, ...overlayProps } = props;
-    const dialogScope = useDialogScope(__scopeAlertDialog);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Overlay, { ...dialogScope, ...overlayProps, ref: forwardedRef });
-  }
-);
-AlertDialogOverlay$1.displayName = OVERLAY_NAME;
-var CONTENT_NAME = "AlertDialogContent";
-var [AlertDialogContentProvider, useAlertDialogContentContext] = createAlertDialogContext(CONTENT_NAME);
-var Slottable = /* @__PURE__ */ createSlottable("AlertDialogContent");
-var AlertDialogContent$1 = reactExports.forwardRef(
-  (props, forwardedRef) => {
-    const { __scopeAlertDialog, children, ...contentProps } = props;
-    const dialogScope = useDialogScope(__scopeAlertDialog);
-    const contentRef = reactExports.useRef(null);
-    const composedRefs = useComposedRefs(forwardedRef, contentRef);
-    const cancelRef = reactExports.useRef(null);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(
-      WarningProvider,
-      {
-        contentName: CONTENT_NAME,
-        titleName: TITLE_NAME,
-        docsSlug: "alert-dialog",
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogContentProvider, { scope: __scopeAlertDialog, cancelRef, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Content,
-          {
-            role: "alertdialog",
-            ...dialogScope,
-            ...contentProps,
-            ref: composedRefs,
-            onOpenAutoFocus: composeEventHandlers(contentProps.onOpenAutoFocus, (event) => {
-              var _a3;
-              event.preventDefault();
-              (_a3 = cancelRef.current) == null ? void 0 : _a3.focus({ preventScroll: true });
-            }),
-            onPointerDownOutside: (event) => event.preventDefault(),
-            onInteractOutside: (event) => event.preventDefault(),
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Slottable, { children }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(DescriptionWarning, { contentRef })
-            ]
-          }
-        ) })
-      }
-    );
-  }
-);
-AlertDialogContent$1.displayName = CONTENT_NAME;
-var TITLE_NAME = "AlertDialogTitle";
-var AlertDialogTitle$1 = reactExports.forwardRef(
-  (props, forwardedRef) => {
-    const { __scopeAlertDialog, ...titleProps } = props;
-    const dialogScope = useDialogScope(__scopeAlertDialog);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { ...dialogScope, ...titleProps, ref: forwardedRef });
-  }
-);
-AlertDialogTitle$1.displayName = TITLE_NAME;
-var DESCRIPTION_NAME = "AlertDialogDescription";
-var AlertDialogDescription$1 = reactExports.forwardRef((props, forwardedRef) => {
-  const { __scopeAlertDialog, ...descriptionProps } = props;
-  const dialogScope = useDialogScope(__scopeAlertDialog);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Description, { ...dialogScope, ...descriptionProps, ref: forwardedRef });
-});
-AlertDialogDescription$1.displayName = DESCRIPTION_NAME;
-var ACTION_NAME = "AlertDialogAction";
-var AlertDialogAction$1 = reactExports.forwardRef(
-  (props, forwardedRef) => {
-    const { __scopeAlertDialog, ...actionProps } = props;
-    const dialogScope = useDialogScope(__scopeAlertDialog);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Close, { ...dialogScope, ...actionProps, ref: forwardedRef });
-  }
-);
-AlertDialogAction$1.displayName = ACTION_NAME;
-var CANCEL_NAME = "AlertDialogCancel";
-var AlertDialogCancel$1 = reactExports.forwardRef(
-  (props, forwardedRef) => {
-    const { __scopeAlertDialog, ...cancelProps } = props;
-    const { cancelRef } = useAlertDialogContentContext(CANCEL_NAME, __scopeAlertDialog);
-    const dialogScope = useDialogScope(__scopeAlertDialog);
-    const ref = useComposedRefs(forwardedRef, cancelRef);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Close, { ...dialogScope, ...cancelProps, ref });
-  }
-);
-AlertDialogCancel$1.displayName = CANCEL_NAME;
-var DescriptionWarning = ({ contentRef }) => {
-  const MESSAGE = `\`${CONTENT_NAME}\` requires a description for the component to be accessible for screen reader users.
-
-You can add a description to the \`${CONTENT_NAME}\` by passing a \`${DESCRIPTION_NAME}\` component as a child, which also benefits sighted users by adding visible context to the dialog.
-
-Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${CONTENT_NAME}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/alert-dialog`;
-  reactExports.useEffect(() => {
-    var _a3;
-    const hasDescription = document.getElementById(
-      (_a3 = contentRef.current) == null ? void 0 : _a3.getAttribute("aria-describedby")
-    );
-    if (!hasDescription) console.warn(MESSAGE);
-  }, [MESSAGE, contentRef]);
-  return null;
-};
-var Root2 = AlertDialog$1;
-var Portal2 = AlertDialogPortal$1;
-var Overlay2 = AlertDialogOverlay$1;
-var Content2 = AlertDialogContent$1;
-var Action = AlertDialogAction$1;
-var Cancel = AlertDialogCancel$1;
-var Title2 = AlertDialogTitle$1;
-var Description2 = AlertDialogDescription$1;
-function r$1(e) {
-  var t, f, n = "";
-  if ("string" == typeof e || "number" == typeof e) n += e;
-  else if ("object" == typeof e) if (Array.isArray(e)) {
-    var o2 = e.length;
-    for (t = 0; t < o2; t++) e[t] && (f = r$1(e[t])) && (n && (n += " "), n += f);
-  } else for (f in e) e[f] && (n && (n += " "), n += f);
-  return n;
-}
-function clsx() {
-  for (var e, t, f = 0, n = "", o2 = arguments.length; f < o2; f++) (e = arguments[f]) && (t = r$1(e)) && (n && (n += " "), n += t);
-  return n;
-}
-const falsyToString = (value) => typeof value === "boolean" ? `${value}` : value === 0 ? "0" : value;
-const cx = clsx;
-const cva = (base, config) => (props) => {
-  var _config_compoundVariants;
-  if ((config === null || config === void 0 ? void 0 : config.variants) == null) return cx(base, props === null || props === void 0 ? void 0 : props.class, props === null || props === void 0 ? void 0 : props.className);
-  const { variants, defaultVariants } = config;
-  const getVariantClassNames = Object.keys(variants).map((variant) => {
-    const variantProp = props === null || props === void 0 ? void 0 : props[variant];
-    const defaultVariantProp = defaultVariants === null || defaultVariants === void 0 ? void 0 : defaultVariants[variant];
-    if (variantProp === null) return null;
-    const variantKey = falsyToString(variantProp) || falsyToString(defaultVariantProp);
-    return variants[variant][variantKey];
-  });
-  const propsWithoutUndefined = props && Object.entries(props).reduce((acc, param) => {
-    let [key, value] = param;
-    if (value === void 0) {
-      return acc;
-    }
-    acc[key] = value;
-    return acc;
-  }, {});
-  const getCompoundVariantClassNames = config === null || config === void 0 ? void 0 : (_config_compoundVariants = config.compoundVariants) === null || _config_compoundVariants === void 0 ? void 0 : _config_compoundVariants.reduce((acc, param) => {
-    let { class: cvClass, className: cvClassName, ...compoundVariantOptions } = param;
-    return Object.entries(compoundVariantOptions).every((param2) => {
-      let [key, value] = param2;
-      return Array.isArray(value) ? value.includes({
-        ...defaultVariants,
-        ...propsWithoutUndefined
-      }[key]) : {
-        ...defaultVariants,
-        ...propsWithoutUndefined
-      }[key] === value;
-    }) ? [
-      ...acc,
-      cvClass,
-      cvClassName
-    ] : acc;
-  }, []);
-  return cx(base, getVariantClassNames, getCompoundVariantClassNames, props === null || props === void 0 ? void 0 : props.class, props === null || props === void 0 ? void 0 : props.className);
-};
-const CLASS_PART_SEPARATOR = "-";
-const createClassGroupUtils = (config) => {
-  const classMap = createClassMap(config);
-  const {
-    conflictingClassGroups,
-    conflictingClassGroupModifiers
-  } = config;
-  const getClassGroupId = (className) => {
-    const classParts = className.split(CLASS_PART_SEPARATOR);
-    if (classParts[0] === "" && classParts.length !== 1) {
-      classParts.shift();
-    }
-    return getGroupRecursive(classParts, classMap) || getGroupIdForArbitraryProperty(className);
-  };
-  const getConflictingClassGroupIds = (classGroupId, hasPostfixModifier) => {
-    const conflicts = conflictingClassGroups[classGroupId] || [];
-    if (hasPostfixModifier && conflictingClassGroupModifiers[classGroupId]) {
-      return [...conflicts, ...conflictingClassGroupModifiers[classGroupId]];
-    }
-    return conflicts;
-  };
-  return {
-    getClassGroupId,
-    getConflictingClassGroupIds
-  };
-};
-const getGroupRecursive = (classParts, classPartObject) => {
-  var _a3;
-  if (classParts.length === 0) {
-    return classPartObject.classGroupId;
-  }
-  const currentClassPart = classParts[0];
-  const nextClassPartObject = classPartObject.nextPart.get(currentClassPart);
-  const classGroupFromNextClassPart = nextClassPartObject ? getGroupRecursive(classParts.slice(1), nextClassPartObject) : void 0;
-  if (classGroupFromNextClassPart) {
-    return classGroupFromNextClassPart;
-  }
-  if (classPartObject.validators.length === 0) {
-    return void 0;
-  }
-  const classRest = classParts.join(CLASS_PART_SEPARATOR);
-  return (_a3 = classPartObject.validators.find(({
-    validator
-  }) => validator(classRest))) == null ? void 0 : _a3.classGroupId;
-};
-const arbitraryPropertyRegex = /^\[(.+)\]$/;
-const getGroupIdForArbitraryProperty = (className) => {
-  if (arbitraryPropertyRegex.test(className)) {
-    const arbitraryPropertyClassName = arbitraryPropertyRegex.exec(className)[1];
-    const property = arbitraryPropertyClassName == null ? void 0 : arbitraryPropertyClassName.substring(0, arbitraryPropertyClassName.indexOf(":"));
-    if (property) {
-      return "arbitrary.." + property;
-    }
-  }
-};
-const createClassMap = (config) => {
-  const {
-    theme,
-    prefix: prefix2
-  } = config;
-  const classMap = {
-    nextPart: /* @__PURE__ */ new Map(),
-    validators: []
-  };
-  const prefixedClassGroupEntries = getPrefixedClassGroupEntries(Object.entries(config.classGroups), prefix2);
-  prefixedClassGroupEntries.forEach(([classGroupId, classGroup]) => {
-    processClassesRecursively(classGroup, classMap, classGroupId, theme);
-  });
-  return classMap;
-};
-const processClassesRecursively = (classGroup, classPartObject, classGroupId, theme) => {
-  classGroup.forEach((classDefinition) => {
-    if (typeof classDefinition === "string") {
-      const classPartObjectToEdit = classDefinition === "" ? classPartObject : getPart(classPartObject, classDefinition);
-      classPartObjectToEdit.classGroupId = classGroupId;
-      return;
-    }
-    if (typeof classDefinition === "function") {
-      if (isThemeGetter(classDefinition)) {
-        processClassesRecursively(classDefinition(theme), classPartObject, classGroupId, theme);
-        return;
-      }
-      classPartObject.validators.push({
-        validator: classDefinition,
-        classGroupId
-      });
-      return;
-    }
-    Object.entries(classDefinition).forEach(([key, classGroup2]) => {
-      processClassesRecursively(classGroup2, getPart(classPartObject, key), classGroupId, theme);
-    });
-  });
-};
-const getPart = (classPartObject, path) => {
-  let currentClassPartObject = classPartObject;
-  path.split(CLASS_PART_SEPARATOR).forEach((pathPart) => {
-    if (!currentClassPartObject.nextPart.has(pathPart)) {
-      currentClassPartObject.nextPart.set(pathPart, {
-        nextPart: /* @__PURE__ */ new Map(),
-        validators: []
-      });
-    }
-    currentClassPartObject = currentClassPartObject.nextPart.get(pathPart);
-  });
-  return currentClassPartObject;
-};
-const isThemeGetter = (func) => func.isThemeGetter;
-const getPrefixedClassGroupEntries = (classGroupEntries, prefix2) => {
-  if (!prefix2) {
-    return classGroupEntries;
-  }
-  return classGroupEntries.map(([classGroupId, classGroup]) => {
-    const prefixedClassGroup = classGroup.map((classDefinition) => {
-      if (typeof classDefinition === "string") {
-        return prefix2 + classDefinition;
-      }
-      if (typeof classDefinition === "object") {
-        return Object.fromEntries(Object.entries(classDefinition).map(([key, value]) => [prefix2 + key, value]));
-      }
-      return classDefinition;
-    });
-    return [classGroupId, prefixedClassGroup];
-  });
-};
-const createLruCache = (maxCacheSize) => {
-  if (maxCacheSize < 1) {
-    return {
-      get: () => void 0,
-      set: () => {
-      }
-    };
-  }
-  let cacheSize = 0;
-  let cache = /* @__PURE__ */ new Map();
-  let previousCache = /* @__PURE__ */ new Map();
-  const update = (key, value) => {
-    cache.set(key, value);
-    cacheSize++;
-    if (cacheSize > maxCacheSize) {
-      cacheSize = 0;
-      previousCache = cache;
-      cache = /* @__PURE__ */ new Map();
-    }
-  };
-  return {
-    get(key) {
-      let value = cache.get(key);
-      if (value !== void 0) {
-        return value;
-      }
-      if ((value = previousCache.get(key)) !== void 0) {
-        update(key, value);
-        return value;
-      }
-    },
-    set(key, value) {
-      if (cache.has(key)) {
-        cache.set(key, value);
-      } else {
-        update(key, value);
-      }
-    }
-  };
-};
-const IMPORTANT_MODIFIER = "!";
-const createParseClassName = (config) => {
-  const {
-    separator,
-    experimentalParseClassName
-  } = config;
-  const isSeparatorSingleCharacter = separator.length === 1;
-  const firstSeparatorCharacter = separator[0];
-  const separatorLength = separator.length;
-  const parseClassName = (className) => {
-    const modifiers = [];
-    let bracketDepth = 0;
-    let modifierStart = 0;
-    let postfixModifierPosition;
-    for (let index2 = 0; index2 < className.length; index2++) {
-      let currentCharacter = className[index2];
-      if (bracketDepth === 0) {
-        if (currentCharacter === firstSeparatorCharacter && (isSeparatorSingleCharacter || className.slice(index2, index2 + separatorLength) === separator)) {
-          modifiers.push(className.slice(modifierStart, index2));
-          modifierStart = index2 + separatorLength;
-          continue;
-        }
-        if (currentCharacter === "/") {
-          postfixModifierPosition = index2;
-          continue;
-        }
-      }
-      if (currentCharacter === "[") {
-        bracketDepth++;
-      } else if (currentCharacter === "]") {
-        bracketDepth--;
-      }
-    }
-    const baseClassNameWithImportantModifier = modifiers.length === 0 ? className : className.substring(modifierStart);
-    const hasImportantModifier = baseClassNameWithImportantModifier.startsWith(IMPORTANT_MODIFIER);
-    const baseClassName = hasImportantModifier ? baseClassNameWithImportantModifier.substring(1) : baseClassNameWithImportantModifier;
-    const maybePostfixModifierPosition = postfixModifierPosition && postfixModifierPosition > modifierStart ? postfixModifierPosition - modifierStart : void 0;
-    return {
-      modifiers,
-      hasImportantModifier,
-      baseClassName,
-      maybePostfixModifierPosition
-    };
-  };
-  if (experimentalParseClassName) {
-    return (className) => experimentalParseClassName({
-      className,
-      parseClassName
-    });
-  }
-  return parseClassName;
-};
-const sortModifiers = (modifiers) => {
-  if (modifiers.length <= 1) {
-    return modifiers;
-  }
-  const sortedModifiers = [];
-  let unsortedModifiers = [];
-  modifiers.forEach((modifier) => {
-    const isArbitraryVariant = modifier[0] === "[";
-    if (isArbitraryVariant) {
-      sortedModifiers.push(...unsortedModifiers.sort(), modifier);
-      unsortedModifiers = [];
-    } else {
-      unsortedModifiers.push(modifier);
-    }
-  });
-  sortedModifiers.push(...unsortedModifiers.sort());
-  return sortedModifiers;
-};
-const createConfigUtils = (config) => ({
-  cache: createLruCache(config.cacheSize),
-  parseClassName: createParseClassName(config),
-  ...createClassGroupUtils(config)
-});
-const SPLIT_CLASSES_REGEX = /\s+/;
-const mergeClassList = (classList, configUtils) => {
-  const {
-    parseClassName,
-    getClassGroupId,
-    getConflictingClassGroupIds
-  } = configUtils;
-  const classGroupsInConflict = [];
-  const classNames = classList.trim().split(SPLIT_CLASSES_REGEX);
-  let result = "";
-  for (let index2 = classNames.length - 1; index2 >= 0; index2 -= 1) {
-    const originalClassName = classNames[index2];
-    const {
-      modifiers,
-      hasImportantModifier,
-      baseClassName,
-      maybePostfixModifierPosition
-    } = parseClassName(originalClassName);
-    let hasPostfixModifier = Boolean(maybePostfixModifierPosition);
-    let classGroupId = getClassGroupId(hasPostfixModifier ? baseClassName.substring(0, maybePostfixModifierPosition) : baseClassName);
-    if (!classGroupId) {
-      if (!hasPostfixModifier) {
-        result = originalClassName + (result.length > 0 ? " " + result : result);
-        continue;
-      }
-      classGroupId = getClassGroupId(baseClassName);
-      if (!classGroupId) {
-        result = originalClassName + (result.length > 0 ? " " + result : result);
-        continue;
-      }
-      hasPostfixModifier = false;
-    }
-    const variantModifier = sortModifiers(modifiers).join(":");
-    const modifierId = hasImportantModifier ? variantModifier + IMPORTANT_MODIFIER : variantModifier;
-    const classId = modifierId + classGroupId;
-    if (classGroupsInConflict.includes(classId)) {
-      continue;
-    }
-    classGroupsInConflict.push(classId);
-    const conflictGroups = getConflictingClassGroupIds(classGroupId, hasPostfixModifier);
-    for (let i = 0; i < conflictGroups.length; ++i) {
-      const group = conflictGroups[i];
-      classGroupsInConflict.push(modifierId + group);
-    }
-    result = originalClassName + (result.length > 0 ? " " + result : result);
-  }
-  return result;
-};
-function twJoin() {
-  let index2 = 0;
-  let argument;
-  let resolvedValue;
-  let string = "";
-  while (index2 < arguments.length) {
-    if (argument = arguments[index2++]) {
-      if (resolvedValue = toValue(argument)) {
-        string && (string += " ");
-        string += resolvedValue;
-      }
-    }
-  }
-  return string;
-}
-const toValue = (mix2) => {
-  if (typeof mix2 === "string") {
-    return mix2;
-  }
-  let resolvedValue;
-  let string = "";
-  for (let k2 = 0; k2 < mix2.length; k2++) {
-    if (mix2[k2]) {
-      if (resolvedValue = toValue(mix2[k2])) {
-        string && (string += " ");
-        string += resolvedValue;
-      }
-    }
-  }
-  return string;
-};
-function createTailwindMerge(createConfigFirst, ...createConfigRest) {
-  let configUtils;
-  let cacheGet;
-  let cacheSet;
-  let functionToCall = initTailwindMerge;
-  function initTailwindMerge(classList) {
-    const config = createConfigRest.reduce((previousConfig, createConfigCurrent) => createConfigCurrent(previousConfig), createConfigFirst());
-    configUtils = createConfigUtils(config);
-    cacheGet = configUtils.cache.get;
-    cacheSet = configUtils.cache.set;
-    functionToCall = tailwindMerge;
-    return tailwindMerge(classList);
-  }
-  function tailwindMerge(classList) {
-    const cachedResult = cacheGet(classList);
-    if (cachedResult) {
-      return cachedResult;
-    }
-    const result = mergeClassList(classList, configUtils);
-    cacheSet(classList, result);
-    return result;
-  }
-  return function callTailwindMerge() {
-    return functionToCall(twJoin.apply(null, arguments));
-  };
-}
-const fromTheme = (key) => {
-  const themeGetter = (theme) => theme[key] || [];
-  themeGetter.isThemeGetter = true;
-  return themeGetter;
-};
-const arbitraryValueRegex = /^\[(?:([a-z-]+):)?(.+)\]$/i;
-const fractionRegex = /^\d+\/\d+$/;
-const stringLengths = /* @__PURE__ */ new Set(["px", "full", "screen"]);
-const tshirtUnitRegex = /^(\d+(\.\d+)?)?(xs|sm|md|lg|xl)$/;
-const lengthUnitRegex = /\d+(%|px|r?em|[sdl]?v([hwib]|min|max)|pt|pc|in|cm|mm|cap|ch|ex|r?lh|cq(w|h|i|b|min|max))|\b(calc|min|max|clamp)\(.+\)|^0$/;
-const colorFunctionRegex = /^(rgba?|hsla?|hwb|(ok)?(lab|lch))\(.+\)$/;
-const shadowRegex = /^(inset_)?-?((\d+)?\.?(\d+)[a-z]+|0)_-?((\d+)?\.?(\d+)[a-z]+|0)/;
-const imageRegex = /^(url|image|image-set|cross-fade|element|(repeating-)?(linear|radial|conic)-gradient)\(.+\)$/;
-const isLength = (value) => isNumber(value) || stringLengths.has(value) || fractionRegex.test(value);
-const isArbitraryLength = (value) => getIsArbitraryValue(value, "length", isLengthOnly);
-const isNumber = (value) => Boolean(value) && !Number.isNaN(Number(value));
-const isArbitraryNumber = (value) => getIsArbitraryValue(value, "number", isNumber);
-const isInteger = (value) => Boolean(value) && Number.isInteger(Number(value));
-const isPercent = (value) => value.endsWith("%") && isNumber(value.slice(0, -1));
-const isArbitraryValue = (value) => arbitraryValueRegex.test(value);
-const isTshirtSize = (value) => tshirtUnitRegex.test(value);
-const sizeLabels = /* @__PURE__ */ new Set(["length", "size", "percentage"]);
-const isArbitrarySize = (value) => getIsArbitraryValue(value, sizeLabels, isNever);
-const isArbitraryPosition = (value) => getIsArbitraryValue(value, "position", isNever);
-const imageLabels = /* @__PURE__ */ new Set(["image", "url"]);
-const isArbitraryImage = (value) => getIsArbitraryValue(value, imageLabels, isImage);
-const isArbitraryShadow = (value) => getIsArbitraryValue(value, "", isShadow);
-const isAny = () => true;
-const getIsArbitraryValue = (value, label, testValue) => {
-  const result = arbitraryValueRegex.exec(value);
-  if (result) {
-    if (result[1]) {
-      return typeof label === "string" ? result[1] === label : label.has(result[1]);
-    }
-    return testValue(result[2]);
-  }
-  return false;
-};
-const isLengthOnly = (value) => (
-  // `colorFunctionRegex` check is necessary because color functions can have percentages in them which which would be incorrectly classified as lengths.
-  // For example, `hsl(0 0% 0%)` would be classified as a length without this check.
-  // I could also use lookbehind assertion in `lengthUnitRegex` but that isn't supported widely enough.
-  lengthUnitRegex.test(value) && !colorFunctionRegex.test(value)
-);
-const isNever = () => false;
-const isShadow = (value) => shadowRegex.test(value);
-const isImage = (value) => imageRegex.test(value);
-const getDefaultConfig = () => {
-  const colors = fromTheme("colors");
-  const spacing = fromTheme("spacing");
-  const blur = fromTheme("blur");
-  const brightness = fromTheme("brightness");
-  const borderColor = fromTheme("borderColor");
-  const borderRadius = fromTheme("borderRadius");
-  const borderSpacing = fromTheme("borderSpacing");
-  const borderWidth = fromTheme("borderWidth");
-  const contrast = fromTheme("contrast");
-  const grayscale = fromTheme("grayscale");
-  const hueRotate = fromTheme("hueRotate");
-  const invert2 = fromTheme("invert");
-  const gap = fromTheme("gap");
-  const gradientColorStops = fromTheme("gradientColorStops");
-  const gradientColorStopPositions = fromTheme("gradientColorStopPositions");
-  const inset = fromTheme("inset");
-  const margin = fromTheme("margin");
-  const opacity = fromTheme("opacity");
-  const padding = fromTheme("padding");
-  const saturate = fromTheme("saturate");
-  const scale2 = fromTheme("scale");
-  const sepia = fromTheme("sepia");
-  const skew = fromTheme("skew");
-  const space = fromTheme("space");
-  const translate = fromTheme("translate");
-  const getOverscroll = () => ["auto", "contain", "none"];
-  const getOverflow = () => ["auto", "hidden", "clip", "visible", "scroll"];
-  const getSpacingWithAutoAndArbitrary = () => ["auto", isArbitraryValue, spacing];
-  const getSpacingWithArbitrary = () => [isArbitraryValue, spacing];
-  const getLengthWithEmptyAndArbitrary = () => ["", isLength, isArbitraryLength];
-  const getNumberWithAutoAndArbitrary = () => ["auto", isNumber, isArbitraryValue];
-  const getPositions = () => ["bottom", "center", "left", "left-bottom", "left-top", "right", "right-bottom", "right-top", "top"];
-  const getLineStyles = () => ["solid", "dashed", "dotted", "double", "none"];
-  const getBlendModes = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"];
-  const getAlign = () => ["start", "end", "center", "between", "around", "evenly", "stretch"];
-  const getZeroAndEmpty = () => ["", "0", isArbitraryValue];
-  const getBreaks = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"];
-  const getNumberAndArbitrary = () => [isNumber, isArbitraryValue];
-  return {
-    cacheSize: 500,
-    separator: ":",
-    theme: {
-      colors: [isAny],
-      spacing: [isLength, isArbitraryLength],
-      blur: ["none", "", isTshirtSize, isArbitraryValue],
-      brightness: getNumberAndArbitrary(),
-      borderColor: [colors],
-      borderRadius: ["none", "", "full", isTshirtSize, isArbitraryValue],
-      borderSpacing: getSpacingWithArbitrary(),
-      borderWidth: getLengthWithEmptyAndArbitrary(),
-      contrast: getNumberAndArbitrary(),
-      grayscale: getZeroAndEmpty(),
-      hueRotate: getNumberAndArbitrary(),
-      invert: getZeroAndEmpty(),
-      gap: getSpacingWithArbitrary(),
-      gradientColorStops: [colors],
-      gradientColorStopPositions: [isPercent, isArbitraryLength],
-      inset: getSpacingWithAutoAndArbitrary(),
-      margin: getSpacingWithAutoAndArbitrary(),
-      opacity: getNumberAndArbitrary(),
-      padding: getSpacingWithArbitrary(),
-      saturate: getNumberAndArbitrary(),
-      scale: getNumberAndArbitrary(),
-      sepia: getZeroAndEmpty(),
-      skew: getNumberAndArbitrary(),
-      space: getSpacingWithArbitrary(),
-      translate: getSpacingWithArbitrary()
-    },
-    classGroups: {
-      // Layout
-      /**
-       * Aspect Ratio
-       * @see https://tailwindcss.com/docs/aspect-ratio
-       */
-      aspect: [{
-        aspect: ["auto", "square", "video", isArbitraryValue]
-      }],
-      /**
-       * Container
-       * @see https://tailwindcss.com/docs/container
-       */
-      container: ["container"],
-      /**
-       * Columns
-       * @see https://tailwindcss.com/docs/columns
-       */
-      columns: [{
-        columns: [isTshirtSize]
-      }],
-      /**
-       * Break After
-       * @see https://tailwindcss.com/docs/break-after
-       */
-      "break-after": [{
-        "break-after": getBreaks()
-      }],
-      /**
-       * Break Before
-       * @see https://tailwindcss.com/docs/break-before
-       */
-      "break-before": [{
-        "break-before": getBreaks()
-      }],
-      /**
-       * Break Inside
-       * @see https://tailwindcss.com/docs/break-inside
-       */
-      "break-inside": [{
-        "break-inside": ["auto", "avoid", "avoid-page", "avoid-column"]
-      }],
-      /**
-       * Box Decoration Break
-       * @see https://tailwindcss.com/docs/box-decoration-break
-       */
-      "box-decoration": [{
-        "box-decoration": ["slice", "clone"]
-      }],
-      /**
-       * Box Sizing
-       * @see https://tailwindcss.com/docs/box-sizing
-       */
-      box: [{
-        box: ["border", "content"]
-      }],
-      /**
-       * Display
-       * @see https://tailwindcss.com/docs/display
-       */
-      display: ["block", "inline-block", "inline", "flex", "inline-flex", "table", "inline-table", "table-caption", "table-cell", "table-column", "table-column-group", "table-footer-group", "table-header-group", "table-row-group", "table-row", "flow-root", "grid", "inline-grid", "contents", "list-item", "hidden"],
-      /**
-       * Floats
-       * @see https://tailwindcss.com/docs/float
-       */
-      float: [{
-        float: ["right", "left", "none", "start", "end"]
-      }],
-      /**
-       * Clear
-       * @see https://tailwindcss.com/docs/clear
-       */
-      clear: [{
-        clear: ["left", "right", "both", "none", "start", "end"]
-      }],
-      /**
-       * Isolation
-       * @see https://tailwindcss.com/docs/isolation
-       */
-      isolation: ["isolate", "isolation-auto"],
-      /**
-       * Object Fit
-       * @see https://tailwindcss.com/docs/object-fit
-       */
-      "object-fit": [{
-        object: ["contain", "cover", "fill", "none", "scale-down"]
-      }],
-      /**
-       * Object Position
-       * @see https://tailwindcss.com/docs/object-position
-       */
-      "object-position": [{
-        object: [...getPositions(), isArbitraryValue]
-      }],
-      /**
-       * Overflow
-       * @see https://tailwindcss.com/docs/overflow
-       */
-      overflow: [{
-        overflow: getOverflow()
-      }],
-      /**
-       * Overflow X
-       * @see https://tailwindcss.com/docs/overflow
-       */
-      "overflow-x": [{
-        "overflow-x": getOverflow()
-      }],
-      /**
-       * Overflow Y
-       * @see https://tailwindcss.com/docs/overflow
-       */
-      "overflow-y": [{
-        "overflow-y": getOverflow()
-      }],
-      /**
-       * Overscroll Behavior
-       * @see https://tailwindcss.com/docs/overscroll-behavior
-       */
-      overscroll: [{
-        overscroll: getOverscroll()
-      }],
-      /**
-       * Overscroll Behavior X
-       * @see https://tailwindcss.com/docs/overscroll-behavior
-       */
-      "overscroll-x": [{
-        "overscroll-x": getOverscroll()
-      }],
-      /**
-       * Overscroll Behavior Y
-       * @see https://tailwindcss.com/docs/overscroll-behavior
-       */
-      "overscroll-y": [{
-        "overscroll-y": getOverscroll()
-      }],
-      /**
-       * Position
-       * @see https://tailwindcss.com/docs/position
-       */
-      position: ["static", "fixed", "absolute", "relative", "sticky"],
-      /**
-       * Top / Right / Bottom / Left
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      inset: [{
-        inset: [inset]
-      }],
-      /**
-       * Right / Left
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      "inset-x": [{
-        "inset-x": [inset]
-      }],
-      /**
-       * Top / Bottom
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      "inset-y": [{
-        "inset-y": [inset]
-      }],
-      /**
-       * Start
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      start: [{
-        start: [inset]
-      }],
-      /**
-       * End
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      end: [{
-        end: [inset]
-      }],
-      /**
-       * Top
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      top: [{
-        top: [inset]
-      }],
-      /**
-       * Right
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      right: [{
-        right: [inset]
-      }],
-      /**
-       * Bottom
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      bottom: [{
-        bottom: [inset]
-      }],
-      /**
-       * Left
-       * @see https://tailwindcss.com/docs/top-right-bottom-left
-       */
-      left: [{
-        left: [inset]
-      }],
-      /**
-       * Visibility
-       * @see https://tailwindcss.com/docs/visibility
-       */
-      visibility: ["visible", "invisible", "collapse"],
-      /**
-       * Z-Index
-       * @see https://tailwindcss.com/docs/z-index
-       */
-      z: [{
-        z: ["auto", isInteger, isArbitraryValue]
-      }],
-      // Flexbox and Grid
-      /**
-       * Flex Basis
-       * @see https://tailwindcss.com/docs/flex-basis
-       */
-      basis: [{
-        basis: getSpacingWithAutoAndArbitrary()
-      }],
-      /**
-       * Flex Direction
-       * @see https://tailwindcss.com/docs/flex-direction
-       */
-      "flex-direction": [{
-        flex: ["row", "row-reverse", "col", "col-reverse"]
-      }],
-      /**
-       * Flex Wrap
-       * @see https://tailwindcss.com/docs/flex-wrap
-       */
-      "flex-wrap": [{
-        flex: ["wrap", "wrap-reverse", "nowrap"]
-      }],
-      /**
-       * Flex
-       * @see https://tailwindcss.com/docs/flex
-       */
-      flex: [{
-        flex: ["1", "auto", "initial", "none", isArbitraryValue]
-      }],
-      /**
-       * Flex Grow
-       * @see https://tailwindcss.com/docs/flex-grow
-       */
-      grow: [{
-        grow: getZeroAndEmpty()
-      }],
-      /**
-       * Flex Shrink
-       * @see https://tailwindcss.com/docs/flex-shrink
-       */
-      shrink: [{
-        shrink: getZeroAndEmpty()
-      }],
-      /**
-       * Order
-       * @see https://tailwindcss.com/docs/order
-       */
-      order: [{
-        order: ["first", "last", "none", isInteger, isArbitraryValue]
-      }],
-      /**
-       * Grid Template Columns
-       * @see https://tailwindcss.com/docs/grid-template-columns
-       */
-      "grid-cols": [{
-        "grid-cols": [isAny]
-      }],
-      /**
-       * Grid Column Start / End
-       * @see https://tailwindcss.com/docs/grid-column
-       */
-      "col-start-end": [{
-        col: ["auto", {
-          span: ["full", isInteger, isArbitraryValue]
-        }, isArbitraryValue]
-      }],
-      /**
-       * Grid Column Start
-       * @see https://tailwindcss.com/docs/grid-column
-       */
-      "col-start": [{
-        "col-start": getNumberWithAutoAndArbitrary()
-      }],
-      /**
-       * Grid Column End
-       * @see https://tailwindcss.com/docs/grid-column
-       */
-      "col-end": [{
-        "col-end": getNumberWithAutoAndArbitrary()
-      }],
-      /**
-       * Grid Template Rows
-       * @see https://tailwindcss.com/docs/grid-template-rows
-       */
-      "grid-rows": [{
-        "grid-rows": [isAny]
-      }],
-      /**
-       * Grid Row Start / End
-       * @see https://tailwindcss.com/docs/grid-row
-       */
-      "row-start-end": [{
-        row: ["auto", {
-          span: [isInteger, isArbitraryValue]
-        }, isArbitraryValue]
-      }],
-      /**
-       * Grid Row Start
-       * @see https://tailwindcss.com/docs/grid-row
-       */
-      "row-start": [{
-        "row-start": getNumberWithAutoAndArbitrary()
-      }],
-      /**
-       * Grid Row End
-       * @see https://tailwindcss.com/docs/grid-row
-       */
-      "row-end": [{
-        "row-end": getNumberWithAutoAndArbitrary()
-      }],
-      /**
-       * Grid Auto Flow
-       * @see https://tailwindcss.com/docs/grid-auto-flow
-       */
-      "grid-flow": [{
-        "grid-flow": ["row", "col", "dense", "row-dense", "col-dense"]
-      }],
-      /**
-       * Grid Auto Columns
-       * @see https://tailwindcss.com/docs/grid-auto-columns
-       */
-      "auto-cols": [{
-        "auto-cols": ["auto", "min", "max", "fr", isArbitraryValue]
-      }],
-      /**
-       * Grid Auto Rows
-       * @see https://tailwindcss.com/docs/grid-auto-rows
-       */
-      "auto-rows": [{
-        "auto-rows": ["auto", "min", "max", "fr", isArbitraryValue]
-      }],
-      /**
-       * Gap
-       * @see https://tailwindcss.com/docs/gap
-       */
-      gap: [{
-        gap: [gap]
-      }],
-      /**
-       * Gap X
-       * @see https://tailwindcss.com/docs/gap
-       */
-      "gap-x": [{
-        "gap-x": [gap]
-      }],
-      /**
-       * Gap Y
-       * @see https://tailwindcss.com/docs/gap
-       */
-      "gap-y": [{
-        "gap-y": [gap]
-      }],
-      /**
-       * Justify Content
-       * @see https://tailwindcss.com/docs/justify-content
-       */
-      "justify-content": [{
-        justify: ["normal", ...getAlign()]
-      }],
-      /**
-       * Justify Items
-       * @see https://tailwindcss.com/docs/justify-items
-       */
-      "justify-items": [{
-        "justify-items": ["start", "end", "center", "stretch"]
-      }],
-      /**
-       * Justify Self
-       * @see https://tailwindcss.com/docs/justify-self
-       */
-      "justify-self": [{
-        "justify-self": ["auto", "start", "end", "center", "stretch"]
-      }],
-      /**
-       * Align Content
-       * @see https://tailwindcss.com/docs/align-content
-       */
-      "align-content": [{
-        content: ["normal", ...getAlign(), "baseline"]
-      }],
-      /**
-       * Align Items
-       * @see https://tailwindcss.com/docs/align-items
-       */
-      "align-items": [{
-        items: ["start", "end", "center", "baseline", "stretch"]
-      }],
-      /**
-       * Align Self
-       * @see https://tailwindcss.com/docs/align-self
-       */
-      "align-self": [{
-        self: ["auto", "start", "end", "center", "stretch", "baseline"]
-      }],
-      /**
-       * Place Content
-       * @see https://tailwindcss.com/docs/place-content
-       */
-      "place-content": [{
-        "place-content": [...getAlign(), "baseline"]
-      }],
-      /**
-       * Place Items
-       * @see https://tailwindcss.com/docs/place-items
-       */
-      "place-items": [{
-        "place-items": ["start", "end", "center", "baseline", "stretch"]
-      }],
-      /**
-       * Place Self
-       * @see https://tailwindcss.com/docs/place-self
-       */
-      "place-self": [{
-        "place-self": ["auto", "start", "end", "center", "stretch"]
-      }],
-      // Spacing
-      /**
-       * Padding
-       * @see https://tailwindcss.com/docs/padding
-       */
-      p: [{
-        p: [padding]
-      }],
-      /**
-       * Padding X
-       * @see https://tailwindcss.com/docs/padding
-       */
-      px: [{
-        px: [padding]
-      }],
-      /**
-       * Padding Y
-       * @see https://tailwindcss.com/docs/padding
-       */
-      py: [{
-        py: [padding]
-      }],
-      /**
-       * Padding Start
-       * @see https://tailwindcss.com/docs/padding
-       */
-      ps: [{
-        ps: [padding]
-      }],
-      /**
-       * Padding End
-       * @see https://tailwindcss.com/docs/padding
-       */
-      pe: [{
-        pe: [padding]
-      }],
-      /**
-       * Padding Top
-       * @see https://tailwindcss.com/docs/padding
-       */
-      pt: [{
-        pt: [padding]
-      }],
-      /**
-       * Padding Right
-       * @see https://tailwindcss.com/docs/padding
-       */
-      pr: [{
-        pr: [padding]
-      }],
-      /**
-       * Padding Bottom
-       * @see https://tailwindcss.com/docs/padding
-       */
-      pb: [{
-        pb: [padding]
-      }],
-      /**
-       * Padding Left
-       * @see https://tailwindcss.com/docs/padding
-       */
-      pl: [{
-        pl: [padding]
-      }],
-      /**
-       * Margin
-       * @see https://tailwindcss.com/docs/margin
-       */
-      m: [{
-        m: [margin]
-      }],
-      /**
-       * Margin X
-       * @see https://tailwindcss.com/docs/margin
-       */
-      mx: [{
-        mx: [margin]
-      }],
-      /**
-       * Margin Y
-       * @see https://tailwindcss.com/docs/margin
-       */
-      my: [{
-        my: [margin]
-      }],
-      /**
-       * Margin Start
-       * @see https://tailwindcss.com/docs/margin
-       */
-      ms: [{
-        ms: [margin]
-      }],
-      /**
-       * Margin End
-       * @see https://tailwindcss.com/docs/margin
-       */
-      me: [{
-        me: [margin]
-      }],
-      /**
-       * Margin Top
-       * @see https://tailwindcss.com/docs/margin
-       */
-      mt: [{
-        mt: [margin]
-      }],
-      /**
-       * Margin Right
-       * @see https://tailwindcss.com/docs/margin
-       */
-      mr: [{
-        mr: [margin]
-      }],
-      /**
-       * Margin Bottom
-       * @see https://tailwindcss.com/docs/margin
-       */
-      mb: [{
-        mb: [margin]
-      }],
-      /**
-       * Margin Left
-       * @see https://tailwindcss.com/docs/margin
-       */
-      ml: [{
-        ml: [margin]
-      }],
-      /**
-       * Space Between X
-       * @see https://tailwindcss.com/docs/space
-       */
-      "space-x": [{
-        "space-x": [space]
-      }],
-      /**
-       * Space Between X Reverse
-       * @see https://tailwindcss.com/docs/space
-       */
-      "space-x-reverse": ["space-x-reverse"],
-      /**
-       * Space Between Y
-       * @see https://tailwindcss.com/docs/space
-       */
-      "space-y": [{
-        "space-y": [space]
-      }],
-      /**
-       * Space Between Y Reverse
-       * @see https://tailwindcss.com/docs/space
-       */
-      "space-y-reverse": ["space-y-reverse"],
-      // Sizing
-      /**
-       * Width
-       * @see https://tailwindcss.com/docs/width
-       */
-      w: [{
-        w: ["auto", "min", "max", "fit", "svw", "lvw", "dvw", isArbitraryValue, spacing]
-      }],
-      /**
-       * Min-Width
-       * @see https://tailwindcss.com/docs/min-width
-       */
-      "min-w": [{
-        "min-w": [isArbitraryValue, spacing, "min", "max", "fit"]
-      }],
-      /**
-       * Max-Width
-       * @see https://tailwindcss.com/docs/max-width
-       */
-      "max-w": [{
-        "max-w": [isArbitraryValue, spacing, "none", "full", "min", "max", "fit", "prose", {
-          screen: [isTshirtSize]
-        }, isTshirtSize]
-      }],
-      /**
-       * Height
-       * @see https://tailwindcss.com/docs/height
-       */
-      h: [{
-        h: [isArbitraryValue, spacing, "auto", "min", "max", "fit", "svh", "lvh", "dvh"]
-      }],
-      /**
-       * Min-Height
-       * @see https://tailwindcss.com/docs/min-height
-       */
-      "min-h": [{
-        "min-h": [isArbitraryValue, spacing, "min", "max", "fit", "svh", "lvh", "dvh"]
-      }],
-      /**
-       * Max-Height
-       * @see https://tailwindcss.com/docs/max-height
-       */
-      "max-h": [{
-        "max-h": [isArbitraryValue, spacing, "min", "max", "fit", "svh", "lvh", "dvh"]
-      }],
-      /**
-       * Size
-       * @see https://tailwindcss.com/docs/size
-       */
-      size: [{
-        size: [isArbitraryValue, spacing, "auto", "min", "max", "fit"]
-      }],
-      // Typography
-      /**
-       * Font Size
-       * @see https://tailwindcss.com/docs/font-size
-       */
-      "font-size": [{
-        text: ["base", isTshirtSize, isArbitraryLength]
-      }],
-      /**
-       * Font Smoothing
-       * @see https://tailwindcss.com/docs/font-smoothing
-       */
-      "font-smoothing": ["antialiased", "subpixel-antialiased"],
-      /**
-       * Font Style
-       * @see https://tailwindcss.com/docs/font-style
-       */
-      "font-style": ["italic", "not-italic"],
-      /**
-       * Font Weight
-       * @see https://tailwindcss.com/docs/font-weight
-       */
-      "font-weight": [{
-        font: ["thin", "extralight", "light", "normal", "medium", "semibold", "bold", "extrabold", "black", isArbitraryNumber]
-      }],
-      /**
-       * Font Family
-       * @see https://tailwindcss.com/docs/font-family
-       */
-      "font-family": [{
-        font: [isAny]
-      }],
-      /**
-       * Font Variant Numeric
-       * @see https://tailwindcss.com/docs/font-variant-numeric
-       */
-      "fvn-normal": ["normal-nums"],
-      /**
-       * Font Variant Numeric
-       * @see https://tailwindcss.com/docs/font-variant-numeric
-       */
-      "fvn-ordinal": ["ordinal"],
-      /**
-       * Font Variant Numeric
-       * @see https://tailwindcss.com/docs/font-variant-numeric
-       */
-      "fvn-slashed-zero": ["slashed-zero"],
-      /**
-       * Font Variant Numeric
-       * @see https://tailwindcss.com/docs/font-variant-numeric
-       */
-      "fvn-figure": ["lining-nums", "oldstyle-nums"],
-      /**
-       * Font Variant Numeric
-       * @see https://tailwindcss.com/docs/font-variant-numeric
-       */
-      "fvn-spacing": ["proportional-nums", "tabular-nums"],
-      /**
-       * Font Variant Numeric
-       * @see https://tailwindcss.com/docs/font-variant-numeric
-       */
-      "fvn-fraction": ["diagonal-fractions", "stacked-fractions"],
-      /**
-       * Letter Spacing
-       * @see https://tailwindcss.com/docs/letter-spacing
-       */
-      tracking: [{
-        tracking: ["tighter", "tight", "normal", "wide", "wider", "widest", isArbitraryValue]
-      }],
-      /**
-       * Line Clamp
-       * @see https://tailwindcss.com/docs/line-clamp
-       */
-      "line-clamp": [{
-        "line-clamp": ["none", isNumber, isArbitraryNumber]
-      }],
-      /**
-       * Line Height
-       * @see https://tailwindcss.com/docs/line-height
-       */
-      leading: [{
-        leading: ["none", "tight", "snug", "normal", "relaxed", "loose", isLength, isArbitraryValue]
-      }],
-      /**
-       * List Style Image
-       * @see https://tailwindcss.com/docs/list-style-image
-       */
-      "list-image": [{
-        "list-image": ["none", isArbitraryValue]
-      }],
-      /**
-       * List Style Type
-       * @see https://tailwindcss.com/docs/list-style-type
-       */
-      "list-style-type": [{
-        list: ["none", "disc", "decimal", isArbitraryValue]
-      }],
-      /**
-       * List Style Position
-       * @see https://tailwindcss.com/docs/list-style-position
-       */
-      "list-style-position": [{
-        list: ["inside", "outside"]
-      }],
-      /**
-       * Placeholder Color
-       * @deprecated since Tailwind CSS v3.0.0
-       * @see https://tailwindcss.com/docs/placeholder-color
-       */
-      "placeholder-color": [{
-        placeholder: [colors]
-      }],
-      /**
-       * Placeholder Opacity
-       * @see https://tailwindcss.com/docs/placeholder-opacity
-       */
-      "placeholder-opacity": [{
-        "placeholder-opacity": [opacity]
-      }],
-      /**
-       * Text Alignment
-       * @see https://tailwindcss.com/docs/text-align
-       */
-      "text-alignment": [{
-        text: ["left", "center", "right", "justify", "start", "end"]
-      }],
-      /**
-       * Text Color
-       * @see https://tailwindcss.com/docs/text-color
-       */
-      "text-color": [{
-        text: [colors]
-      }],
-      /**
-       * Text Opacity
-       * @see https://tailwindcss.com/docs/text-opacity
-       */
-      "text-opacity": [{
-        "text-opacity": [opacity]
-      }],
-      /**
-       * Text Decoration
-       * @see https://tailwindcss.com/docs/text-decoration
-       */
-      "text-decoration": ["underline", "overline", "line-through", "no-underline"],
-      /**
-       * Text Decoration Style
-       * @see https://tailwindcss.com/docs/text-decoration-style
-       */
-      "text-decoration-style": [{
-        decoration: [...getLineStyles(), "wavy"]
-      }],
-      /**
-       * Text Decoration Thickness
-       * @see https://tailwindcss.com/docs/text-decoration-thickness
-       */
-      "text-decoration-thickness": [{
-        decoration: ["auto", "from-font", isLength, isArbitraryLength]
-      }],
-      /**
-       * Text Underline Offset
-       * @see https://tailwindcss.com/docs/text-underline-offset
-       */
-      "underline-offset": [{
-        "underline-offset": ["auto", isLength, isArbitraryValue]
-      }],
-      /**
-       * Text Decoration Color
-       * @see https://tailwindcss.com/docs/text-decoration-color
-       */
-      "text-decoration-color": [{
-        decoration: [colors]
-      }],
-      /**
-       * Text Transform
-       * @see https://tailwindcss.com/docs/text-transform
-       */
-      "text-transform": ["uppercase", "lowercase", "capitalize", "normal-case"],
-      /**
-       * Text Overflow
-       * @see https://tailwindcss.com/docs/text-overflow
-       */
-      "text-overflow": ["truncate", "text-ellipsis", "text-clip"],
-      /**
-       * Text Wrap
-       * @see https://tailwindcss.com/docs/text-wrap
-       */
-      "text-wrap": [{
-        text: ["wrap", "nowrap", "balance", "pretty"]
-      }],
-      /**
-       * Text Indent
-       * @see https://tailwindcss.com/docs/text-indent
-       */
-      indent: [{
-        indent: getSpacingWithArbitrary()
-      }],
-      /**
-       * Vertical Alignment
-       * @see https://tailwindcss.com/docs/vertical-align
-       */
-      "vertical-align": [{
-        align: ["baseline", "top", "middle", "bottom", "text-top", "text-bottom", "sub", "super", isArbitraryValue]
-      }],
-      /**
-       * Whitespace
-       * @see https://tailwindcss.com/docs/whitespace
-       */
-      whitespace: [{
-        whitespace: ["normal", "nowrap", "pre", "pre-line", "pre-wrap", "break-spaces"]
-      }],
-      /**
-       * Word Break
-       * @see https://tailwindcss.com/docs/word-break
-       */
-      break: [{
-        break: ["normal", "words", "all", "keep"]
-      }],
-      /**
-       * Hyphens
-       * @see https://tailwindcss.com/docs/hyphens
-       */
-      hyphens: [{
-        hyphens: ["none", "manual", "auto"]
-      }],
-      /**
-       * Content
-       * @see https://tailwindcss.com/docs/content
-       */
-      content: [{
-        content: ["none", isArbitraryValue]
-      }],
-      // Backgrounds
-      /**
-       * Background Attachment
-       * @see https://tailwindcss.com/docs/background-attachment
-       */
-      "bg-attachment": [{
-        bg: ["fixed", "local", "scroll"]
-      }],
-      /**
-       * Background Clip
-       * @see https://tailwindcss.com/docs/background-clip
-       */
-      "bg-clip": [{
-        "bg-clip": ["border", "padding", "content", "text"]
-      }],
-      /**
-       * Background Opacity
-       * @deprecated since Tailwind CSS v3.0.0
-       * @see https://tailwindcss.com/docs/background-opacity
-       */
-      "bg-opacity": [{
-        "bg-opacity": [opacity]
-      }],
-      /**
-       * Background Origin
-       * @see https://tailwindcss.com/docs/background-origin
-       */
-      "bg-origin": [{
-        "bg-origin": ["border", "padding", "content"]
-      }],
-      /**
-       * Background Position
-       * @see https://tailwindcss.com/docs/background-position
-       */
-      "bg-position": [{
-        bg: [...getPositions(), isArbitraryPosition]
-      }],
-      /**
-       * Background Repeat
-       * @see https://tailwindcss.com/docs/background-repeat
-       */
-      "bg-repeat": [{
-        bg: ["no-repeat", {
-          repeat: ["", "x", "y", "round", "space"]
-        }]
-      }],
-      /**
-       * Background Size
-       * @see https://tailwindcss.com/docs/background-size
-       */
-      "bg-size": [{
-        bg: ["auto", "cover", "contain", isArbitrarySize]
-      }],
-      /**
-       * Background Image
-       * @see https://tailwindcss.com/docs/background-image
-       */
-      "bg-image": [{
-        bg: ["none", {
-          "gradient-to": ["t", "tr", "r", "br", "b", "bl", "l", "tl"]
-        }, isArbitraryImage]
-      }],
-      /**
-       * Background Color
-       * @see https://tailwindcss.com/docs/background-color
-       */
-      "bg-color": [{
-        bg: [colors]
-      }],
-      /**
-       * Gradient Color Stops From Position
-       * @see https://tailwindcss.com/docs/gradient-color-stops
-       */
-      "gradient-from-pos": [{
-        from: [gradientColorStopPositions]
-      }],
-      /**
-       * Gradient Color Stops Via Position
-       * @see https://tailwindcss.com/docs/gradient-color-stops
-       */
-      "gradient-via-pos": [{
-        via: [gradientColorStopPositions]
-      }],
-      /**
-       * Gradient Color Stops To Position
-       * @see https://tailwindcss.com/docs/gradient-color-stops
-       */
-      "gradient-to-pos": [{
-        to: [gradientColorStopPositions]
-      }],
-      /**
-       * Gradient Color Stops From
-       * @see https://tailwindcss.com/docs/gradient-color-stops
-       */
-      "gradient-from": [{
-        from: [gradientColorStops]
-      }],
-      /**
-       * Gradient Color Stops Via
-       * @see https://tailwindcss.com/docs/gradient-color-stops
-       */
-      "gradient-via": [{
-        via: [gradientColorStops]
-      }],
-      /**
-       * Gradient Color Stops To
-       * @see https://tailwindcss.com/docs/gradient-color-stops
-       */
-      "gradient-to": [{
-        to: [gradientColorStops]
-      }],
-      // Borders
-      /**
-       * Border Radius
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      rounded: [{
-        rounded: [borderRadius]
-      }],
-      /**
-       * Border Radius Start
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-s": [{
-        "rounded-s": [borderRadius]
-      }],
-      /**
-       * Border Radius End
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-e": [{
-        "rounded-e": [borderRadius]
-      }],
-      /**
-       * Border Radius Top
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-t": [{
-        "rounded-t": [borderRadius]
-      }],
-      /**
-       * Border Radius Right
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-r": [{
-        "rounded-r": [borderRadius]
-      }],
-      /**
-       * Border Radius Bottom
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-b": [{
-        "rounded-b": [borderRadius]
-      }],
-      /**
-       * Border Radius Left
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-l": [{
-        "rounded-l": [borderRadius]
-      }],
-      /**
-       * Border Radius Start Start
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-ss": [{
-        "rounded-ss": [borderRadius]
-      }],
-      /**
-       * Border Radius Start End
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-se": [{
-        "rounded-se": [borderRadius]
-      }],
-      /**
-       * Border Radius End End
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-ee": [{
-        "rounded-ee": [borderRadius]
-      }],
-      /**
-       * Border Radius End Start
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-es": [{
-        "rounded-es": [borderRadius]
-      }],
-      /**
-       * Border Radius Top Left
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-tl": [{
-        "rounded-tl": [borderRadius]
-      }],
-      /**
-       * Border Radius Top Right
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-tr": [{
-        "rounded-tr": [borderRadius]
-      }],
-      /**
-       * Border Radius Bottom Right
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-br": [{
-        "rounded-br": [borderRadius]
-      }],
-      /**
-       * Border Radius Bottom Left
-       * @see https://tailwindcss.com/docs/border-radius
-       */
-      "rounded-bl": [{
-        "rounded-bl": [borderRadius]
-      }],
-      /**
-       * Border Width
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w": [{
-        border: [borderWidth]
-      }],
-      /**
-       * Border Width X
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w-x": [{
-        "border-x": [borderWidth]
-      }],
-      /**
-       * Border Width Y
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w-y": [{
-        "border-y": [borderWidth]
-      }],
-      /**
-       * Border Width Start
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w-s": [{
-        "border-s": [borderWidth]
-      }],
-      /**
-       * Border Width End
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w-e": [{
-        "border-e": [borderWidth]
-      }],
-      /**
-       * Border Width Top
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w-t": [{
-        "border-t": [borderWidth]
-      }],
-      /**
-       * Border Width Right
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w-r": [{
-        "border-r": [borderWidth]
-      }],
-      /**
-       * Border Width Bottom
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w-b": [{
-        "border-b": [borderWidth]
-      }],
-      /**
-       * Border Width Left
-       * @see https://tailwindcss.com/docs/border-width
-       */
-      "border-w-l": [{
-        "border-l": [borderWidth]
-      }],
-      /**
-       * Border Opacity
-       * @see https://tailwindcss.com/docs/border-opacity
-       */
-      "border-opacity": [{
-        "border-opacity": [opacity]
-      }],
-      /**
-       * Border Style
-       * @see https://tailwindcss.com/docs/border-style
-       */
-      "border-style": [{
-        border: [...getLineStyles(), "hidden"]
-      }],
-      /**
-       * Divide Width X
-       * @see https://tailwindcss.com/docs/divide-width
-       */
-      "divide-x": [{
-        "divide-x": [borderWidth]
-      }],
-      /**
-       * Divide Width X Reverse
-       * @see https://tailwindcss.com/docs/divide-width
-       */
-      "divide-x-reverse": ["divide-x-reverse"],
-      /**
-       * Divide Width Y
-       * @see https://tailwindcss.com/docs/divide-width
-       */
-      "divide-y": [{
-        "divide-y": [borderWidth]
-      }],
-      /**
-       * Divide Width Y Reverse
-       * @see https://tailwindcss.com/docs/divide-width
-       */
-      "divide-y-reverse": ["divide-y-reverse"],
-      /**
-       * Divide Opacity
-       * @see https://tailwindcss.com/docs/divide-opacity
-       */
-      "divide-opacity": [{
-        "divide-opacity": [opacity]
-      }],
-      /**
-       * Divide Style
-       * @see https://tailwindcss.com/docs/divide-style
-       */
-      "divide-style": [{
-        divide: getLineStyles()
-      }],
-      /**
-       * Border Color
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color": [{
-        border: [borderColor]
-      }],
-      /**
-       * Border Color X
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color-x": [{
-        "border-x": [borderColor]
-      }],
-      /**
-       * Border Color Y
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color-y": [{
-        "border-y": [borderColor]
-      }],
-      /**
-       * Border Color S
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color-s": [{
-        "border-s": [borderColor]
-      }],
-      /**
-       * Border Color E
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color-e": [{
-        "border-e": [borderColor]
-      }],
-      /**
-       * Border Color Top
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color-t": [{
-        "border-t": [borderColor]
-      }],
-      /**
-       * Border Color Right
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color-r": [{
-        "border-r": [borderColor]
-      }],
-      /**
-       * Border Color Bottom
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color-b": [{
-        "border-b": [borderColor]
-      }],
-      /**
-       * Border Color Left
-       * @see https://tailwindcss.com/docs/border-color
-       */
-      "border-color-l": [{
-        "border-l": [borderColor]
-      }],
-      /**
-       * Divide Color
-       * @see https://tailwindcss.com/docs/divide-color
-       */
-      "divide-color": [{
-        divide: [borderColor]
-      }],
-      /**
-       * Outline Style
-       * @see https://tailwindcss.com/docs/outline-style
-       */
-      "outline-style": [{
-        outline: ["", ...getLineStyles()]
-      }],
-      /**
-       * Outline Offset
-       * @see https://tailwindcss.com/docs/outline-offset
-       */
-      "outline-offset": [{
-        "outline-offset": [isLength, isArbitraryValue]
-      }],
-      /**
-       * Outline Width
-       * @see https://tailwindcss.com/docs/outline-width
-       */
-      "outline-w": [{
-        outline: [isLength, isArbitraryLength]
-      }],
-      /**
-       * Outline Color
-       * @see https://tailwindcss.com/docs/outline-color
-       */
-      "outline-color": [{
-        outline: [colors]
-      }],
-      /**
-       * Ring Width
-       * @see https://tailwindcss.com/docs/ring-width
-       */
-      "ring-w": [{
-        ring: getLengthWithEmptyAndArbitrary()
-      }],
-      /**
-       * Ring Width Inset
-       * @see https://tailwindcss.com/docs/ring-width
-       */
-      "ring-w-inset": ["ring-inset"],
-      /**
-       * Ring Color
-       * @see https://tailwindcss.com/docs/ring-color
-       */
-      "ring-color": [{
-        ring: [colors]
-      }],
-      /**
-       * Ring Opacity
-       * @see https://tailwindcss.com/docs/ring-opacity
-       */
-      "ring-opacity": [{
-        "ring-opacity": [opacity]
-      }],
-      /**
-       * Ring Offset Width
-       * @see https://tailwindcss.com/docs/ring-offset-width
-       */
-      "ring-offset-w": [{
-        "ring-offset": [isLength, isArbitraryLength]
-      }],
-      /**
-       * Ring Offset Color
-       * @see https://tailwindcss.com/docs/ring-offset-color
-       */
-      "ring-offset-color": [{
-        "ring-offset": [colors]
-      }],
-      // Effects
-      /**
-       * Box Shadow
-       * @see https://tailwindcss.com/docs/box-shadow
-       */
-      shadow: [{
-        shadow: ["", "inner", "none", isTshirtSize, isArbitraryShadow]
-      }],
-      /**
-       * Box Shadow Color
-       * @see https://tailwindcss.com/docs/box-shadow-color
-       */
-      "shadow-color": [{
-        shadow: [isAny]
-      }],
-      /**
-       * Opacity
-       * @see https://tailwindcss.com/docs/opacity
-       */
-      opacity: [{
-        opacity: [opacity]
-      }],
-      /**
-       * Mix Blend Mode
-       * @see https://tailwindcss.com/docs/mix-blend-mode
-       */
-      "mix-blend": [{
-        "mix-blend": [...getBlendModes(), "plus-lighter", "plus-darker"]
-      }],
-      /**
-       * Background Blend Mode
-       * @see https://tailwindcss.com/docs/background-blend-mode
-       */
-      "bg-blend": [{
-        "bg-blend": getBlendModes()
-      }],
-      // Filters
-      /**
-       * Filter
-       * @deprecated since Tailwind CSS v3.0.0
-       * @see https://tailwindcss.com/docs/filter
-       */
-      filter: [{
-        filter: ["", "none"]
-      }],
-      /**
-       * Blur
-       * @see https://tailwindcss.com/docs/blur
-       */
-      blur: [{
-        blur: [blur]
-      }],
-      /**
-       * Brightness
-       * @see https://tailwindcss.com/docs/brightness
-       */
-      brightness: [{
-        brightness: [brightness]
-      }],
-      /**
-       * Contrast
-       * @see https://tailwindcss.com/docs/contrast
-       */
-      contrast: [{
-        contrast: [contrast]
-      }],
-      /**
-       * Drop Shadow
-       * @see https://tailwindcss.com/docs/drop-shadow
-       */
-      "drop-shadow": [{
-        "drop-shadow": ["", "none", isTshirtSize, isArbitraryValue]
-      }],
-      /**
-       * Grayscale
-       * @see https://tailwindcss.com/docs/grayscale
-       */
-      grayscale: [{
-        grayscale: [grayscale]
-      }],
-      /**
-       * Hue Rotate
-       * @see https://tailwindcss.com/docs/hue-rotate
-       */
-      "hue-rotate": [{
-        "hue-rotate": [hueRotate]
-      }],
-      /**
-       * Invert
-       * @see https://tailwindcss.com/docs/invert
-       */
-      invert: [{
-        invert: [invert2]
-      }],
-      /**
-       * Saturate
-       * @see https://tailwindcss.com/docs/saturate
-       */
-      saturate: [{
-        saturate: [saturate]
-      }],
-      /**
-       * Sepia
-       * @see https://tailwindcss.com/docs/sepia
-       */
-      sepia: [{
-        sepia: [sepia]
-      }],
-      /**
-       * Backdrop Filter
-       * @deprecated since Tailwind CSS v3.0.0
-       * @see https://tailwindcss.com/docs/backdrop-filter
-       */
-      "backdrop-filter": [{
-        "backdrop-filter": ["", "none"]
-      }],
-      /**
-       * Backdrop Blur
-       * @see https://tailwindcss.com/docs/backdrop-blur
-       */
-      "backdrop-blur": [{
-        "backdrop-blur": [blur]
-      }],
-      /**
-       * Backdrop Brightness
-       * @see https://tailwindcss.com/docs/backdrop-brightness
-       */
-      "backdrop-brightness": [{
-        "backdrop-brightness": [brightness]
-      }],
-      /**
-       * Backdrop Contrast
-       * @see https://tailwindcss.com/docs/backdrop-contrast
-       */
-      "backdrop-contrast": [{
-        "backdrop-contrast": [contrast]
-      }],
-      /**
-       * Backdrop Grayscale
-       * @see https://tailwindcss.com/docs/backdrop-grayscale
-       */
-      "backdrop-grayscale": [{
-        "backdrop-grayscale": [grayscale]
-      }],
-      /**
-       * Backdrop Hue Rotate
-       * @see https://tailwindcss.com/docs/backdrop-hue-rotate
-       */
-      "backdrop-hue-rotate": [{
-        "backdrop-hue-rotate": [hueRotate]
-      }],
-      /**
-       * Backdrop Invert
-       * @see https://tailwindcss.com/docs/backdrop-invert
-       */
-      "backdrop-invert": [{
-        "backdrop-invert": [invert2]
-      }],
-      /**
-       * Backdrop Opacity
-       * @see https://tailwindcss.com/docs/backdrop-opacity
-       */
-      "backdrop-opacity": [{
-        "backdrop-opacity": [opacity]
-      }],
-      /**
-       * Backdrop Saturate
-       * @see https://tailwindcss.com/docs/backdrop-saturate
-       */
-      "backdrop-saturate": [{
-        "backdrop-saturate": [saturate]
-      }],
-      /**
-       * Backdrop Sepia
-       * @see https://tailwindcss.com/docs/backdrop-sepia
-       */
-      "backdrop-sepia": [{
-        "backdrop-sepia": [sepia]
-      }],
-      // Tables
-      /**
-       * Border Collapse
-       * @see https://tailwindcss.com/docs/border-collapse
-       */
-      "border-collapse": [{
-        border: ["collapse", "separate"]
-      }],
-      /**
-       * Border Spacing
-       * @see https://tailwindcss.com/docs/border-spacing
-       */
-      "border-spacing": [{
-        "border-spacing": [borderSpacing]
-      }],
-      /**
-       * Border Spacing X
-       * @see https://tailwindcss.com/docs/border-spacing
-       */
-      "border-spacing-x": [{
-        "border-spacing-x": [borderSpacing]
-      }],
-      /**
-       * Border Spacing Y
-       * @see https://tailwindcss.com/docs/border-spacing
-       */
-      "border-spacing-y": [{
-        "border-spacing-y": [borderSpacing]
-      }],
-      /**
-       * Table Layout
-       * @see https://tailwindcss.com/docs/table-layout
-       */
-      "table-layout": [{
-        table: ["auto", "fixed"]
-      }],
-      /**
-       * Caption Side
-       * @see https://tailwindcss.com/docs/caption-side
-       */
-      caption: [{
-        caption: ["top", "bottom"]
-      }],
-      // Transitions and Animation
-      /**
-       * Tranisition Property
-       * @see https://tailwindcss.com/docs/transition-property
-       */
-      transition: [{
-        transition: ["none", "all", "", "colors", "opacity", "shadow", "transform", isArbitraryValue]
-      }],
-      /**
-       * Transition Duration
-       * @see https://tailwindcss.com/docs/transition-duration
-       */
-      duration: [{
-        duration: getNumberAndArbitrary()
-      }],
-      /**
-       * Transition Timing Function
-       * @see https://tailwindcss.com/docs/transition-timing-function
-       */
-      ease: [{
-        ease: ["linear", "in", "out", "in-out", isArbitraryValue]
-      }],
-      /**
-       * Transition Delay
-       * @see https://tailwindcss.com/docs/transition-delay
-       */
-      delay: [{
-        delay: getNumberAndArbitrary()
-      }],
-      /**
-       * Animation
-       * @see https://tailwindcss.com/docs/animation
-       */
-      animate: [{
-        animate: ["none", "spin", "ping", "pulse", "bounce", isArbitraryValue]
-      }],
-      // Transforms
-      /**
-       * Transform
-       * @see https://tailwindcss.com/docs/transform
-       */
-      transform: [{
-        transform: ["", "gpu", "none"]
-      }],
-      /**
-       * Scale
-       * @see https://tailwindcss.com/docs/scale
-       */
-      scale: [{
-        scale: [scale2]
-      }],
-      /**
-       * Scale X
-       * @see https://tailwindcss.com/docs/scale
-       */
-      "scale-x": [{
-        "scale-x": [scale2]
-      }],
-      /**
-       * Scale Y
-       * @see https://tailwindcss.com/docs/scale
-       */
-      "scale-y": [{
-        "scale-y": [scale2]
-      }],
-      /**
-       * Rotate
-       * @see https://tailwindcss.com/docs/rotate
-       */
-      rotate: [{
-        rotate: [isInteger, isArbitraryValue]
-      }],
-      /**
-       * Translate X
-       * @see https://tailwindcss.com/docs/translate
-       */
-      "translate-x": [{
-        "translate-x": [translate]
-      }],
-      /**
-       * Translate Y
-       * @see https://tailwindcss.com/docs/translate
-       */
-      "translate-y": [{
-        "translate-y": [translate]
-      }],
-      /**
-       * Skew X
-       * @see https://tailwindcss.com/docs/skew
-       */
-      "skew-x": [{
-        "skew-x": [skew]
-      }],
-      /**
-       * Skew Y
-       * @see https://tailwindcss.com/docs/skew
-       */
-      "skew-y": [{
-        "skew-y": [skew]
-      }],
-      /**
-       * Transform Origin
-       * @see https://tailwindcss.com/docs/transform-origin
-       */
-      "transform-origin": [{
-        origin: ["center", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left", "top-left", isArbitraryValue]
-      }],
-      // Interactivity
-      /**
-       * Accent Color
-       * @see https://tailwindcss.com/docs/accent-color
-       */
-      accent: [{
-        accent: ["auto", colors]
-      }],
-      /**
-       * Appearance
-       * @see https://tailwindcss.com/docs/appearance
-       */
-      appearance: [{
-        appearance: ["none", "auto"]
-      }],
-      /**
-       * Cursor
-       * @see https://tailwindcss.com/docs/cursor
-       */
-      cursor: [{
-        cursor: ["auto", "default", "pointer", "wait", "text", "move", "help", "not-allowed", "none", "context-menu", "progress", "cell", "crosshair", "vertical-text", "alias", "copy", "no-drop", "grab", "grabbing", "all-scroll", "col-resize", "row-resize", "n-resize", "e-resize", "s-resize", "w-resize", "ne-resize", "nw-resize", "se-resize", "sw-resize", "ew-resize", "ns-resize", "nesw-resize", "nwse-resize", "zoom-in", "zoom-out", isArbitraryValue]
-      }],
-      /**
-       * Caret Color
-       * @see https://tailwindcss.com/docs/just-in-time-mode#caret-color-utilities
-       */
-      "caret-color": [{
-        caret: [colors]
-      }],
-      /**
-       * Pointer Events
-       * @see https://tailwindcss.com/docs/pointer-events
-       */
-      "pointer-events": [{
-        "pointer-events": ["none", "auto"]
-      }],
-      /**
-       * Resize
-       * @see https://tailwindcss.com/docs/resize
-       */
-      resize: [{
-        resize: ["none", "y", "x", ""]
-      }],
-      /**
-       * Scroll Behavior
-       * @see https://tailwindcss.com/docs/scroll-behavior
-       */
-      "scroll-behavior": [{
-        scroll: ["auto", "smooth"]
-      }],
-      /**
-       * Scroll Margin
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-m": [{
-        "scroll-m": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Margin X
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-mx": [{
-        "scroll-mx": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Margin Y
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-my": [{
-        "scroll-my": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Margin Start
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-ms": [{
-        "scroll-ms": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Margin End
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-me": [{
-        "scroll-me": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Margin Top
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-mt": [{
-        "scroll-mt": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Margin Right
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-mr": [{
-        "scroll-mr": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Margin Bottom
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-mb": [{
-        "scroll-mb": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Margin Left
-       * @see https://tailwindcss.com/docs/scroll-margin
-       */
-      "scroll-ml": [{
-        "scroll-ml": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-p": [{
-        "scroll-p": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding X
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-px": [{
-        "scroll-px": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding Y
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-py": [{
-        "scroll-py": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding Start
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-ps": [{
-        "scroll-ps": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding End
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-pe": [{
-        "scroll-pe": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding Top
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-pt": [{
-        "scroll-pt": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding Right
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-pr": [{
-        "scroll-pr": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding Bottom
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-pb": [{
-        "scroll-pb": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Padding Left
-       * @see https://tailwindcss.com/docs/scroll-padding
-       */
-      "scroll-pl": [{
-        "scroll-pl": getSpacingWithArbitrary()
-      }],
-      /**
-       * Scroll Snap Align
-       * @see https://tailwindcss.com/docs/scroll-snap-align
-       */
-      "snap-align": [{
-        snap: ["start", "end", "center", "align-none"]
-      }],
-      /**
-       * Scroll Snap Stop
-       * @see https://tailwindcss.com/docs/scroll-snap-stop
-       */
-      "snap-stop": [{
-        snap: ["normal", "always"]
-      }],
-      /**
-       * Scroll Snap Type
-       * @see https://tailwindcss.com/docs/scroll-snap-type
-       */
-      "snap-type": [{
-        snap: ["none", "x", "y", "both"]
-      }],
-      /**
-       * Scroll Snap Type Strictness
-       * @see https://tailwindcss.com/docs/scroll-snap-type
-       */
-      "snap-strictness": [{
-        snap: ["mandatory", "proximity"]
-      }],
-      /**
-       * Touch Action
-       * @see https://tailwindcss.com/docs/touch-action
-       */
-      touch: [{
-        touch: ["auto", "none", "manipulation"]
-      }],
-      /**
-       * Touch Action X
-       * @see https://tailwindcss.com/docs/touch-action
-       */
-      "touch-x": [{
-        "touch-pan": ["x", "left", "right"]
-      }],
-      /**
-       * Touch Action Y
-       * @see https://tailwindcss.com/docs/touch-action
-       */
-      "touch-y": [{
-        "touch-pan": ["y", "up", "down"]
-      }],
-      /**
-       * Touch Action Pinch Zoom
-       * @see https://tailwindcss.com/docs/touch-action
-       */
-      "touch-pz": ["touch-pinch-zoom"],
-      /**
-       * User Select
-       * @see https://tailwindcss.com/docs/user-select
-       */
-      select: [{
-        select: ["none", "text", "all", "auto"]
-      }],
-      /**
-       * Will Change
-       * @see https://tailwindcss.com/docs/will-change
-       */
-      "will-change": [{
-        "will-change": ["auto", "scroll", "contents", "transform", isArbitraryValue]
-      }],
-      // SVG
-      /**
-       * Fill
-       * @see https://tailwindcss.com/docs/fill
-       */
-      fill: [{
-        fill: [colors, "none"]
-      }],
-      /**
-       * Stroke Width
-       * @see https://tailwindcss.com/docs/stroke-width
-       */
-      "stroke-w": [{
-        stroke: [isLength, isArbitraryLength, isArbitraryNumber]
-      }],
-      /**
-       * Stroke
-       * @see https://tailwindcss.com/docs/stroke
-       */
-      stroke: [{
-        stroke: [colors, "none"]
-      }],
-      // Accessibility
-      /**
-       * Screen Readers
-       * @see https://tailwindcss.com/docs/screen-readers
-       */
-      sr: ["sr-only", "not-sr-only"],
-      /**
-       * Forced Color Adjust
-       * @see https://tailwindcss.com/docs/forced-color-adjust
-       */
-      "forced-color-adjust": [{
-        "forced-color-adjust": ["auto", "none"]
-      }]
-    },
-    conflictingClassGroups: {
-      overflow: ["overflow-x", "overflow-y"],
-      overscroll: ["overscroll-x", "overscroll-y"],
-      inset: ["inset-x", "inset-y", "start", "end", "top", "right", "bottom", "left"],
-      "inset-x": ["right", "left"],
-      "inset-y": ["top", "bottom"],
-      flex: ["basis", "grow", "shrink"],
-      gap: ["gap-x", "gap-y"],
-      p: ["px", "py", "ps", "pe", "pt", "pr", "pb", "pl"],
-      px: ["pr", "pl"],
-      py: ["pt", "pb"],
-      m: ["mx", "my", "ms", "me", "mt", "mr", "mb", "ml"],
-      mx: ["mr", "ml"],
-      my: ["mt", "mb"],
-      size: ["w", "h"],
-      "font-size": ["leading"],
-      "fvn-normal": ["fvn-ordinal", "fvn-slashed-zero", "fvn-figure", "fvn-spacing", "fvn-fraction"],
-      "fvn-ordinal": ["fvn-normal"],
-      "fvn-slashed-zero": ["fvn-normal"],
-      "fvn-figure": ["fvn-normal"],
-      "fvn-spacing": ["fvn-normal"],
-      "fvn-fraction": ["fvn-normal"],
-      "line-clamp": ["display", "overflow"],
-      rounded: ["rounded-s", "rounded-e", "rounded-t", "rounded-r", "rounded-b", "rounded-l", "rounded-ss", "rounded-se", "rounded-ee", "rounded-es", "rounded-tl", "rounded-tr", "rounded-br", "rounded-bl"],
-      "rounded-s": ["rounded-ss", "rounded-es"],
-      "rounded-e": ["rounded-se", "rounded-ee"],
-      "rounded-t": ["rounded-tl", "rounded-tr"],
-      "rounded-r": ["rounded-tr", "rounded-br"],
-      "rounded-b": ["rounded-br", "rounded-bl"],
-      "rounded-l": ["rounded-tl", "rounded-bl"],
-      "border-spacing": ["border-spacing-x", "border-spacing-y"],
-      "border-w": ["border-w-s", "border-w-e", "border-w-t", "border-w-r", "border-w-b", "border-w-l"],
-      "border-w-x": ["border-w-r", "border-w-l"],
-      "border-w-y": ["border-w-t", "border-w-b"],
-      "border-color": ["border-color-s", "border-color-e", "border-color-t", "border-color-r", "border-color-b", "border-color-l"],
-      "border-color-x": ["border-color-r", "border-color-l"],
-      "border-color-y": ["border-color-t", "border-color-b"],
-      "scroll-m": ["scroll-mx", "scroll-my", "scroll-ms", "scroll-me", "scroll-mt", "scroll-mr", "scroll-mb", "scroll-ml"],
-      "scroll-mx": ["scroll-mr", "scroll-ml"],
-      "scroll-my": ["scroll-mt", "scroll-mb"],
-      "scroll-p": ["scroll-px", "scroll-py", "scroll-ps", "scroll-pe", "scroll-pt", "scroll-pr", "scroll-pb", "scroll-pl"],
-      "scroll-px": ["scroll-pr", "scroll-pl"],
-      "scroll-py": ["scroll-pt", "scroll-pb"],
-      touch: ["touch-x", "touch-y", "touch-pz"],
-      "touch-x": ["touch"],
-      "touch-y": ["touch"],
-      "touch-pz": ["touch"]
-    },
-    conflictingClassGroupModifiers: {
-      "font-size": ["leading"]
-    }
-  };
-};
-const twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
-function cn(...inputs) {
-  return twMerge(clsx(inputs));
-}
-const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        outline: "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-        secondary: "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline"
-      },
-      size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9"
-      }
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default"
-    }
-  }
-);
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
+function Dialog({
   ...props
 }) {
-  const Comp = asChild ? Slot$1 : "button";
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Comp,
-    {
-      "data-slot": "button",
-      className: cn(buttonVariants({ variant, size, className })),
-      ...props
-    }
-  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$2, { "data-slot": "dialog", ...props });
 }
-function AlertDialog({
+function DialogPortal({
   ...props
 }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root2, { "data-slot": "alert-dialog", ...props });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal, { "data-slot": "dialog-portal", ...props });
 }
-function AlertDialogPortal({
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal2, { "data-slot": "alert-dialog-portal", ...props });
-}
-function AlertDialogOverlay({
+function DialogOverlay({
   className,
   ...props
 }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Overlay2,
+    Overlay,
     {
-      "data-slot": "alert-dialog-overlay",
+      "data-slot": "dialog-overlay",
       className: cn(
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
         className
@@ -27924,101 +27883,172 @@ function AlertDialogOverlay({
     }
   );
 }
-function AlertDialogContent({
+function DialogContent({
   className,
+  children,
+  showCloseButton = true,
   ...props
 }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogPortal, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogOverlay, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Content2,
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogPortal, { "data-slot": "dialog-portal", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogOverlay, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Content,
       {
-        "data-slot": "alert-dialog-content",
+        "data-slot": "dialog-content",
         className: cn(
           "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
           className
         ),
-        ...props
+        ...props,
+        children: [
+          children,
+          showCloseButton && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Close,
+            {
+              "data-slot": "dialog-close",
+              className: "ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, {}),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Close" })
+              ]
+            }
+          )
+        ]
       }
     )
   ] });
 }
-function AlertDialogHeader({
-  className,
-  ...props
-}) {
+function DialogHeader({ className, ...props }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",
     {
-      "data-slot": "alert-dialog-header",
+      "data-slot": "dialog-header",
       className: cn("flex flex-col gap-2 text-center sm:text-left", className),
       ...props
     }
   );
 }
-function AlertDialogFooter({
+function DialogTitle({
   className,
   ...props
 }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
+    Title,
     {
-      "data-slot": "alert-dialog-footer",
+      "data-slot": "dialog-title",
+      className: cn("text-lg leading-none font-semibold", className),
+      ...props
+    }
+  );
+}
+var PROGRESS_NAME = "Progress";
+var DEFAULT_MAX = 100;
+var [createProgressContext] = createContextScope(PROGRESS_NAME);
+var [ProgressProvider, useProgressContext] = createProgressContext(PROGRESS_NAME);
+var Progress$1 = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeProgress,
+      value: valueProp = null,
+      max: maxProp,
+      getValueLabel = defaultGetValueLabel,
+      ...progressProps
+    } = props;
+    if ((maxProp || maxProp === 0) && !isValidMaxNumber(maxProp)) {
+      console.error(getInvalidMaxError(`${maxProp}`, "Progress"));
+    }
+    const max = isValidMaxNumber(maxProp) ? maxProp : DEFAULT_MAX;
+    if (valueProp !== null && !isValidValueNumber(valueProp, max)) {
+      console.error(getInvalidValueError(`${valueProp}`, "Progress"));
+    }
+    const value = isValidValueNumber(valueProp, max) ? valueProp : null;
+    const valueLabel = isNumber(value) ? getValueLabel(value, max) : void 0;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressProvider, { scope: __scopeProgress, value, max, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Primitive.div,
+      {
+        "aria-valuemax": max,
+        "aria-valuemin": 0,
+        "aria-valuenow": isNumber(value) ? value : void 0,
+        "aria-valuetext": valueLabel,
+        role: "progressbar",
+        "data-state": getProgressState(value, max),
+        "data-value": value ?? void 0,
+        "data-max": max,
+        ...progressProps,
+        ref: forwardedRef
+      }
+    ) });
+  }
+);
+Progress$1.displayName = PROGRESS_NAME;
+var INDICATOR_NAME = "ProgressIndicator";
+var ProgressIndicator = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeProgress, ...indicatorProps } = props;
+    const context = useProgressContext(INDICATOR_NAME, __scopeProgress);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Primitive.div,
+      {
+        "data-state": getProgressState(context.value, context.max),
+        "data-value": context.value ?? void 0,
+        "data-max": context.max,
+        ...indicatorProps,
+        ref: forwardedRef
+      }
+    );
+  }
+);
+ProgressIndicator.displayName = INDICATOR_NAME;
+function defaultGetValueLabel(value, max) {
+  return `${Math.round(value / max * 100)}%`;
+}
+function getProgressState(value, maxValue) {
+  return value == null ? "indeterminate" : value === maxValue ? "complete" : "loading";
+}
+function isNumber(value) {
+  return typeof value === "number";
+}
+function isValidMaxNumber(max) {
+  return isNumber(max) && !isNaN(max) && max > 0;
+}
+function isValidValueNumber(value, max) {
+  return isNumber(value) && !isNaN(value) && value <= max && value >= 0;
+}
+function getInvalidMaxError(propValue, componentName) {
+  return `Invalid prop \`max\` of value \`${propValue}\` supplied to \`${componentName}\`. Only numbers greater than 0 are valid max values. Defaulting to \`${DEFAULT_MAX}\`.`;
+}
+function getInvalidValueError(propValue, componentName) {
+  return `Invalid prop \`value\` of value \`${propValue}\` supplied to \`${componentName}\`. The \`value\` prop must be:
+  - a positive number
+  - less than the value passed to \`max\` (or ${DEFAULT_MAX} if no \`max\` prop is set)
+  - \`null\` or \`undefined\` if the progress is indeterminate.
+
+Defaulting to \`null\`.`;
+}
+var Root$1 = Progress$1;
+var Indicator = ProgressIndicator;
+function Progress({
+  className,
+  value,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Root$1,
+    {
+      "data-slot": "progress",
       className: cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        "bg-primary/20 relative h-2 w-full overflow-hidden rounded-full",
         className
       ),
-      ...props
-    }
-  );
-}
-function AlertDialogTitle({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Title2,
-    {
-      "data-slot": "alert-dialog-title",
-      className: cn("text-lg font-semibold", className),
-      ...props
-    }
-  );
-}
-function AlertDialogDescription({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Description2,
-    {
-      "data-slot": "alert-dialog-description",
-      className: cn("text-muted-foreground text-sm", className),
-      ...props
-    }
-  );
-}
-function AlertDialogAction({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Action,
-    {
-      className: cn(buttonVariants(), className),
-      ...props
-    }
-  );
-}
-function AlertDialogCancel({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Cancel,
-    {
-      className: cn(buttonVariants({ variant: "outline" }), className),
-      ...props
+      ...props,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Indicator,
+        {
+          "data-slot": "progress-indicator",
+          className: "bg-primary h-full w-full flex-1 transition-all",
+          style: { transform: `translateX(-${100 - (value || 0)}%)` }
+        }
+      )
     }
   );
 }
@@ -28032,17 +28062,6 @@ function Skeleton({ className, ...props }) {
     }
   );
 }
-var WatchStatus$1 = /* @__PURE__ */ ((WatchStatus2) => {
-  WatchStatus2["pending"] = "pending";
-  WatchStatus2["completed"] = "completed";
-  WatchStatus2["watching"] = "watching";
-  return WatchStatus2;
-})(WatchStatus$1 || {});
-var WatchType$1 = /* @__PURE__ */ ((WatchType2) => {
-  WatchType2["movie"] = "movie";
-  WatchType2["series"] = "series";
-  return WatchType2;
-})(WatchType$1 || {});
 var ReplicaRejectCode;
 (function(ReplicaRejectCode2) {
   ReplicaRejectCode2[ReplicaRejectCode2["SysFatal"] = 1] = "SysFatal";
@@ -38654,34 +38673,183 @@ function _createActorMethod(actor, methodName, func, blsVerify2) {
   handler.withOptions = (options) => (...args) => caller(options, ...args);
   return handler;
 }
+const index = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  ACTOR_METHOD_WITH_CERTIFICATE,
+  ACTOR_METHOD_WITH_HTTP_DETAILS,
+  Actor,
+  AgentError,
+  AnonymousIdentity,
+  CborDecodeErrorCode,
+  CborEncodeErrorCode,
+  Certificate,
+  CertificateHasTooManyDelegationsErrorCode,
+  CertificateNotAuthorizedErrorCode,
+  CertificateOutdatedErrorCode,
+  CertificateTimeErrorCode,
+  CertificateVerificationErrorCode,
+  CertifiedRejectErrorCode,
+  CreateHttpAgentErrorCode,
+  DEFAULT_POLLING_OPTIONS,
+  DerDecodeErrorCode,
+  DerDecodeLengthMismatchErrorCode,
+  DerEncodeErrorCode,
+  DerKeyLengthMismatchErrorCode,
+  DerPrefixMismatchErrorCode,
+  ED25519_OID,
+  Ed25519PublicKey: Ed25519PublicKey$1,
+  get Endpoint() {
+    return Endpoint;
+  },
+  get ErrorKindEnum() {
+    return ErrorKindEnum;
+  },
+  Expiry,
+  ExpiryJsonDeserializeErrorCode,
+  ExternalError,
+  HashTreeDecodeErrorCode,
+  HashValueErrorCode,
+  HttpAgent,
+  HttpDefaultFetchErrorCode,
+  HttpErrorCode,
+  HttpFetchErrorCode,
+  HttpV3ApiNotSupportedErrorCode,
+  IC_REQUEST_AUTH_DELEGATION_DOMAIN_SEPARATOR,
+  IC_REQUEST_DOMAIN_SEPARATOR,
+  IC_RESPONSE_DOMAIN_SEPARATOR,
+  IC_ROOT_KEY,
+  IdentityInvalidErrorCode,
+  IngressExpiryInvalidErrorCode,
+  InputError,
+  InvalidReadStateRequestErrorCode,
+  JSON_KEY_EXPIRY,
+  LookupErrorCode,
+  get LookupLabelStatus() {
+    return LookupLabelStatus;
+  },
+  get LookupPathStatus() {
+    return LookupPathStatus;
+  },
+  get LookupSubtreeStatus() {
+    return LookupSubtreeStatus;
+  },
+  MalformedLookupFoundValueErrorCode,
+  MalformedPublicKeyErrorCode,
+  MalformedSignatureErrorCode,
+  MissingCanisterIdErrorCode,
+  MissingLookupValueErrorCode,
+  MissingRootKeyErrorCode,
+  MissingSignatureErrorCode,
+  get NodeType() {
+    return NodeType;
+  },
+  Observable,
+  ObservableLog,
+  ProtocolError,
+  get QueryResponseStatus() {
+    return QueryResponseStatus;
+  },
+  QuerySignatureVerificationFailedErrorCode,
+  get ReadRequestType() {
+    return ReadRequestType;
+  },
+  RejectError,
+  get ReplicaRejectCode() {
+    return ReplicaRejectCode;
+  },
+  RequestStatusDoneNoReplyErrorCode,
+  get RequestStatusResponseStatus() {
+    return RequestStatusResponseStatus;
+  },
+  SignIdentity,
+  get SubmitRequestType() {
+    return SubmitRequestType;
+  },
+  TimeoutWaitingForResponseErrorCode,
+  TransportError,
+  TrustError,
+  UNREACHABLE_ERROR,
+  UncertifiedRejectErrorCode,
+  UncertifiedRejectUpdateErrorCode,
+  UnexpectedErrorCode,
+  UnknownError,
+  blsVerify,
+  calculateIngressExpiry,
+  check_canister_ranges,
+  constructRequest,
+  decodeLen,
+  decodeLenBytes,
+  defaultStrategy,
+  domain_sep,
+  encodeLen,
+  encodeLenBytes,
+  find_label,
+  flatten_forks,
+  hashOfMap,
+  hashValue,
+  httpHeadersTransform,
+  isV2ResponseBody,
+  isV3ResponseBody,
+  lookupResultToBuffer,
+  lookup_path,
+  lookup_subtree,
+  makeNonce,
+  makeNonceTransform,
+  pollForResponse,
+  randomNumber,
+  reconstruct,
+  requestIdOf,
+  uint8Equals,
+  uint8FromBufLike,
+  unwrapDER,
+  wrapDER
+}, Symbol.toStringTag, { value: "Module" }));
+const _CaffeineStorageCreateCertificateResult = Record({
+  "method": Text,
+  "blob_hash": Text
+});
+const _CaffeineStorageRefillInformation = Record({
+  "proposed_top_up_amount": Opt(Nat)
+});
+const _CaffeineStorageRefillResult = Record({
+  "success": Opt(Bool),
+  "topped_up_amount": Opt(Nat)
+});
+const BlobId = Text;
 const UserRole = Variant({
   "admin": Null,
   "user": Null,
   "guest": Null
 });
 const Id = Nat;
-const WatchType = Variant({
+const WatchType$1 = Variant({
   "movie": Null,
   "series": Null
 });
 const PendingItem = Record({
   "id": Id,
   "title": Text,
-  "watchType": WatchType,
+  "watchType": WatchType$1,
   "notes": Text
 });
-const WatchStatus = Variant({
+const WatchStatus$1 = Variant({
   "pending": Null,
   "completed": Null,
   "watching": Null
 });
 const WatchItem = Record({
   "id": Id,
-  "status": WatchStatus,
+  "status": WatchStatus$1,
   "title": Text,
-  "watchType": WatchType,
+  "watchType": WatchType$1,
   "pausedAtMin": Opt(Nat),
   "notes": Text
+});
+const AlbumEntry = Record({
+  "id": Id,
+  "date": Int,
+  "blobIds": Vec(BlobId),
+  "description": Text
 });
 const MealMenu = Record({
   "date": Int,
@@ -38693,13 +38861,45 @@ const MealMenu = Record({
 const UserProfile = Record({ "name": Text });
 const Time = Int;
 Service({
+  "_caffeineStorageBlobIsLive": Func(
+    [Vec(Nat8)],
+    [Bool],
+    ["query"]
+  ),
+  "_caffeineStorageBlobsToDelete": Func(
+    [],
+    [Vec(Vec(Nat8))],
+    ["query"]
+  ),
+  "_caffeineStorageConfirmBlobDeletion": Func(
+    [Vec(Vec(Nat8))],
+    [],
+    []
+  ),
+  "_caffeineStorageCreateCertificate": Func(
+    [Text],
+    [_CaffeineStorageCreateCertificateResult],
+    []
+  ),
+  "_caffeineStorageRefillCashier": Func(
+    [Opt(_CaffeineStorageRefillInformation)],
+    [_CaffeineStorageRefillResult],
+    []
+  ),
+  "_caffeineStorageUpdateGatewayPrincipals": Func([], [], []),
   "_initializeAccessControlWithSecret": Func([Text], [], []),
+  "addPhotoToAlbumEntry": Func([Int, BlobId], [], []),
   "assignCallerUserRole": Func([Principal2, UserRole], [], []),
+  "createAlbumEntry": Func([Int, Text], [Id], []),
   "createPendingItem": Func([PendingItem], [Id], []),
   "createWatchItem": Func([WatchItem], [Id], []),
+  "deleteAlbumEntry": Func([Int], [], []),
   "deleteMealMenu": Func([Int], [], []),
   "deletePendingItem": Func([Id], [], []),
+  "deletePhoto": Func([BlobId], [], []),
   "deleteWatchItem": Func([Id], [], []),
+  "getAlbumEntryByDate": Func([Int], [Opt(AlbumEntry)], ["query"]),
+  "getAllAlbumEntries": Func([], [Vec(AlbumEntry)], ["query"]),
   "getAllMealMenus": Func([], [Vec(MealMenu)], ["query"]),
   "getAllPendingItems": Func([], [Vec(PendingItem)], ["query"]),
   "getAllWatchItems": Func([], [Vec(WatchItem)], ["query"]),
@@ -38716,12 +38916,26 @@ Service({
   ),
   "getWatchItem": Func([Id], [WatchItem], ["query"]),
   "isCallerAdmin": Func([], [Bool], ["query"]),
+  "removePhotoFromAlbumEntry": Func([Int, BlobId], [], []),
   "saveCallerUserProfile": Func([UserProfile], [], []),
   "updatePendingItem": Func([Id, PendingItem], [], []),
   "updateWatchItem": Func([Id, WatchItem], [], []),
+  "uploadPhoto": Func([BlobId], [BlobId], []),
   "upsertMealMenu": Func([MealMenu], [], [])
 });
 const idlFactory = ({ IDL: IDL2 }) => {
+  const _CaffeineStorageCreateCertificateResult2 = IDL2.Record({
+    "method": IDL2.Text,
+    "blob_hash": IDL2.Text
+  });
+  const _CaffeineStorageRefillInformation2 = IDL2.Record({
+    "proposed_top_up_amount": IDL2.Opt(IDL2.Nat)
+  });
+  const _CaffeineStorageRefillResult2 = IDL2.Record({
+    "success": IDL2.Opt(IDL2.Bool),
+    "topped_up_amount": IDL2.Opt(IDL2.Nat)
+  });
+  const BlobId2 = IDL2.Text;
   const UserRole2 = IDL2.Variant({
     "admin": IDL2.Null,
     "user": IDL2.Null,
@@ -38748,6 +38962,12 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "pausedAtMin": IDL2.Opt(IDL2.Nat),
     "notes": IDL2.Text
   });
+  const AlbumEntry2 = IDL2.Record({
+    "id": Id2,
+    "date": IDL2.Int,
+    "blobIds": IDL2.Vec(BlobId2),
+    "description": IDL2.Text
+  });
   const MealMenu2 = IDL2.Record({
     "date": IDL2.Int,
     "breakfast": IDL2.Text,
@@ -38758,13 +38978,49 @@ const idlFactory = ({ IDL: IDL2 }) => {
   const UserProfile2 = IDL2.Record({ "name": IDL2.Text });
   const Time2 = IDL2.Int;
   return IDL2.Service({
+    "_caffeineStorageBlobIsLive": IDL2.Func(
+      [IDL2.Vec(IDL2.Nat8)],
+      [IDL2.Bool],
+      ["query"]
+    ),
+    "_caffeineStorageBlobsToDelete": IDL2.Func(
+      [],
+      [IDL2.Vec(IDL2.Vec(IDL2.Nat8))],
+      ["query"]
+    ),
+    "_caffeineStorageConfirmBlobDeletion": IDL2.Func(
+      [IDL2.Vec(IDL2.Vec(IDL2.Nat8))],
+      [],
+      []
+    ),
+    "_caffeineStorageCreateCertificate": IDL2.Func(
+      [IDL2.Text],
+      [_CaffeineStorageCreateCertificateResult2],
+      []
+    ),
+    "_caffeineStorageRefillCashier": IDL2.Func(
+      [IDL2.Opt(_CaffeineStorageRefillInformation2)],
+      [_CaffeineStorageRefillResult2],
+      []
+    ),
+    "_caffeineStorageUpdateGatewayPrincipals": IDL2.Func([], [], []),
     "_initializeAccessControlWithSecret": IDL2.Func([IDL2.Text], [], []),
+    "addPhotoToAlbumEntry": IDL2.Func([IDL2.Int, BlobId2], [], []),
     "assignCallerUserRole": IDL2.Func([IDL2.Principal, UserRole2], [], []),
+    "createAlbumEntry": IDL2.Func([IDL2.Int, IDL2.Text], [Id2], []),
     "createPendingItem": IDL2.Func([PendingItem2], [Id2], []),
     "createWatchItem": IDL2.Func([WatchItem2], [Id2], []),
+    "deleteAlbumEntry": IDL2.Func([IDL2.Int], [], []),
     "deleteMealMenu": IDL2.Func([IDL2.Int], [], []),
     "deletePendingItem": IDL2.Func([Id2], [], []),
+    "deletePhoto": IDL2.Func([BlobId2], [], []),
     "deleteWatchItem": IDL2.Func([Id2], [], []),
+    "getAlbumEntryByDate": IDL2.Func(
+      [IDL2.Int],
+      [IDL2.Opt(AlbumEntry2)],
+      ["query"]
+    ),
+    "getAllAlbumEntries": IDL2.Func([], [IDL2.Vec(AlbumEntry2)], ["query"]),
     "getAllMealMenus": IDL2.Func([], [IDL2.Vec(MealMenu2)], ["query"]),
     "getAllPendingItems": IDL2.Func([], [IDL2.Vec(PendingItem2)], ["query"]),
     "getAllWatchItems": IDL2.Func([], [IDL2.Vec(WatchItem2)], ["query"]),
@@ -38781,9 +39037,11 @@ const idlFactory = ({ IDL: IDL2 }) => {
     ),
     "getWatchItem": IDL2.Func([Id2], [WatchItem2], ["query"]),
     "isCallerAdmin": IDL2.Func([], [IDL2.Bool], ["query"]),
+    "removePhotoFromAlbumEntry": IDL2.Func([IDL2.Int, BlobId2], [], []),
     "saveCallerUserProfile": IDL2.Func([UserProfile2], [], []),
     "updatePendingItem": IDL2.Func([Id2, PendingItem2], [], []),
     "updateWatchItem": IDL2.Func([Id2, WatchItem2], [], []),
+    "uploadPhoto": IDL2.Func([BlobId2], [BlobId2], []),
     "upsertMealMenu": IDL2.Func([MealMenu2], [], [])
   });
 };
@@ -38843,6 +39101,90 @@ class Backend {
     this._downloadFile = _downloadFile;
     this.processError = processError2;
   }
+  async _caffeineStorageBlobIsLive(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor._caffeineStorageBlobIsLive(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor._caffeineStorageBlobIsLive(arg0);
+      return result;
+    }
+  }
+  async _caffeineStorageBlobsToDelete() {
+    if (this.processError) {
+      try {
+        const result = await this.actor._caffeineStorageBlobsToDelete();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor._caffeineStorageBlobsToDelete();
+      return result;
+    }
+  }
+  async _caffeineStorageConfirmBlobDeletion(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor._caffeineStorageConfirmBlobDeletion(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor._caffeineStorageConfirmBlobDeletion(arg0);
+      return result;
+    }
+  }
+  async _caffeineStorageCreateCertificate(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor._caffeineStorageCreateCertificate(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor._caffeineStorageCreateCertificate(arg0);
+      return result;
+    }
+  }
+  async _caffeineStorageRefillCashier(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor._caffeineStorageRefillCashier(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0));
+        return from_candid__CaffeineStorageRefillResult_n4(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor._caffeineStorageRefillCashier(to_candid_opt_n1(this._uploadFile, this._downloadFile, arg0));
+      return from_candid__CaffeineStorageRefillResult_n4(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async _caffeineStorageUpdateGatewayPrincipals() {
+    if (this.processError) {
+      try {
+        const result = await this.actor._caffeineStorageUpdateGatewayPrincipals();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor._caffeineStorageUpdateGatewayPrincipals();
+      return result;
+    }
+  }
   async _initializeAccessControlWithSecret(arg0) {
     if (this.processError) {
       try {
@@ -38857,45 +39199,87 @@ class Backend {
       return result;
     }
   }
-  async assignCallerUserRole(arg0, arg1) {
+  async addPhotoToAlbumEntry(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+        const result = await this.actor.addPhotoToAlbumEntry(arg0, arg1);
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+      const result = await this.actor.addPhotoToAlbumEntry(arg0, arg1);
+      return result;
+    }
+  }
+  async assignCallerUserRole(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n8(this._uploadFile, this._downloadFile, arg1));
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n8(this._uploadFile, this._downloadFile, arg1));
+      return result;
+    }
+  }
+  async createAlbumEntry(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.createAlbumEntry(arg0, arg1);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.createAlbumEntry(arg0, arg1);
       return result;
     }
   }
   async createPendingItem(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.createPendingItem(to_candid_PendingItem_n3(this._uploadFile, this._downloadFile, arg0));
+        const result = await this.actor.createPendingItem(to_candid_PendingItem_n10(this._uploadFile, this._downloadFile, arg0));
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.createPendingItem(to_candid_PendingItem_n3(this._uploadFile, this._downloadFile, arg0));
+      const result = await this.actor.createPendingItem(to_candid_PendingItem_n10(this._uploadFile, this._downloadFile, arg0));
       return result;
     }
   }
   async createWatchItem(arg0) {
     if (this.processError) {
       try {
-        const result = await this.actor.createWatchItem(to_candid_WatchItem_n7(this._uploadFile, this._downloadFile, arg0));
+        const result = await this.actor.createWatchItem(to_candid_WatchItem_n14(this._uploadFile, this._downloadFile, arg0));
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.createWatchItem(to_candid_WatchItem_n7(this._uploadFile, this._downloadFile, arg0));
+      const result = await this.actor.createWatchItem(to_candid_WatchItem_n14(this._uploadFile, this._downloadFile, arg0));
+      return result;
+    }
+  }
+  async deleteAlbumEntry(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.deleteAlbumEntry(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.deleteAlbumEntry(arg0);
       return result;
     }
   }
@@ -38927,6 +39311,20 @@ class Backend {
       return result;
     }
   }
+  async deletePhoto(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.deletePhoto(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.deletePhoto(arg0);
+      return result;
+    }
+  }
   async deleteWatchItem(arg0) {
     if (this.processError) {
       try {
@@ -38938,6 +39336,34 @@ class Backend {
       }
     } else {
       const result = await this.actor.deleteWatchItem(arg0);
+      return result;
+    }
+  }
+  async getAlbumEntryByDate(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getAlbumEntryByDate(arg0);
+        return from_candid_opt_n18(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getAlbumEntryByDate(arg0);
+      return from_candid_opt_n18(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getAllAlbumEntries() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getAllAlbumEntries();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getAllAlbumEntries();
       return result;
     }
   }
@@ -38959,56 +39385,56 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getAllPendingItems();
-        return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n19(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getAllPendingItems();
-      return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n19(this._uploadFile, this._downloadFile, result);
     }
   }
   async getAllWatchItems() {
     if (this.processError) {
       try {
         const result = await this.actor.getAllWatchItems();
-        return from_candid_vec_n16(this._uploadFile, this._downloadFile, result);
+        return from_candid_vec_n24(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getAllWatchItems();
-      return from_candid_vec_n16(this._uploadFile, this._downloadFile, result);
+      return from_candid_vec_n24(this._uploadFile, this._downloadFile, result);
     }
   }
   async getCallerUserProfile() {
     if (this.processError) {
       try {
         const result = await this.actor.getCallerUserProfile();
-        return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getCallerUserProfile();
-      return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
     }
   }
   async getCallerUserRole() {
     if (this.processError) {
       try {
         const result = await this.actor.getCallerUserRole();
-        return from_candid_UserRole_n23(this._uploadFile, this._downloadFile, result);
+        return from_candid_UserRole_n30(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getCallerUserRole();
-      return from_candid_UserRole_n23(this._uploadFile, this._downloadFile, result);
+      return from_candid_UserRole_n30(this._uploadFile, this._downloadFile, result);
     }
   }
   async getLastUpdated() {
@@ -39043,56 +39469,56 @@ class Backend {
     if (this.processError) {
       try {
         const result = await this.actor.getPendingItem(arg0);
-        return from_candid_PendingItem_n12(this._uploadFile, this._downloadFile, result);
+        return from_candid_PendingItem_n20(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getPendingItem(arg0);
-      return from_candid_PendingItem_n12(this._uploadFile, this._downloadFile, result);
+      return from_candid_PendingItem_n20(this._uploadFile, this._downloadFile, result);
     }
   }
   async getTodaysMenu() {
     if (this.processError) {
       try {
         const result = await this.actor.getTodaysMenu();
-        return from_candid_opt_n25(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n32(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getTodaysMenu();
-      return from_candid_opt_n25(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n32(this._uploadFile, this._downloadFile, result);
     }
   }
   async getUserProfile(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getUserProfile(arg0);
-        return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
+        return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getUserProfile(arg0);
-      return from_candid_opt_n22(this._uploadFile, this._downloadFile, result);
+      return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
     }
   }
   async getWatchItem(arg0) {
     if (this.processError) {
       try {
         const result = await this.actor.getWatchItem(arg0);
-        return from_candid_WatchItem_n17(this._uploadFile, this._downloadFile, result);
+        return from_candid_WatchItem_n25(this._uploadFile, this._downloadFile, result);
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
       const result = await this.actor.getWatchItem(arg0);
-      return from_candid_WatchItem_n17(this._uploadFile, this._downloadFile, result);
+      return from_candid_WatchItem_n25(this._uploadFile, this._downloadFile, result);
     }
   }
   async isCallerAdmin() {
@@ -39106,6 +39532,20 @@ class Backend {
       }
     } else {
       const result = await this.actor.isCallerAdmin();
+      return result;
+    }
+  }
+  async removePhotoFromAlbumEntry(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.removePhotoFromAlbumEntry(arg0, arg1);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.removePhotoFromAlbumEntry(arg0, arg1);
       return result;
     }
   }
@@ -39126,28 +39566,42 @@ class Backend {
   async updatePendingItem(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.updatePendingItem(arg0, to_candid_PendingItem_n3(this._uploadFile, this._downloadFile, arg1));
+        const result = await this.actor.updatePendingItem(arg0, to_candid_PendingItem_n10(this._uploadFile, this._downloadFile, arg1));
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.updatePendingItem(arg0, to_candid_PendingItem_n3(this._uploadFile, this._downloadFile, arg1));
+      const result = await this.actor.updatePendingItem(arg0, to_candid_PendingItem_n10(this._uploadFile, this._downloadFile, arg1));
       return result;
     }
   }
   async updateWatchItem(arg0, arg1) {
     if (this.processError) {
       try {
-        const result = await this.actor.updateWatchItem(arg0, to_candid_WatchItem_n7(this._uploadFile, this._downloadFile, arg1));
+        const result = await this.actor.updateWatchItem(arg0, to_candid_WatchItem_n14(this._uploadFile, this._downloadFile, arg1));
         return result;
       } catch (e) {
         this.processError(e);
         throw new Error("unreachable");
       }
     } else {
-      const result = await this.actor.updateWatchItem(arg0, to_candid_WatchItem_n7(this._uploadFile, this._downloadFile, arg1));
+      const result = await this.actor.updateWatchItem(arg0, to_candid_WatchItem_n14(this._uploadFile, this._downloadFile, arg1));
+      return result;
+    }
+  }
+  async uploadPhoto(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.uploadPhoto(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.uploadPhoto(arg0);
       return result;
     }
   }
@@ -39166,97 +39620,130 @@ class Backend {
     }
   }
 }
-function from_candid_PendingItem_n12(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n13(_uploadFile, _downloadFile, value);
+function from_candid_PendingItem_n20(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n21(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n23(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n24(_uploadFile, _downloadFile, value);
+function from_candid_UserRole_n30(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n31(_uploadFile, _downloadFile, value);
 }
-function from_candid_WatchItem_n17(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n18(_uploadFile, _downloadFile, value);
+function from_candid_WatchItem_n25(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n26(_uploadFile, _downloadFile, value);
 }
-function from_candid_WatchStatus_n19(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n20(_uploadFile, _downloadFile, value);
+function from_candid_WatchStatus_n27(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n28(_uploadFile, _downloadFile, value);
 }
-function from_candid_WatchType_n14(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n15(_uploadFile, _downloadFile, value);
+function from_candid_WatchType_n22(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n23(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n21(_uploadFile, _downloadFile, value) {
+function from_candid__CaffeineStorageRefillResult_n4(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n5(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n18(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n22(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n29(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n25(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n32(_uploadFile, _downloadFile, value) {
   return value.length === 0 ? null : value[0];
 }
-function from_candid_record_n13(_uploadFile, _downloadFile, value) {
+function from_candid_opt_n6(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n7(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_record_n21(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
     title: value.title,
-    watchType: from_candid_WatchType_n14(_uploadFile, _downloadFile, value.watchType),
+    watchType: from_candid_WatchType_n22(_uploadFile, _downloadFile, value.watchType),
     notes: value.notes
   };
 }
-function from_candid_record_n18(_uploadFile, _downloadFile, value) {
+function from_candid_record_n26(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    status: from_candid_WatchStatus_n19(_uploadFile, _downloadFile, value.status),
+    status: from_candid_WatchStatus_n27(_uploadFile, _downloadFile, value.status),
     title: value.title,
-    watchType: from_candid_WatchType_n14(_uploadFile, _downloadFile, value.watchType),
-    pausedAtMin: record_opt_to_undefined(from_candid_opt_n21(_uploadFile, _downloadFile, value.pausedAtMin)),
+    watchType: from_candid_WatchType_n22(_uploadFile, _downloadFile, value.watchType),
+    pausedAtMin: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.pausedAtMin)),
     notes: value.notes
   };
 }
-function from_candid_variant_n15(_uploadFile, _downloadFile, value) {
+function from_candid_record_n5(_uploadFile, _downloadFile, value) {
+  return {
+    success: record_opt_to_undefined(from_candid_opt_n6(_uploadFile, _downloadFile, value.success)),
+    topped_up_amount: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.topped_up_amount))
+  };
+}
+function from_candid_variant_n23(_uploadFile, _downloadFile, value) {
   return "movie" in value ? "movie" : "series" in value ? "series" : value;
 }
-function from_candid_variant_n20(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n28(_uploadFile, _downloadFile, value) {
   return "pending" in value ? "pending" : "completed" in value ? "completed" : "watching" in value ? "watching" : value;
 }
-function from_candid_variant_n24(_uploadFile, _downloadFile, value) {
+function from_candid_variant_n31(_uploadFile, _downloadFile, value) {
   return "admin" in value ? "admin" : "user" in value ? "user" : "guest" in value ? "guest" : value;
 }
-function from_candid_vec_n11(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_PendingItem_n12(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n19(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_PendingItem_n20(_uploadFile, _downloadFile, x2));
 }
-function from_candid_vec_n16(_uploadFile, _downloadFile, value) {
-  return value.map((x2) => from_candid_WatchItem_n17(_uploadFile, _downloadFile, x2));
+function from_candid_vec_n24(_uploadFile, _downloadFile, value) {
+  return value.map((x2) => from_candid_WatchItem_n25(_uploadFile, _downloadFile, x2));
 }
-function to_candid_PendingItem_n3(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n4(_uploadFile, _downloadFile, value);
+function to_candid_PendingItem_n10(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n11(_uploadFile, _downloadFile, value);
 }
-function to_candid_UserRole_n1(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n2(_uploadFile, _downloadFile, value);
+function to_candid_UserRole_n8(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n9(_uploadFile, _downloadFile, value);
 }
-function to_candid_WatchItem_n7(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n8(_uploadFile, _downloadFile, value);
+function to_candid_WatchItem_n14(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n15(_uploadFile, _downloadFile, value);
 }
-function to_candid_WatchStatus_n9(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n10(_uploadFile, _downloadFile, value);
+function to_candid_WatchStatus_n16(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n17(_uploadFile, _downloadFile, value);
 }
-function to_candid_WatchType_n5(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n6(_uploadFile, _downloadFile, value);
+function to_candid_WatchType_n12(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n13(_uploadFile, _downloadFile, value);
 }
-function to_candid_record_n4(_uploadFile, _downloadFile, value) {
+function to_candid__CaffeineStorageRefillInformation_n2(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n3(_uploadFile, _downloadFile, value);
+}
+function to_candid_opt_n1(_uploadFile, _downloadFile, value) {
+  return value === null ? candid_none() : candid_some(to_candid__CaffeineStorageRefillInformation_n2(_uploadFile, _downloadFile, value));
+}
+function to_candid_record_n11(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
     title: value.title,
-    watchType: to_candid_WatchType_n5(_uploadFile, _downloadFile, value.watchType),
+    watchType: to_candid_WatchType_n12(_uploadFile, _downloadFile, value.watchType),
     notes: value.notes
   };
 }
-function to_candid_record_n8(_uploadFile, _downloadFile, value) {
+function to_candid_record_n15(_uploadFile, _downloadFile, value) {
   return {
     id: value.id,
-    status: to_candid_WatchStatus_n9(_uploadFile, _downloadFile, value.status),
+    status: to_candid_WatchStatus_n16(_uploadFile, _downloadFile, value.status),
     title: value.title,
-    watchType: to_candid_WatchType_n5(_uploadFile, _downloadFile, value.watchType),
+    watchType: to_candid_WatchType_n12(_uploadFile, _downloadFile, value.watchType),
     pausedAtMin: value.pausedAtMin ? candid_some(value.pausedAtMin) : candid_none(),
     notes: value.notes
   };
 }
-function to_candid_variant_n10(_uploadFile, _downloadFile, value) {
+function to_candid_record_n3(_uploadFile, _downloadFile, value) {
+  return {
+    proposed_top_up_amount: value.proposed_top_up_amount ? candid_some(value.proposed_top_up_amount) : candid_none()
+  };
+}
+function to_candid_variant_n13(_uploadFile, _downloadFile, value) {
+  return value == "movie" ? {
+    movie: null
+  } : value == "series" ? {
+    series: null
+  } : value;
+}
+function to_candid_variant_n17(_uploadFile, _downloadFile, value) {
   return value == "pending" ? {
     pending: null
   } : value == "completed" ? {
@@ -39265,20 +39752,13 @@ function to_candid_variant_n10(_uploadFile, _downloadFile, value) {
     watching: null
   } : value;
 }
-function to_candid_variant_n2(_uploadFile, _downloadFile, value) {
+function to_candid_variant_n9(_uploadFile, _downloadFile, value) {
   return value == "admin" ? {
     admin: null
   } : value == "user" ? {
     user: null
   } : value == "guest" ? {
     guest: null
-  } : value;
-}
-function to_candid_variant_n6(_uploadFile, _downloadFile, value) {
-  return value == "movie" ? {
-    movie: null
-  } : value == "series" ? {
-    series: null
   } : value;
 }
 function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
@@ -41573,6 +42053,907 @@ function useGetLastUpdated() {
     staleTime: 0
   });
 }
+function useGetAllAlbumEntries() {
+  const { actor, isFetching } = useActor();
+  return useQuery({
+    queryKey: ["albumEntries"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllAlbumEntries();
+    },
+    enabled: !!actor && !isFetching
+  });
+}
+function useCreateAlbumEntry() {
+  const { actor } = useActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      date,
+      description
+    }) => {
+      if (!actor) throw new Error("No actor");
+      return actor.createAlbumEntry(date, description);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["albumEntries"] });
+    }
+  });
+}
+function useAddPhotoToAlbumEntry() {
+  const { actor } = useActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ date, blobId }) => {
+      if (!actor) throw new Error("No actor");
+      return actor.addPhotoToAlbumEntry(date, blobId);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["albumEntries"] });
+    }
+  });
+}
+function useRemovePhotoFromAlbumEntry() {
+  const { actor } = useActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ date, blobId }) => {
+      if (!actor) throw new Error("No actor");
+      return actor.removePhotoFromAlbumEntry(date, blobId);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["albumEntries"] });
+    }
+  });
+}
+function dateToDayBigint(date) {
+  const d2 = new Date(date);
+  d2.setHours(0, 0, 0, 0);
+  return BigInt(d2.getTime()) * 1000000n;
+}
+function bigintToDate(ns) {
+  return new Date(Number(ns / 1000000n));
+}
+function formatDateES(date) {
+  return date.toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+function dateToInputValue(date) {
+  const y2 = date.getFullYear();
+  const m2 = String(date.getMonth() + 1).padStart(2, "0");
+  const d2 = String(date.getDate()).padStart(2, "0");
+  return `${y2}-${m2}-${d2}`;
+}
+function PhotoViewer({
+  photos,
+  initialIndex,
+  date,
+  onClose,
+  onDelete,
+  getBlobUrl
+}) {
+  const [current, setCurrent] = reactExports.useState(initialIndex);
+  const prev = () => setCurrent((c2) => c2 > 0 ? c2 - 1 : photos.length - 1);
+  const next = () => setCurrent((c2) => c2 < photos.length - 1 ? c2 + 1 : 0);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: true, onOpenChange: (o2) => !o2 && onClose(), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    DialogContent,
+    {
+      className: "w-[calc(100%-32px)] max-w-sm rounded-2xl p-0 overflow-hidden",
+      "data-ocid": "album.modal",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { className: "px-4 pt-4 pb-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "text-sm font-medium text-muted-foreground", children: formatDateES(date) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                onClick: onClose,
+                className: "rounded-full p-1 hover:bg-muted transition-colors",
+                "data-ocid": "album.close_button",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { size: 18 })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+            current + 1,
+            " / ",
+            photos.length
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            motion.img,
+            {
+              src: getBlobUrl(photos[current]),
+              alt: `Foto ${current + 1}`,
+              className: "w-full aspect-square object-cover",
+              initial: { opacity: 0 },
+              animate: { opacity: 1 },
+              exit: { opacity: 0 },
+              transition: { duration: 0.2 }
+            },
+            current
+          ) }),
+          photos.length > 1 && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                onClick: prev,
+                className: "absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full p-1.5 hover:bg-black/60 transition-colors",
+                "data-ocid": "album.pagination_prev",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronLeft, { size: 20 })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                onClick: next,
+                className: "absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full p-1.5 hover:bg-black/60 transition-colors",
+                "data-ocid": "album.pagination_next",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 20 })
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-4 pb-4 pt-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            variant: "destructive",
+            size: "sm",
+            className: "w-full rounded-xl",
+            onClick: () => {
+              onDelete(photos[current]);
+              if (photos.length === 1) {
+                onClose();
+              } else {
+                setCurrent((c2) => c2 > 0 ? c2 - 1 : 0);
+              }
+            },
+            "data-ocid": "album.delete_button",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14, className: "mr-2" }),
+              "Eliminar foto"
+            ]
+          }
+        ) })
+      ]
+    }
+  ) });
+}
+function AddPhotosDialog({
+  onClose,
+  onUpload,
+  isUploading,
+  uploadProgress
+}) {
+  const today = /* @__PURE__ */ new Date();
+  const [selectedDate, setSelectedDate] = reactExports.useState(dateToInputValue(today));
+  const [selectedFiles, setSelectedFiles] = reactExports.useState([]);
+  const fileInputRef = reactExports.useRef(null);
+  const handleSubmit = async () => {
+    if (selectedFiles.length === 0) return;
+    const dateObj = /* @__PURE__ */ new Date(`${selectedDate}T00:00:00`);
+    const dateBigint = dateToDayBigint(dateObj);
+    await onUpload(dateBigint, selectedFiles);
+    onClose();
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: true, onOpenChange: (o2) => !o2 && !isUploading && onClose(), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    DialogContent,
+    {
+      className: "w-[calc(100%-32px)] max-w-sm rounded-2xl",
+      "data-ocid": "album.dialog",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "text-center text-lg font-display font-bold", children: "📸 Añadir al álbum" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "label",
+              {
+                className: "text-sm font-medium text-foreground",
+                htmlFor: "album-date",
+                children: "Fecha"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                id: "album-date",
+                type: "date",
+                value: selectedDate,
+                onChange: (e) => setSelectedDate(e.target.value),
+                className: "w-full h-10 px-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring",
+                "data-ocid": "album.input"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "label",
+              {
+                htmlFor: "album-file-input",
+                className: "text-sm font-medium text-foreground",
+                children: "Fotos"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "input",
+              {
+                id: "album-file-input",
+                ref: fileInputRef,
+                type: "file",
+                accept: "image/*",
+                multiple: true,
+                className: "hidden",
+                onChange: (e) => {
+                  if (e.target.files) {
+                    setSelectedFiles(Array.from(e.target.files));
+                  }
+                }
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => {
+                  var _a3;
+                  return (_a3 = fileInputRef.current) == null ? void 0 : _a3.click();
+                },
+                className: "w-full h-24 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-2 hover:border-primary hover:bg-primary/5 transition-colors",
+                "data-ocid": "album.dropzone",
+                children: selectedFiles.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Camera, { size: 24, className: "text-primary" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-medium text-primary", children: [
+                    selectedFiles.length,
+                    " foto",
+                    selectedFiles.length !== 1 ? "s" : "",
+                    " seleccionada",
+                    selectedFiles.length !== 1 ? "s" : ""
+                  ] })
+                ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Camera, { size: 24, className: "text-muted-foreground" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-muted-foreground", children: "Toca para seleccionar fotos" })
+                ] })
+              }
+            )
+          ] }),
+          isUploading && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", "data-ocid": "album.loading_state", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground text-center", children: [
+              "Subiendo... ",
+              uploadProgress,
+              "%"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Progress, { value: uploadProgress, className: "h-2" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                className: "flex-1 rounded-xl",
+                onClick: onClose,
+                disabled: isUploading,
+                "data-ocid": "album.cancel_button",
+                children: "Cancelar"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                className: "flex-1 rounded-xl",
+                onClick: handleSubmit,
+                disabled: selectedFiles.length === 0 || isUploading,
+                "data-ocid": "album.confirm_button",
+                children: isUploading ? "Subiendo..." : "Guardar"
+              }
+            )
+          ] })
+        ] })
+      ]
+    }
+  ) });
+}
+function DayGroup({
+  entry,
+  onPhotoClick,
+  onAddPhoto,
+  onDeletePhoto,
+  getBlobUrl,
+  index: index2
+}) {
+  const date = bigintToDate(entry.date);
+  const [hoveredPhoto, setHoveredPhoto] = reactExports.useState(null);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    motion.div,
+    {
+      initial: { opacity: 0, y: 16 },
+      animate: { opacity: 1, y: 0 },
+      transition: { delay: index2 * 0.05 },
+      className: "bg-card rounded-xl card-shadow overflow-hidden",
+      "data-ocid": `album.item.${index2 + 1}`,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-4 py-3 border-b border-border/50", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground capitalize", children: formatDateES(date) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+              entry.blobIds.length,
+              " foto",
+              entry.blobIds.length !== 1 ? "s" : ""
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              type: "button",
+              onClick: () => onAddPhoto(entry.date),
+              className: "flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors bg-primary/10 hover:bg-primary/20 px-2.5 py-1.5 rounded-lg",
+              "data-ocid": "album.secondary_button",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14 }),
+                "Añadir"
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 grid grid-cols-3 gap-2", children: entry.blobIds.map((blobId, photoIdx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            className: "relative aspect-square cursor-pointer group",
+            onMouseEnter: () => setHoveredPhoto(blobId),
+            onMouseLeave: () => setHoveredPhoto(null),
+            onClick: () => onPhotoClick(entry.blobIds, photoIdx, date),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "img",
+                {
+                  src: getBlobUrl(blobId),
+                  alt: `Foto ${photoIdx + 1}`,
+                  className: "w-full h-full object-cover rounded-lg"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: hoveredPhoto === blobId && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                motion.div,
+                {
+                  initial: { opacity: 0 },
+                  animate: { opacity: 1 },
+                  exit: { opacity: 0 },
+                  className: "absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: (e) => {
+                        e.stopPropagation();
+                        onDeletePhoto(entry.date, blobId);
+                      },
+                      className: "bg-destructive text-destructive-foreground rounded-full p-1.5 shadow-md",
+                      "data-ocid": "album.delete_button",
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 })
+                    }
+                  )
+                }
+              ) })
+            ]
+          },
+          blobId
+        )) })
+      ]
+    }
+  );
+}
+function AlbumTab() {
+  const { data: entries, isLoading } = useGetAllAlbumEntries();
+  const createAlbumEntry = useCreateAlbumEntry();
+  const addPhoto = useAddPhotoToAlbumEntry();
+  const removePhoto = useRemovePhotoFromAlbumEntry();
+  const { actor } = useActor();
+  const [showAddDialog, setShowAddDialog] = reactExports.useState(false);
+  const [isUploading, setIsUploading] = reactExports.useState(false);
+  const [uploadProgress, setUploadProgress] = reactExports.useState(0);
+  const [viewer, setViewer] = reactExports.useState(null);
+  const quickAddFileRef = reactExports.useRef(null);
+  const quickAddDateRef = reactExports.useRef(null);
+  const sortedEntries = entries ? [...entries].sort((a2, b2) => a2.date > b2.date ? -1 : 1) : [];
+  const getBlobUrl = (blobId) => {
+    const storageGatewayUrl = window.__caffeineStorageGatewayUrl || "https://blob.caffeine.ai";
+    const backendCanisterId = window.__caffeineBackendCanisterId || "";
+    const projectId = window.__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
+    return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
+  };
+  const initStorageConfig = async () => {
+    if (window.__caffeineStorageGatewayUrl) return;
+    try {
+      const config = await loadConfig();
+      window.__caffeineStorageGatewayUrl = config.storage_gateway_url;
+      window.__caffeineBackendCanisterId = config.backend_canister_id;
+      window.__caffeineProjectId = config.project_id;
+    } catch {
+    }
+  };
+  const uploadPhotos = async (dateBigint, files) => {
+    var _a3;
+    if (!actor) {
+      ue.error("No hay conexión con el servidor");
+      return;
+    }
+    setIsUploading(true);
+    setUploadProgress(0);
+    try {
+      await initStorageConfig();
+      const config = await loadConfig();
+      const { HttpAgent: HttpAgent2 } = await __vitePreload(async () => {
+        const { HttpAgent: HttpAgent3 } = await Promise.resolve().then(() => index);
+        return { HttpAgent: HttpAgent3 };
+      }, true ? void 0 : void 0);
+      const agent = new HttpAgent2({ host: config.backend_host });
+      if ((_a3 = config.backend_host) == null ? void 0 : _a3.includes("localhost")) {
+        await agent.fetchRootKey().catch(() => {
+        });
+      }
+      const storageClient = new StorageClient(
+        config.bucket_name,
+        config.storage_gateway_url,
+        config.backend_canister_id,
+        config.project_id,
+        agent
+      );
+      const existingEntry = await actor.getAlbumEntryByDate(dateBigint);
+      if (!existingEntry) {
+        await createAlbumEntry.mutateAsync({
+          date: dateBigint,
+          description: ""
+        });
+      }
+      const total = files.length;
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        const { hash } = await storageClient.putFile(bytes, (pct) => {
+          setUploadProgress(Math.round((i + pct / 100) / total * 100));
+        });
+        await actor.uploadPhoto(hash);
+        await addPhoto.mutateAsync({ date: dateBigint, blobId: hash });
+        setUploadProgress(Math.round((i + 1) / total * 100));
+      }
+      window.__caffeineStorageGatewayUrl = config.storage_gateway_url;
+      window.__caffeineBackendCanisterId = config.backend_canister_id;
+      window.__caffeineProjectId = config.project_id;
+      ue.success(
+        `${files.length} foto${files.length !== 1 ? "s" : ""} añadida${files.length !== 1 ? "s" : ""} al álbum`
+      );
+    } catch (err) {
+      console.error(err);
+      ue.error("Error al subir las fotos. Inténtalo de nuevo.");
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+  const handleAddPhotoForDate = (date) => {
+    quickAddDateRef.current = date;
+    setShowAddDialog(true);
+  };
+  const handleDeletePhoto = async (date, blobId) => {
+    try {
+      await removePhoto.mutateAsync({ date, blobId });
+      if (actor) {
+        await actor.deletePhoto(blobId);
+      }
+      ue.success("Foto eliminada");
+    } catch {
+      ue.error("Error al eliminar la foto");
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 pt-6 pb-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-display font-bold text-foreground", children: "📷 Álbum" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mt-0.5", children: "Vuestros recuerdos juntos" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          onClick: () => {
+            setShowAddDialog(true);
+          },
+          className: "rounded-xl gap-1.5",
+          size: "sm",
+          "data-ocid": "album.primary_button",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16 }),
+            "Añadir"
+          ]
+        }
+      )
+    ] }),
+    isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", "data-ocid": "album.loading_state", children: [1, 2].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "bg-card rounded-xl card-shadow overflow-hidden",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 py-3 border-b border-border/50", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-4 w-32 mb-1" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-3 w-16" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 grid grid-cols-3 gap-2", children: [1, 2, 3].map((j2) => /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "aspect-square rounded-lg" }, j2)) })
+        ]
+      },
+      i
+    )) }) : sortedEntries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      motion.div,
+      {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        className: "flex flex-col items-center justify-center py-16 text-center",
+        "data-ocid": "album.empty_state",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-6xl mb-4", children: "📷" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-lg font-semibold text-foreground mb-2", children: "Vuestro álbum está vacío" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mb-6 max-w-xs", children: "Añadid vuestras primeras fotos juntos y empezad a crear recuerdos" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              onClick: () => setShowAddDialog(true),
+              className: "rounded-xl gap-2",
+              "data-ocid": "album.open_modal_button",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Camera, { size: 16 }),
+                "Añadir primera foto"
+              ]
+            }
+          )
+        ]
+      }
+    ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: sortedEntries.map((entry, idx) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      DayGroup,
+      {
+        entry,
+        index: idx,
+        getBlobUrl,
+        onPhotoClick: (photos, photoIdx, date) => setViewer({ photos, index: photoIdx, date }),
+        onAddPhoto: handleAddPhotoForDate,
+        onDeletePhoto: handleDeletePhoto
+      },
+      entry.date.toString()
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        ref: quickAddFileRef,
+        type: "file",
+        accept: "image/*",
+        multiple: true,
+        className: "hidden",
+        onChange: async (e) => {
+          if (e.target.files && quickAddDateRef.current !== null) {
+            const files = Array.from(e.target.files);
+            await uploadPhotos(quickAddDateRef.current, files);
+          }
+          e.target.value = "";
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: showAddDialog && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddPhotosDialog,
+      {
+        onClose: () => setShowAddDialog(false),
+        onUpload: uploadPhotos,
+        isUploading,
+        uploadProgress
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: viewer && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      PhotoViewer,
+      {
+        photos: viewer.photos,
+        initialIndex: viewer.index,
+        date: viewer.date,
+        onClose: () => setViewer(null),
+        onDelete: (blobId) => {
+          const entry = sortedEntries.find(
+            (e) => e.blobIds.includes(blobId)
+          );
+          if (entry) {
+            handleDeletePhoto(entry.date, blobId);
+          }
+          const newPhotos = viewer.photos.filter((p2) => p2 !== blobId);
+          if (newPhotos.length === 0) {
+            setViewer(null);
+          } else {
+            setViewer(
+              (v2) => v2 ? {
+                ...v2,
+                photos: newPhotos,
+                index: Math.min(v2.index, newPhotos.length - 1)
+              } : null
+            );
+          }
+        },
+        getBlobUrl
+      }
+    ) })
+  ] });
+}
+var ROOT_NAME = "AlertDialog";
+var [createAlertDialogContext] = createContextScope(ROOT_NAME, [
+  createDialogScope
+]);
+var useDialogScope = createDialogScope();
+var AlertDialog$1 = (props) => {
+  const { __scopeAlertDialog, ...alertDialogProps } = props;
+  const dialogScope = useDialogScope(__scopeAlertDialog);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$2, { ...dialogScope, ...alertDialogProps, modal: true });
+};
+AlertDialog$1.displayName = ROOT_NAME;
+var TRIGGER_NAME = "AlertDialogTrigger";
+var AlertDialogTrigger = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAlertDialog, ...triggerProps } = props;
+    const dialogScope = useDialogScope(__scopeAlertDialog);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Trigger, { ...dialogScope, ...triggerProps, ref: forwardedRef });
+  }
+);
+AlertDialogTrigger.displayName = TRIGGER_NAME;
+var PORTAL_NAME = "AlertDialogPortal";
+var AlertDialogPortal$1 = (props) => {
+  const { __scopeAlertDialog, ...portalProps } = props;
+  const dialogScope = useDialogScope(__scopeAlertDialog);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal, { ...dialogScope, ...portalProps });
+};
+AlertDialogPortal$1.displayName = PORTAL_NAME;
+var OVERLAY_NAME = "AlertDialogOverlay";
+var AlertDialogOverlay$1 = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAlertDialog, ...overlayProps } = props;
+    const dialogScope = useDialogScope(__scopeAlertDialog);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Overlay, { ...dialogScope, ...overlayProps, ref: forwardedRef });
+  }
+);
+AlertDialogOverlay$1.displayName = OVERLAY_NAME;
+var CONTENT_NAME = "AlertDialogContent";
+var [AlertDialogContentProvider, useAlertDialogContentContext] = createAlertDialogContext(CONTENT_NAME);
+var Slottable = /* @__PURE__ */ createSlottable("AlertDialogContent");
+var AlertDialogContent$1 = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAlertDialog, children, ...contentProps } = props;
+    const dialogScope = useDialogScope(__scopeAlertDialog);
+    const contentRef = reactExports.useRef(null);
+    const composedRefs = useComposedRefs(forwardedRef, contentRef);
+    const cancelRef = reactExports.useRef(null);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      WarningProvider,
+      {
+        contentName: CONTENT_NAME,
+        titleName: TITLE_NAME,
+        docsSlug: "alert-dialog",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogContentProvider, { scope: __scopeAlertDialog, cancelRef, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Content,
+          {
+            role: "alertdialog",
+            ...dialogScope,
+            ...contentProps,
+            ref: composedRefs,
+            onOpenAutoFocus: composeEventHandlers(contentProps.onOpenAutoFocus, (event) => {
+              var _a3;
+              event.preventDefault();
+              (_a3 = cancelRef.current) == null ? void 0 : _a3.focus({ preventScroll: true });
+            }),
+            onPointerDownOutside: (event) => event.preventDefault(),
+            onInteractOutside: (event) => event.preventDefault(),
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Slottable, { children }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(DescriptionWarning, { contentRef })
+            ]
+          }
+        ) })
+      }
+    );
+  }
+);
+AlertDialogContent$1.displayName = CONTENT_NAME;
+var TITLE_NAME = "AlertDialogTitle";
+var AlertDialogTitle$1 = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAlertDialog, ...titleProps } = props;
+    const dialogScope = useDialogScope(__scopeAlertDialog);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Title, { ...dialogScope, ...titleProps, ref: forwardedRef });
+  }
+);
+AlertDialogTitle$1.displayName = TITLE_NAME;
+var DESCRIPTION_NAME = "AlertDialogDescription";
+var AlertDialogDescription$1 = reactExports.forwardRef((props, forwardedRef) => {
+  const { __scopeAlertDialog, ...descriptionProps } = props;
+  const dialogScope = useDialogScope(__scopeAlertDialog);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Description, { ...dialogScope, ...descriptionProps, ref: forwardedRef });
+});
+AlertDialogDescription$1.displayName = DESCRIPTION_NAME;
+var ACTION_NAME = "AlertDialogAction";
+var AlertDialogAction$1 = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAlertDialog, ...actionProps } = props;
+    const dialogScope = useDialogScope(__scopeAlertDialog);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Close, { ...dialogScope, ...actionProps, ref: forwardedRef });
+  }
+);
+AlertDialogAction$1.displayName = ACTION_NAME;
+var CANCEL_NAME = "AlertDialogCancel";
+var AlertDialogCancel$1 = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAlertDialog, ...cancelProps } = props;
+    const { cancelRef } = useAlertDialogContentContext(CANCEL_NAME, __scopeAlertDialog);
+    const dialogScope = useDialogScope(__scopeAlertDialog);
+    const ref = useComposedRefs(forwardedRef, cancelRef);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Close, { ...dialogScope, ...cancelProps, ref });
+  }
+);
+AlertDialogCancel$1.displayName = CANCEL_NAME;
+var DescriptionWarning = ({ contentRef }) => {
+  const MESSAGE = `\`${CONTENT_NAME}\` requires a description for the component to be accessible for screen reader users.
+
+You can add a description to the \`${CONTENT_NAME}\` by passing a \`${DESCRIPTION_NAME}\` component as a child, which also benefits sighted users by adding visible context to the dialog.
+
+Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${CONTENT_NAME}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/alert-dialog`;
+  reactExports.useEffect(() => {
+    var _a3;
+    const hasDescription = document.getElementById(
+      (_a3 = contentRef.current) == null ? void 0 : _a3.getAttribute("aria-describedby")
+    );
+    if (!hasDescription) console.warn(MESSAGE);
+  }, [MESSAGE, contentRef]);
+  return null;
+};
+var Root2 = AlertDialog$1;
+var Portal2 = AlertDialogPortal$1;
+var Overlay2 = AlertDialogOverlay$1;
+var Content2 = AlertDialogContent$1;
+var Action = AlertDialogAction$1;
+var Cancel = AlertDialogCancel$1;
+var Title2 = AlertDialogTitle$1;
+var Description2 = AlertDialogDescription$1;
+function AlertDialog({
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root2, { "data-slot": "alert-dialog", ...props });
+}
+function AlertDialogPortal({
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal2, { "data-slot": "alert-dialog-portal", ...props });
+}
+function AlertDialogOverlay({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Overlay2,
+    {
+      "data-slot": "alert-dialog-overlay",
+      className: cn(
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function AlertDialogContent({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogPortal, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogOverlay, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Content2,
+      {
+        "data-slot": "alert-dialog-content",
+        className: cn(
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
+          className
+        ),
+        ...props
+      }
+    )
+  ] });
+}
+function AlertDialogHeader({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      "data-slot": "alert-dialog-header",
+      className: cn("flex flex-col gap-2 text-center sm:text-left", className),
+      ...props
+    }
+  );
+}
+function AlertDialogFooter({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      "data-slot": "alert-dialog-footer",
+      className: cn(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function AlertDialogTitle({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Title2,
+    {
+      "data-slot": "alert-dialog-title",
+      className: cn("text-lg font-semibold", className),
+      ...props
+    }
+  );
+}
+function AlertDialogDescription({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Description2,
+    {
+      "data-slot": "alert-dialog-description",
+      className: cn("text-muted-foreground text-sm", className),
+      ...props
+    }
+  );
+}
+function AlertDialogAction({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Action,
+    {
+      className: cn(buttonVariants(), className),
+      ...props
+    }
+  );
+}
+function AlertDialogCancel({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Cancel,
+    {
+      className: cn(buttonVariants({ variant: "outline" }), className),
+      ...props
+    }
+  );
+}
+var WatchStatus = /* @__PURE__ */ ((WatchStatus2) => {
+  WatchStatus2["pending"] = "pending";
+  WatchStatus2["completed"] = "completed";
+  WatchStatus2["watching"] = "watching";
+  return WatchStatus2;
+})(WatchStatus || {});
+var WatchType = /* @__PURE__ */ ((WatchType2) => {
+  WatchType2["movie"] = "movie";
+  WatchType2["series"] = "series";
+  return WatchType2;
+})(WatchType || {});
 function DataTab() {
   const { data: watchItems = [], isLoading: loadingWatch } = useGetAllWatchItems();
   const { data: pendingItems = [], isLoading: loadingPending } = useGetAllPendingItems();
@@ -41585,9 +42966,9 @@ function DataTab() {
   const [isResetting, setIsResetting] = reactExports.useState(false);
   const isLoading = loadingWatch || loadingPending || loadingMenus;
   const stats = {
-    watching: watchItems.filter((i) => i.status === WatchStatus$1.watching).length,
-    pending: watchItems.filter((i) => i.status === WatchStatus$1.pending).length,
-    completed: watchItems.filter((i) => i.status === WatchStatus$1.completed).length,
+    watching: watchItems.filter((i) => i.status === WatchStatus.watching).length,
+    pending: watchItems.filter((i) => i.status === WatchStatus.pending).length,
+    completed: watchItems.filter((i) => i.status === WatchStatus.completed).length,
     pendingItems: pendingItems.length,
     menus: mealMenus.length
   };
@@ -41831,90 +43212,6 @@ function Badge({
     }
   );
 }
-function Dialog({
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$1, { "data-slot": "dialog", ...props });
-}
-function DialogPortal({
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal, { "data-slot": "dialog-portal", ...props });
-}
-function DialogOverlay({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Overlay,
-    {
-      "data-slot": "dialog-overlay",
-      className: cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
-        className
-      ),
-      ...props
-    }
-  );
-}
-function DialogContent({
-  className,
-  children,
-  showCloseButton = true,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogPortal, { "data-slot": "dialog-portal", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogOverlay, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      Content,
-      {
-        "data-slot": "dialog-content",
-        className: cn(
-          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
-          className
-        ),
-        ...props,
-        children: [
-          children,
-          showCloseButton && /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            Close,
-            {
-              "data-slot": "dialog-close",
-              className: "ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, {}),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "sr-only", children: "Close" })
-              ]
-            }
-          )
-        ]
-      }
-    )
-  ] });
-}
-function DialogHeader({ className, ...props }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
-    {
-      "data-slot": "dialog-header",
-      className: cn("flex flex-col gap-2 text-center sm:text-left", className),
-      ...props
-    }
-  );
-}
-function DialogTitle({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Title,
-    {
-      "data-slot": "dialog-title",
-      className: cn("text-lg leading-none font-semibold", className),
-      ...props
-    }
-  );
-}
 function Input({ className, type, ...props }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "input",
@@ -41980,7 +43277,7 @@ function HomeTab({ onTabChange }) {
   const { data: todaysMenu } = useGetTodaysMenu();
   const { data: pendingItems = [] } = useGetAllPendingItems();
   const watchingItems = watchItems.filter(
-    (i) => i.status === WatchStatus$1.watching
+    (i) => i.status === WatchStatus.watching
   );
   const currentlyWatching = watchingItems[0] || null;
   const pendingCount = pendingItems.length;
@@ -42042,7 +43339,7 @@ function HomeTab({ onTabChange }) {
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-white/70 text-xs font-medium uppercase tracking-wide", children: "Viendo ahora" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-display font-bold mt-1 leading-tight", children: currentlyWatching.title }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-3", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-white/20 text-white border-none text-xs", children: currentlyWatching.watchType === WatchType$1.movie ? "🎬 Película" : "📺 Serie" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-white/20 text-white border-none text-xs", children: currentlyWatching.watchType === WatchType.movie ? "🎬 Película" : "📺 Serie" }),
                 currentlyWatching.pausedAtMin !== void 0 && currentlyWatching.pausedAtMin !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1 bg-white/20 rounded-full px-2.5 py-0.5", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 11, className: "text-white" }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-white", children: [
@@ -42052,7 +43349,7 @@ function HomeTab({ onTabChange }) {
                 ] })
               ] })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-4xl ml-2", children: currentlyWatching.watchType === WatchType$1.movie ? "🎬" : "📺" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-4xl ml-2", children: currentlyWatching.watchType === WatchType.movie ? "🎬" : "📺" })
           ] }),
           currentlyWatching.notes && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-white/80 text-xs line-clamp-2", children: currentlyWatching.notes })
         ]
@@ -42097,7 +43394,7 @@ function HomeTab({ onTabChange }) {
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground truncate", children: item.title }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mt-1", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs", children: item.watchType === WatchType$1.movie ? "Película" : "Serie" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs", children: item.watchType === WatchType.movie ? "Película" : "Serie" }),
                 item.pausedAtMin !== void 0 && item.pausedAtMin !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground flex items-center gap-1", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 11 }),
                   "Min. ",
@@ -42105,7 +43402,7 @@ function HomeTab({ onTabChange }) {
                 ] })
               ] })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl ml-2", children: item.watchType === WatchType$1.movie ? "🎬" : "📺" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl ml-2", children: item.watchType === WatchType.movie ? "🎬" : "📺" })
           ]
         },
         item.id.toString()
@@ -42613,7 +43910,7 @@ function MenuTab() {
 }
 const DEFAULT_FORM$1 = {
   title: "",
-  watchType: WatchType$1.movie,
+  watchType: WatchType.movie,
   notes: ""
 };
 function PendingTab() {
@@ -42736,10 +44033,10 @@ function PendingTab() {
           className: "bg-card rounded-xl p-4 card-shadow",
           "data-ocid": `pending.item.${idx + 1}`,
           children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType$1.movie ? "🎬" : "📺" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType.movie ? "🎬" : "📺" }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground truncate", children: item.title }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-2 mt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs", children: item.watchType === WatchType$1.movie ? "Película" : "Serie" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-2 mt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs", children: item.watchType === WatchType.movie ? "Película" : "Serie" }) }),
               item.notes && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-1 line-clamp-2", children: item.notes })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
@@ -42801,8 +44098,8 @@ function PendingTab() {
                   "button",
                   {
                     type: "button",
-                    onClick: () => setForm((p2) => ({ ...p2, watchType: WatchType$1.movie })),
-                    className: `flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${form.watchType === WatchType$1.movie ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
+                    onClick: () => setForm((p2) => ({ ...p2, watchType: WatchType.movie })),
+                    className: `flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${form.watchType === WatchType.movie ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
                     "data-ocid": "pending.toggle",
                     children: "🎬 Película"
                   }
@@ -42811,8 +44108,8 @@ function PendingTab() {
                   "button",
                   {
                     type: "button",
-                    onClick: () => setForm((p2) => ({ ...p2, watchType: WatchType$1.series })),
-                    className: `flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${form.watchType === WatchType$1.series ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
+                    onClick: () => setForm((p2) => ({ ...p2, watchType: WatchType.series })),
+                    className: `flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${form.watchType === WatchType.series ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
                     "data-ocid": "pending.toggle",
                     children: "📺 Serie"
                   }
@@ -42900,24 +44197,24 @@ function PendingTab() {
   ] });
 }
 const STATUS_LABELS = {
-  [WatchStatus$1.watching]: "Viendo",
-  [WatchStatus$1.pending]: "Pendiente",
-  [WatchStatus$1.completed]: "Completada"
+  [WatchStatus.watching]: "Viendo",
+  [WatchStatus.pending]: "Pendiente",
+  [WatchStatus.completed]: "Completada"
 };
 const STATUS_COLORS = {
-  [WatchStatus$1.watching]: "bg-primary/10 text-primary border-primary/20",
-  [WatchStatus$1.pending]: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  [WatchStatus$1.completed]: "bg-green-50 text-green-700 border-green-200"
+  [WatchStatus.watching]: "bg-primary/10 text-primary border-primary/20",
+  [WatchStatus.pending]: "bg-yellow-50 text-yellow-700 border-yellow-200",
+  [WatchStatus.completed]: "bg-green-50 text-green-700 border-green-200"
 };
 const STATUS_ORDER = [
-  WatchStatus$1.watching,
-  WatchStatus$1.pending,
-  WatchStatus$1.completed
+  WatchStatus.watching,
+  WatchStatus.pending,
+  WatchStatus.completed
 ];
 const DEFAULT_FORM = {
   title: "",
-  watchType: WatchType$1.movie,
-  status: WatchStatus$1.watching,
+  watchType: WatchType.movie,
+  status: WatchStatus.watching,
   pausedAtMin: "",
   notes: ""
 };
@@ -43049,7 +44346,7 @@ function WatchingTab() {
           className: "bg-card rounded-xl p-4 card-shadow",
           "data-ocid": `watching.item.${idx + 1}`,
           children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl mt-0.5", children: item.watchType === WatchType$1.movie ? "🎬" : "📺" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl mt-0.5", children: item.watchType === WatchType.movie ? "🎬" : "📺" }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground truncate", children: item.title }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5 mt-1.5", children: [
@@ -43061,7 +44358,7 @@ function WatchingTab() {
                     children: STATUS_LABELS[item.status]
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs", children: item.watchType === WatchType$1.movie ? "Película" : "Serie" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs", children: item.watchType === WatchType.movie ? "Película" : "Serie" }),
                 item.pausedAtMin !== void 0 && item.pausedAtMin !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1 text-xs text-muted-foreground", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 10 }),
                   "Min. ",
@@ -43135,8 +44432,8 @@ function WatchingTab() {
                   "button",
                   {
                     type: "button",
-                    onClick: () => setForm((p2) => ({ ...p2, watchType: WatchType$1.movie })),
-                    className: `flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${form.watchType === WatchType$1.movie ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
+                    onClick: () => setForm((p2) => ({ ...p2, watchType: WatchType.movie })),
+                    className: `flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${form.watchType === WatchType.movie ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
                     "data-ocid": "watching.toggle",
                     children: "🎬 Película"
                   }
@@ -43145,8 +44442,8 @@ function WatchingTab() {
                   "button",
                   {
                     type: "button",
-                    onClick: () => setForm((p2) => ({ ...p2, watchType: WatchType$1.series })),
-                    className: `flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${form.watchType === WatchType$1.series ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
+                    onClick: () => setForm((p2) => ({ ...p2, watchType: WatchType.series })),
+                    className: `flex-1 py-2 rounded-xl text-sm font-medium border transition-all ${form.watchType === WatchType.series ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
                     "data-ocid": "watching.toggle",
                     children: "📺 Serie"
                   }
@@ -43272,8 +44569,8 @@ function WatchingTab() {
   ] });
 }
 function WelcomeModal({ open, onClose }) {
-  const [name1, setName1] = reactExports.useState("");
-  const [name2, setName2] = reactExports.useState("");
+  const [name1, setName1] = reactExports.useState("Diana");
+  const [name2, setName2] = reactExports.useState("David");
   const handleSave = () => {
     if (!name1.trim()) return;
     localStorage.setItem("partnerName1", name1.trim());
@@ -43298,7 +44595,7 @@ function WelcomeModal({ open, onClose }) {
               Input,
               {
                 id: "name1",
-                placeholder: "Ej: María",
+                placeholder: "Diana",
                 value: name1,
                 onChange: (e) => setName1(e.target.value),
                 "data-ocid": "welcome.input",
@@ -43312,7 +44609,7 @@ function WelcomeModal({ open, onClose }) {
               Input,
               {
                 id: "name2",
-                placeholder: "Ej: Carlos",
+                placeholder: "David",
                 value: name2,
                 onChange: (e) => setName2(e.target.value),
                 "data-ocid": "welcome.input",
@@ -43340,6 +44637,7 @@ const TABS = [
   { id: "viendo", label: "Viendo", icon: Film },
   { id: "pendientes", label: "Pendientes", icon: Bookmark },
   { id: "menu", label: "Menú", icon: UtensilsCrossed },
+  { id: "album", label: "Álbum", icon: Camera },
   { id: "datos", label: "Datos", icon: Download }
 ];
 function App() {
@@ -43368,6 +44666,7 @@ function App() {
       queryClient2.invalidateQueries({ queryKey: ["pendingItems"] });
       queryClient2.invalidateQueries({ queryKey: ["todaysMenu"] });
       queryClient2.invalidateQueries({ queryKey: ["mealMenus"] });
+      queryClient2.invalidateQueries({ queryKey: ["albumEntries"] });
       setTimeout(() => setIsSyncing(false), 1500);
     }
   }, [lastUpdated, queryClient2]);
@@ -43427,6 +44726,17 @@ function App() {
         },
         "menu"
       ),
+      activeTab === "album" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        motion.div,
+        {
+          initial: { opacity: 0, x: -10 },
+          animate: { opacity: 1, x: 0 },
+          exit: { opacity: 0, x: 10 },
+          transition: { duration: 0.2 },
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(AlbumTab, {})
+        },
+        "album"
+      ),
       activeTab === "datos" && /* @__PURE__ */ jsxRuntimeExports.jsx(
         motion.div,
         {
@@ -43459,7 +44769,7 @@ function App() {
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Icon2,
                   {
-                    size: 20,
+                    size: 18,
                     className: isActive ? "text-primary" : "text-muted-foreground",
                     strokeWidth: isActive ? 2.5 : 1.8
                   }
@@ -43467,7 +44777,7 @@ function App() {
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "span",
                   {
-                    className: `text-[10px] font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`,
+                    className: `text-[9px] font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`,
                     children: tab.label
                   }
                 ),

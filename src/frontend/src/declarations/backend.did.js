@@ -8,6 +8,18 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const _CaffeineStorageCreateCertificateResult = IDL.Record({
+  'method' : IDL.Text,
+  'blob_hash' : IDL.Text,
+});
+export const _CaffeineStorageRefillInformation = IDL.Record({
+  'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const _CaffeineStorageRefillResult = IDL.Record({
+  'success' : IDL.Opt(IDL.Bool),
+  'topped_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const BlobId = IDL.Text;
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -37,6 +49,12 @@ export const WatchItem = IDL.Record({
   'pausedAtMin' : IDL.Opt(IDL.Nat),
   'notes' : IDL.Text,
 });
+export const AlbumEntry = IDL.Record({
+  'id' : Id,
+  'date' : IDL.Int,
+  'blobIds' : IDL.Vec(BlobId),
+  'description' : IDL.Text,
+});
 export const MealMenu = IDL.Record({
   'date' : IDL.Int,
   'breakfast' : IDL.Text,
@@ -48,13 +66,45 @@ export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const Time = IDL.Int;
 
 export const idlService = IDL.Service({
+  '_caffeineStorageBlobIsLive' : IDL.Func(
+      [IDL.Vec(IDL.Nat8)],
+      [IDL.Bool],
+      ['query'],
+    ),
+  '_caffeineStorageBlobsToDelete' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      ['query'],
+    ),
+  '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      [],
+      [],
+    ),
+  '_caffeineStorageCreateCertificate' : IDL.Func(
+      [IDL.Text],
+      [_CaffeineStorageCreateCertificateResult],
+      [],
+    ),
+  '_caffeineStorageRefillCashier' : IDL.Func(
+      [IDL.Opt(_CaffeineStorageRefillInformation)],
+      [_CaffeineStorageRefillResult],
+      [],
+    ),
+  '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addPhotoToAlbumEntry' : IDL.Func([IDL.Int, BlobId], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'createAlbumEntry' : IDL.Func([IDL.Int, IDL.Text], [Id], []),
   'createPendingItem' : IDL.Func([PendingItem], [Id], []),
   'createWatchItem' : IDL.Func([WatchItem], [Id], []),
+  'deleteAlbumEntry' : IDL.Func([IDL.Int], [], []),
   'deleteMealMenu' : IDL.Func([IDL.Int], [], []),
   'deletePendingItem' : IDL.Func([Id], [], []),
+  'deletePhoto' : IDL.Func([BlobId], [], []),
   'deleteWatchItem' : IDL.Func([Id], [], []),
+  'getAlbumEntryByDate' : IDL.Func([IDL.Int], [IDL.Opt(AlbumEntry)], ['query']),
+  'getAllAlbumEntries' : IDL.Func([], [IDL.Vec(AlbumEntry)], ['query']),
   'getAllMealMenus' : IDL.Func([], [IDL.Vec(MealMenu)], ['query']),
   'getAllPendingItems' : IDL.Func([], [IDL.Vec(PendingItem)], ['query']),
   'getAllWatchItems' : IDL.Func([], [IDL.Vec(WatchItem)], ['query']),
@@ -71,15 +121,29 @@ export const idlService = IDL.Service({
     ),
   'getWatchItem' : IDL.Func([Id], [WatchItem], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'removePhotoFromAlbumEntry' : IDL.Func([IDL.Int, BlobId], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'updatePendingItem' : IDL.Func([Id, PendingItem], [], []),
   'updateWatchItem' : IDL.Func([Id, WatchItem], [], []),
+  'uploadPhoto' : IDL.Func([BlobId], [BlobId], []),
   'upsertMealMenu' : IDL.Func([MealMenu], [], []),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const _CaffeineStorageCreateCertificateResult = IDL.Record({
+    'method' : IDL.Text,
+    'blob_hash' : IDL.Text,
+  });
+  const _CaffeineStorageRefillInformation = IDL.Record({
+    'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const _CaffeineStorageRefillResult = IDL.Record({
+    'success' : IDL.Opt(IDL.Bool),
+    'topped_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const BlobId = IDL.Text;
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
@@ -106,6 +170,12 @@ export const idlFactory = ({ IDL }) => {
     'pausedAtMin' : IDL.Opt(IDL.Nat),
     'notes' : IDL.Text,
   });
+  const AlbumEntry = IDL.Record({
+    'id' : Id,
+    'date' : IDL.Int,
+    'blobIds' : IDL.Vec(BlobId),
+    'description' : IDL.Text,
+  });
   const MealMenu = IDL.Record({
     'date' : IDL.Int,
     'breakfast' : IDL.Text,
@@ -117,13 +187,49 @@ export const idlFactory = ({ IDL }) => {
   const Time = IDL.Int;
   
   return IDL.Service({
+    '_caffeineStorageBlobIsLive' : IDL.Func(
+        [IDL.Vec(IDL.Nat8)],
+        [IDL.Bool],
+        ['query'],
+      ),
+    '_caffeineStorageBlobsToDelete' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        ['query'],
+      ),
+    '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        [],
+        [],
+      ),
+    '_caffeineStorageCreateCertificate' : IDL.Func(
+        [IDL.Text],
+        [_CaffeineStorageCreateCertificateResult],
+        [],
+      ),
+    '_caffeineStorageRefillCashier' : IDL.Func(
+        [IDL.Opt(_CaffeineStorageRefillInformation)],
+        [_CaffeineStorageRefillResult],
+        [],
+      ),
+    '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addPhotoToAlbumEntry' : IDL.Func([IDL.Int, BlobId], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'createAlbumEntry' : IDL.Func([IDL.Int, IDL.Text], [Id], []),
     'createPendingItem' : IDL.Func([PendingItem], [Id], []),
     'createWatchItem' : IDL.Func([WatchItem], [Id], []),
+    'deleteAlbumEntry' : IDL.Func([IDL.Int], [], []),
     'deleteMealMenu' : IDL.Func([IDL.Int], [], []),
     'deletePendingItem' : IDL.Func([Id], [], []),
+    'deletePhoto' : IDL.Func([BlobId], [], []),
     'deleteWatchItem' : IDL.Func([Id], [], []),
+    'getAlbumEntryByDate' : IDL.Func(
+        [IDL.Int],
+        [IDL.Opt(AlbumEntry)],
+        ['query'],
+      ),
+    'getAllAlbumEntries' : IDL.Func([], [IDL.Vec(AlbumEntry)], ['query']),
     'getAllMealMenus' : IDL.Func([], [IDL.Vec(MealMenu)], ['query']),
     'getAllPendingItems' : IDL.Func([], [IDL.Vec(PendingItem)], ['query']),
     'getAllWatchItems' : IDL.Func([], [IDL.Vec(WatchItem)], ['query']),
@@ -140,9 +246,11 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getWatchItem' : IDL.Func([Id], [WatchItem], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'removePhotoFromAlbumEntry' : IDL.Func([IDL.Int, BlobId], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'updatePendingItem' : IDL.Func([Id, PendingItem], [], []),
     'updateWatchItem' : IDL.Func([Id, WatchItem], [], []),
+    'uploadPhoto' : IDL.Func([BlobId], [BlobId], []),
     'upsertMealMenu' : IDL.Func([MealMenu], [], []),
   });
 };

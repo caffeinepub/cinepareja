@@ -10,6 +10,13 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface AlbumEntry {
+  'id' : Id,
+  'date' : bigint,
+  'blobIds' : Array<BlobId>,
+  'description' : string,
+}
+export type BlobId = string;
 export type Id = bigint;
 export interface MealMenu {
   'date' : bigint,
@@ -42,14 +49,46 @@ export type WatchStatus = { 'pending' : null } |
   { 'watching' : null };
 export type WatchType = { 'movie' : null } |
   { 'series' : null };
+export interface _CaffeineStorageCreateCertificateResult {
+  'method' : string,
+  'blob_hash' : string,
+}
+export interface _CaffeineStorageRefillInformation {
+  'proposed_top_up_amount' : [] | [bigint],
+}
+export interface _CaffeineStorageRefillResult {
+  'success' : [] | [boolean],
+  'topped_up_amount' : [] | [bigint],
+}
 export interface _SERVICE {
+  '_caffeineStorageBlobIsLive' : ActorMethod<[Uint8Array], boolean>,
+  '_caffeineStorageBlobsToDelete' : ActorMethod<[], Array<Uint8Array>>,
+  '_caffeineStorageConfirmBlobDeletion' : ActorMethod<
+    [Array<Uint8Array>],
+    undefined
+  >,
+  '_caffeineStorageCreateCertificate' : ActorMethod<
+    [string],
+    _CaffeineStorageCreateCertificateResult
+  >,
+  '_caffeineStorageRefillCashier' : ActorMethod<
+    [[] | [_CaffeineStorageRefillInformation]],
+    _CaffeineStorageRefillResult
+  >,
+  '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addPhotoToAlbumEntry' : ActorMethod<[bigint, BlobId], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'createAlbumEntry' : ActorMethod<[bigint, string], Id>,
   'createPendingItem' : ActorMethod<[PendingItem], Id>,
   'createWatchItem' : ActorMethod<[WatchItem], Id>,
+  'deleteAlbumEntry' : ActorMethod<[bigint], undefined>,
   'deleteMealMenu' : ActorMethod<[bigint], undefined>,
   'deletePendingItem' : ActorMethod<[Id], undefined>,
+  'deletePhoto' : ActorMethod<[BlobId], undefined>,
   'deleteWatchItem' : ActorMethod<[Id], undefined>,
+  'getAlbumEntryByDate' : ActorMethod<[bigint], [] | [AlbumEntry]>,
+  'getAllAlbumEntries' : ActorMethod<[], Array<AlbumEntry>>,
   'getAllMealMenus' : ActorMethod<[], Array<MealMenu>>,
   'getAllPendingItems' : ActorMethod<[], Array<PendingItem>>,
   'getAllWatchItems' : ActorMethod<[], Array<WatchItem>>,
@@ -62,9 +101,11 @@ export interface _SERVICE {
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'getWatchItem' : ActorMethod<[Id], WatchItem>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'removePhotoFromAlbumEntry' : ActorMethod<[bigint, BlobId], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'updatePendingItem' : ActorMethod<[Id, PendingItem], undefined>,
   'updateWatchItem' : ActorMethod<[Id, WatchItem], undefined>,
+  'uploadPhoto' : ActorMethod<[BlobId], BlobId>,
   'upsertMealMenu' : ActorMethod<[MealMenu], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;

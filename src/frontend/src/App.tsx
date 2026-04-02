@@ -1,8 +1,16 @@
 import { Toaster } from "@/components/ui/sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import { Bookmark, Download, Film, Home, UtensilsCrossed } from "lucide-react";
+import {
+  Bookmark,
+  Camera,
+  Download,
+  Film,
+  Home,
+  UtensilsCrossed,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import AlbumTab from "./components/AlbumTab";
 import DataTab from "./components/DataTab";
 import HomeTab from "./components/HomeTab";
 import MenuTab from "./components/MenuTab";
@@ -11,13 +19,14 @@ import WatchingTab from "./components/WatchingTab";
 import WelcomeModal from "./components/WelcomeModal";
 import { useGetLastUpdated } from "./hooks/useQueries";
 
-type TabId = "inicio" | "viendo" | "pendientes" | "menu" | "datos";
+type TabId = "inicio" | "viendo" | "pendientes" | "menu" | "album" | "datos";
 
 const TABS = [
   { id: "inicio" as TabId, label: "Inicio", icon: Home },
   { id: "viendo" as TabId, label: "Viendo", icon: Film },
   { id: "pendientes" as TabId, label: "Pendientes", icon: Bookmark },
   { id: "menu" as TabId, label: "Menú", icon: UtensilsCrossed },
+  { id: "album" as TabId, label: "Álbum", icon: Camera },
   { id: "datos" as TabId, label: "Datos", icon: Download },
 ];
 
@@ -49,6 +58,7 @@ export default function App() {
       queryClient.invalidateQueries({ queryKey: ["pendingItems"] });
       queryClient.invalidateQueries({ queryKey: ["todaysMenu"] });
       queryClient.invalidateQueries({ queryKey: ["mealMenus"] });
+      queryClient.invalidateQueries({ queryKey: ["albumEntries"] });
       setTimeout(() => setIsSyncing(false), 1500);
     }
   }, [lastUpdated, queryClient]);
@@ -117,6 +127,17 @@ export default function App() {
                 <MenuTab />
               </motion.div>
             )}
+            {activeTab === "album" && (
+              <motion.div
+                key="album"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <AlbumTab />
+              </motion.div>
+            )}
             {activeTab === "datos" && (
               <motion.div
                 key="datos"
@@ -150,14 +171,14 @@ export default function App() {
                   aria-label={tab.label}
                 >
                   <Icon
-                    size={20}
+                    size={18}
                     className={
                       isActive ? "text-primary" : "text-muted-foreground"
                     }
                     strokeWidth={isActive ? 2.5 : 1.8}
                   />
                   <span
-                    className={`text-[10px] font-medium ${
+                    className={`text-[9px] font-medium ${
                       isActive ? "text-primary" : "text-muted-foreground"
                     }`}
                   >

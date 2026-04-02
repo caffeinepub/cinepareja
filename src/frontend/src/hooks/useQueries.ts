@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { MealMenu, PendingItem, WatchItem } from "../backend.d";
+import type {
+  AlbumEntry,
+  MealMenu,
+  PendingItem,
+  WatchItem,
+} from "../backend.d";
 import { useActor } from "./useActor";
 
 // Watch Items
@@ -179,5 +184,77 @@ export function useGetLastUpdated() {
     enabled: !!actor && !isFetching,
     refetchInterval: 10000,
     staleTime: 0,
+  });
+}
+
+// Album Entries
+export function useGetAllAlbumEntries() {
+  const { actor, isFetching } = useActor();
+  return useQuery<AlbumEntry[]>({
+    queryKey: ["albumEntries"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllAlbumEntries();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useCreateAlbumEntry() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      date,
+      description,
+    }: { date: bigint; description: string }) => {
+      if (!actor) throw new Error("No actor");
+      return actor.createAlbumEntry(date, description);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["albumEntries"] });
+    },
+  });
+}
+
+export function useAddPhotoToAlbumEntry() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ date, blobId }: { date: bigint; blobId: string }) => {
+      if (!actor) throw new Error("No actor");
+      return actor.addPhotoToAlbumEntry(date, blobId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["albumEntries"] });
+    },
+  });
+}
+
+export function useRemovePhotoFromAlbumEntry() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ date, blobId }: { date: bigint; blobId: string }) => {
+      if (!actor) throw new Error("No actor");
+      return actor.removePhotoFromAlbumEntry(date, blobId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["albumEntries"] });
+    },
+  });
+}
+
+export function useDeleteAlbumEntry() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (date: bigint) => {
+      if (!actor) throw new Error("No actor");
+      return actor.deleteAlbumEntry(date);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["albumEntries"] });
+    },
   });
 }
