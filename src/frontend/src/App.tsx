@@ -6,6 +6,7 @@ import {
   Download,
   Film,
   Home,
+  Loader2,
   UtensilsCrossed,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -13,10 +14,12 @@ import { useEffect, useRef, useState } from "react";
 import AlbumTab from "./components/AlbumTab";
 import DataTab from "./components/DataTab";
 import HomeTab from "./components/HomeTab";
+import LoginScreen from "./components/LoginScreen";
 import MenuTab from "./components/MenuTab";
 import PendingTab from "./components/PendingTab";
 import WatchingTab from "./components/WatchingTab";
 import WelcomeModal from "./components/WelcomeModal";
+import { useInternetIdentity } from "./hooks/useInternetIdentity";
 import { useGetLastUpdated } from "./hooks/useQueries";
 
 type TabId = "inicio" | "viendo" | "pendientes" | "menu" | "album" | "datos";
@@ -37,13 +40,18 @@ export default function App() {
   const queryClient = useQueryClient();
   const lastUpdatedRef = useRef<bigint | null>(null);
   const { data: lastUpdated } = useGetLastUpdated();
+  const { identity, isInitializing } = useInternetIdentity();
+
+  const isAuthenticated =
+    identity !== undefined && !identity.getPrincipal().isAnonymous();
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     const name1 = localStorage.getItem("partnerName1");
     if (!name1) {
       setShowWelcome(true);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (lastUpdated === undefined || lastUpdated === null) return;
@@ -62,6 +70,25 @@ export default function App() {
       setTimeout(() => setIsSyncing(false), 1500);
     }
   }, [lastUpdated, queryClient]);
+
+  // Show full-screen spinner only while initializing AND not yet determined
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 size={32} className="text-primary animate-spin" />
+      </div>
+    );
+  }
+
+  // Show login screen if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <>
+        <LoginScreen />
+        <Toaster position="top-center" richColors />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex justify-center">

@@ -15172,17 +15172,17 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$f = [
+const __iconNode$j = [
   ["path", { d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", key: "1fy3hk" }]
 ];
-const Bookmark = createLucideIcon("bookmark", __iconNode$f);
+const Bookmark = createLucideIcon("bookmark", __iconNode$j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$e = [
+const __iconNode$i = [
   [
     "path",
     {
@@ -15192,69 +15192,77 @@ const __iconNode$e = [
   ],
   ["circle", { cx: "12", cy: "13", r: "3", key: "1vg3eu" }]
 ];
-const Camera = createLucideIcon("camera", __iconNode$e);
+const Camera = createLucideIcon("camera", __iconNode$i);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$d = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$d);
+const __iconNode$h = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$h);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$c = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$c);
+const __iconNode$g = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$g);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$b = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$b);
+const __iconNode$f = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$f);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$a = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$a);
+const __iconNode$e = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$e);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$9 = [
+const __iconNode$d = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$d);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$c = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$9);
+const Clock = createLucideIcon("clock", __iconNode$c);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$8 = [
+const __iconNode$b = [
   ["path", { d: "M12 15V3", key: "m9g1x1" }],
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
   ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const Download = createLucideIcon("download", __iconNode$8);
+const Download = createLucideIcon("download", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$7 = [
+const __iconNode$a = [
   ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
   ["path", { d: "M7 3v18", key: "bbkbws" }],
   ["path", { d: "M3 7.5h4", key: "zfgn84" }],
@@ -15264,14 +15272,14 @@ const __iconNode$7 = [
   ["path", { d: "M17 7.5h4", key: "myr1c1" }],
   ["path", { d: "M17 16.5h4", key: "go4c1d" }]
 ];
-const Film = createLucideIcon("film", __iconNode$7);
+const Film = createLucideIcon("film", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$6 = [
+const __iconNode$9 = [
   [
     "path",
     {
@@ -15280,14 +15288,14 @@ const __iconNode$6 = [
     }
   ]
 ];
-const Heart = createLucideIcon("heart", __iconNode$6);
+const Heart = createLucideIcon("heart", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$5 = [
+const __iconNode$8 = [
   ["path", { d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8", key: "5wwlr5" }],
   [
     "path",
@@ -15297,7 +15305,39 @@ const __iconNode$5 = [
     }
   ]
 ];
-const House = createLucideIcon("house", __iconNode$5);
+const House = createLucideIcon("house", __iconNode$8);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$7 = [
+  ["path", { d: "M9 17H7A5 5 0 0 1 7 7h2", key: "8i5ue5" }],
+  ["path", { d: "M15 7h2a5 5 0 1 1 0 10h-2", key: "1b9ql8" }],
+  ["line", { x1: "8", x2: "16", y1: "12", y2: "12", key: "1jonct" }]
+];
+const Link2 = createLucideIcon("link-2", __iconNode$7);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$6 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$6);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$5 = [
+  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
+  ["path", { d: "M21 12H9", key: "dn1m92" }],
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$5);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -40318,6 +40358,21 @@ async function createActorWithConfig(options) {
     actorOptions
   );
 }
+function getUrlParameter(paramName) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const regularParam = urlParams.get(paramName);
+  if (regularParam !== null) {
+    return regularParam;
+  }
+  const hash = window.location.hash;
+  const queryStartIndex = hash.indexOf("?");
+  if (queryStartIndex !== -1) {
+    const hashQuery = hash.substring(queryStartIndex + 1);
+    const hashParams = new URLSearchParams(hashQuery);
+    return hashParams.get(paramName);
+  }
+  return null;
+}
 function storeSessionParameter(key, value) {
   try {
     sessionStorage.setItem(key, value);
@@ -43273,6 +43328,8 @@ function HomeTab({ onTabChange }) {
   );
   const [tempName1, setTempName1] = reactExports.useState(name1);
   const [tempName2, setTempName2] = reactExports.useState(name2);
+  const [copied, setCopied] = reactExports.useState(false);
+  const { clear } = useInternetIdentity();
   const { data: watchItems = [] } = useGetAllWatchItems();
   const { data: todaysMenu } = useGetTodaysMenu();
   const { data: pendingItems = [] } = useGetAllPendingItems();
@@ -43289,6 +43346,22 @@ function HomeTab({ onTabChange }) {
     setName1(n1);
     setName2(n2);
     setEditNames(false);
+  };
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2e3);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = window.location.href;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2e3);
+    }
   };
   const formatMin = (min) => {
     if (min === void 0 || min === null) return null;
@@ -43310,21 +43383,36 @@ function HomeTab({ onTabChange }) {
           name2 ? ` & ${name2}` : ""
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Button,
-        {
-          variant: "ghost",
-          size: "icon",
-          onClick: () => {
-            setTempName1(name1);
-            setTempName2(name2);
-            setEditNames(true);
-          },
-          "data-ocid": "home.edit_button",
-          className: "rounded-xl",
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pen, { size: 16 })
-        }
-      )
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "ghost",
+            size: "icon",
+            onClick: () => {
+              setTempName1(name1);
+              setTempName2(name2);
+              setEditNames(true);
+            },
+            "data-ocid": "home.edit_button",
+            className: "rounded-xl",
+            "aria-label": "Editar nombres",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pen, { size: 16 })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "ghost",
+            size: "icon",
+            onClick: clear,
+            "data-ocid": "home.secondary_button",
+            className: "rounded-xl text-muted-foreground hover:text-destructive",
+            "aria-label": "Cerrar sesión",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(LogOut, { size: 16 })
+          }
+        )
+      ] })
     ] }),
     currentlyWatching ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
       motion.div,
@@ -43379,6 +43467,38 @@ function HomeTab({ onTabChange }) {
         ] })
       }
     ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("section", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      motion.div,
+      {
+        initial: { opacity: 0, y: 8 },
+        animate: { opacity: 1, y: 0 },
+        className: "bg-card rounded-2xl p-4 card-shadow border border-border/60",
+        "data-ocid": "home.panel",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-full hero-gradient flex items-center justify-center flex-shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Link2, { size: 16, className: "text-white" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground", children: "Invitar a tu pareja" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-0.5 mb-3", children: "Comparte este enlace para que vea lo mismo que tú" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 bg-muted rounded-lg px-3 py-1.5 truncate", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground truncate", children: window.location.href }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  size: "sm",
+                  onClick: handleCopyLink,
+                  "data-ocid": "home.secondary_button",
+                  className: `flex-shrink-0 rounded-xl text-xs h-8 px-3 transition-all ${copied ? "bg-green-500 hover:bg-green-500 text-white" : "hero-gradient border-none text-white"}`,
+                  children: copied ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { size: 12, className: "mr-1" }),
+                    "¡Copiado!"
+                  ] }) : "Copiar"
+                }
+              )
+            ] })
+          ] })
+        ] })
+      }
+    ) }),
     watchingItems.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-base font-display font-semibold text-foreground mb-3 flex items-center gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Film, { size: 16, className: "text-primary" }),
@@ -43558,6 +43678,129 @@ function HomeTab({ onTabChange }) {
       }
     ) })
   ] });
+}
+function LoginScreen() {
+  const { login, isInitializing, isLoggingIn } = useInternetIdentity();
+  const inviteCode = getUrlParameter("code");
+  if (isInitializing) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen flex items-center justify-center bg-background", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      motion.div,
+      {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        className: "flex flex-col items-center gap-4",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-16 h-16 rounded-full hero-gradient flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Heart, { size: 28, className: "text-white fill-white" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 rounded-full hero-gradient opacity-30 animate-ping" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground animate-pulse", children: "Cargando..." })
+        ]
+      }
+    ) });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen flex items-center justify-center bg-background", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full max-w-[430px] min-h-screen flex flex-col", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "hero-gradient flex-shrink-0 flex flex-col items-center justify-center pt-20 pb-16 px-6 relative overflow-hidden", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-[-40px] right-[-40px] w-32 h-32 rounded-full bg-white/10" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute bottom-[-20px] left-[-20px] w-24 h-24 rounded-full bg-white/10" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        motion.div,
+        {
+          initial: { scale: 0.6, opacity: 0 },
+          animate: { scale: 1, opacity: 1 },
+          transition: {
+            type: "spring",
+            stiffness: 200,
+            damping: 15,
+            delay: 0.1
+          },
+          className: "w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 shadow-lg",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Heart, { size: 44, className: "text-white fill-white" })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, y: 16 },
+          animate: { opacity: 1, y: 0 },
+          transition: { delay: 0.2 },
+          className: "text-center",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-4xl font-display font-bold text-white tracking-tight", children: "CinePareja" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-white/80 text-base mt-2 font-body", children: "El espacio de los dos" })
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 bg-background rounded-t-3xl -mt-6 px-6 pt-8 pb-10 flex flex-col", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: inviteCode && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, y: -10 },
+          animate: { opacity: 1, y: 0 },
+          className: "mb-6 bg-secondary rounded-2xl p-4 flex items-start gap-3",
+          "data-ocid": "login.panel",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-9 h-9 rounded-full hero-gradient flex items-center justify-center flex-shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Link2, { size: 16, className: "text-white" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground", children: "Tu pareja te ha invitado" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-0.5", children: "Inicia sesión para acceder al espacio compartido de CinePareja" })
+            ] })
+          ]
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        motion.div,
+        {
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { delay: 0.3 },
+          className: "flex-1 flex flex-col",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl font-display font-bold text-foreground", children: inviteCode ? "¡Bienvenido/a!" : "¡Hola!" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-1.5 mb-8", children: inviteCode ? "Inicia sesión para ver lo mismo que tu pareja en tiempo real." : "Inicia sesión para acceder a vuestra app de pareja compartida." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  onClick: login,
+                  disabled: isLoggingIn,
+                  className: "w-full h-12 rounded-2xl text-base font-semibold hero-gradient border-none text-white shadow-md",
+                  "data-ocid": "login.primary_button",
+                  children: isLoggingIn ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { size: 18, className: "mr-2 animate-spin" }),
+                    "Iniciando sesión..."
+                  ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(Heart, { size: 18, className: "mr-2 fill-white" }),
+                    "Iniciar sesión"
+                  ] })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-center text-xs text-muted-foreground px-4", children: "Usamos Internet Identity para proteger tu privacidad de forma segura y sin contraseñas." })
+            ] })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        motion.div,
+        {
+          initial: { opacity: 0 },
+          animate: { opacity: 1 },
+          transition: { delay: 0.5 },
+          className: "mt-8 space-y-3",
+          children: [
+            { emoji: "🎬", text: "Seguimiento de películas y series" },
+            { emoji: "📋", text: "Lista de pendientes compartida" },
+            { emoji: "🍽️", text: "Planificador de menú diario" },
+            { emoji: "📸", text: "Álbum de fotos por día" }
+          ].map((f) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xl w-7 text-center", children: f.emoji }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: f.text })
+          ] }, f.text))
+        }
+      )
+    ] })
+  ] }) });
 }
 function Textarea({ className, ...props }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -44647,12 +44890,15 @@ function App() {
   const queryClient2 = useQueryClient();
   const lastUpdatedRef = reactExports.useRef(null);
   const { data: lastUpdated } = useGetLastUpdated();
+  const { identity, isInitializing } = useInternetIdentity();
+  const isAuthenticated = identity !== void 0 && !identity.getPrincipal().isAnonymous();
   reactExports.useEffect(() => {
+    if (!isAuthenticated) return;
     const name1 = localStorage.getItem("partnerName1");
     if (!name1) {
       setShowWelcome(true);
     }
-  }, []);
+  }, [isAuthenticated]);
   reactExports.useEffect(() => {
     if (lastUpdated === void 0 || lastUpdated === null) return;
     if (lastUpdatedRef.current === null) {
@@ -44670,6 +44916,15 @@ function App() {
       setTimeout(() => setIsSyncing(false), 1500);
     }
   }, [lastUpdated, queryClient2]);
+  if (isInitializing) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen flex items-center justify-center bg-background", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { size: 32, className: "text-primary animate-spin" }) });
+  }
+  if (!isAuthenticated) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(LoginScreen, {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Toaster, { position: "top-center", richColors: true })
+    ] });
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen bg-background flex justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full max-w-[430px] relative flex flex-col min-h-screen", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: isSyncing && /* @__PURE__ */ jsxRuntimeExports.jsx(
       motion.div,

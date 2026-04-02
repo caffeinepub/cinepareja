@@ -10,15 +10,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Bookmark,
+  Check,
   Clock,
   Edit2,
   Film,
   Heart,
+  Link2,
+  LogOut,
   UtensilsCrossed,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { WatchStatus, WatchType } from "../backend.d";
+import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import {
   useGetAllPendingItems,
   useGetAllWatchItems,
@@ -41,7 +45,9 @@ export default function HomeTab({ onTabChange }: HomeTabProps) {
   );
   const [tempName1, setTempName1] = useState(name1);
   const [tempName2, setTempName2] = useState(name2);
+  const [copied, setCopied] = useState(false);
 
+  const { clear } = useInternetIdentity();
   const { data: watchItems = [] } = useGetAllWatchItems();
   const { data: todaysMenu } = useGetTodaysMenu();
   const { data: pendingItems = [] } = useGetAllPendingItems();
@@ -60,6 +66,24 @@ export default function HomeTab({ onTabChange }: HomeTabProps) {
     setName1(n1);
     setName2(n2);
     setEditNames(false);
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for browsers without clipboard API
+      const textarea = document.createElement("textarea");
+      textarea.value = window.location.href;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const formatMin = (min: bigint | undefined) => {
@@ -89,19 +113,32 @@ export default function HomeTab({ onTabChange }: HomeTabProps) {
             </p>
           )}
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            setTempName1(name1);
-            setTempName2(name2);
-            setEditNames(true);
-          }}
-          data-ocid="home.edit_button"
-          className="rounded-xl"
-        >
-          <Edit2 size={16} />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              setTempName1(name1);
+              setTempName2(name2);
+              setEditNames(true);
+            }}
+            data-ocid="home.edit_button"
+            className="rounded-xl"
+            aria-label="Editar nombres"
+          >
+            <Edit2 size={16} />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={clear}
+            data-ocid="home.secondary_button"
+            className="rounded-xl text-muted-foreground hover:text-destructive"
+            aria-label="Cerrar sesión"
+          >
+            <LogOut size={16} />
+          </Button>
+        </div>
       </div>
 
       {/* Hero watching card */}
@@ -174,6 +211,56 @@ export default function HomeTab({ onTabChange }: HomeTabProps) {
           </div>
         </motion.div>
       )}
+
+      {/* Invitar a tu pareja */}
+      <section>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-card rounded-2xl p-4 card-shadow border border-border/60"
+          data-ocid="home.panel"
+        >
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-full hero-gradient flex items-center justify-center flex-shrink-0">
+              <Link2 size={16} className="text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-foreground">
+                Invitar a tu pareja
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5 mb-3">
+                Comparte este enlace para que vea lo mismo que tú
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 bg-muted rounded-lg px-3 py-1.5 truncate">
+                  <p className="text-xs text-muted-foreground truncate">
+                    {window.location.href}
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={handleCopyLink}
+                  data-ocid="home.secondary_button"
+                  className={`flex-shrink-0 rounded-xl text-xs h-8 px-3 transition-all ${
+                    copied
+                      ? "bg-green-500 hover:bg-green-500 text-white"
+                      : "hero-gradient border-none text-white"
+                  }`}
+                >
+                  {copied ? (
+                    <>
+                      <Check size={12} className="mr-1" />
+                      ¡Copiado!
+                    </>
+                  ) : (
+                    "Copiar"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </section>
 
       {/* Viendo ahora section */}
       {watchingItems.length > 0 && (
