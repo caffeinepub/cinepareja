@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Figtree";
+  src: url("/assets/fonts/Figtree.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/assets/fonts/PlusJakartaSans.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 1rem;
+
+    /* Warm off-white/cream background: #F6F0E8 */
+    --background: 0.962 0.012 68;
+    /* Near-black text: #1A1A1A */
+    --foreground: 0.145 0 0;
+    /* Card surfaces: white #FFFFFF */
+    --card: 1 0 0;
+    --card-foreground: 0.145 0 0;
+    --popover: 1 0 0;
+    --popover-foreground: 0.145 0 0;
+    /* Primary: dusty rose #C45B73 */
+    --primary: 0.54 0.135 10;
+    --primary-foreground: 1 0 0;
+    /* Secondary: light blush */
+    --secondary: 0.94 0.025 10;
+    --secondary-foreground: 0.54 0.135 10;
+    /* Muted: light gray */
+    --muted: 0.96 0.008 60;
+    --muted-foreground: 0.5 0.02 60;
+    /* Accent: lavender */
+    --accent: 0.88 0.05 290;
+    --accent-foreground: 0.3 0.08 290;
+    /* Destructive */
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    /* Border: very light warm */
+    --border: 0.91 0.015 60;
+    --input: 0.91 0.015 60;
+    --ring: 0.54 0.135 10;
+    /* Tab bar blush #F2D6DC */
+    --tab-bar: 0.92 0.04 10;
+    /* Hero gradient colors */
+    --hero-start: 0.72 0.08 300;
+    --hero-end: 0.82 0.09 10;
+    /* Charts */
+    --chart-1: 0.646 0.222 41.116;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+    --sidebar: 0.985 0 0;
+    --sidebar-foreground: 0.145 0 0;
+    --sidebar-primary: 0.54 0.135 10;
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent: 0.97 0 0;
+    --sidebar-accent-foreground: 0.205 0 0;
+    --sidebar-border: 0.922 0 0;
+    --sidebar-ring: 0.708 0 0;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .tab-bar-bg {
+    background-color: oklch(var(--tab-bar));
+  }
+
+  .hero-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(var(--hero-start)) 0%,
+      oklch(var(--hero-end)) 100%
+    );
+  }
+
+  .card-shadow {
+    box-shadow: 0 2px 12px 0 oklch(0.145 0 0 / 0.08), 0 1px 3px 0
+      oklch(0.145 0 0 / 0.05);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Scrollbar hide utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
