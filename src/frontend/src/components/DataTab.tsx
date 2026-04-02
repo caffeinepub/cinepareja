@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Bookmark,
+  Camera,
   Download,
   Film,
   Trash2,
@@ -26,10 +27,34 @@ import {
   useDeleteMealMenu,
   useDeletePendingItem,
   useDeleteWatchItem,
+  useGetAllAlbumEntries,
   useGetAllMealMenus,
   useGetAllPendingItems,
   useGetAllWatchItems,
 } from "../hooks/useQueries";
+
+// Convert nanosecond bigint to JS Date
+function bigintToDate(ns: bigint): Date {
+  return new Date(Number(ns / 1_000_000n));
+}
+
+// Format date in Spanish
+function formatDateES(date: Date): string {
+  return date.toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function getBlobUrl(blobId: string): string {
+  const storageGatewayUrl =
+    (window as any).__caffeineStorageGatewayUrl || "https://blob.caffeine.ai";
+  const backendCanisterId = (window as any).__caffeineBackendCanisterId || "";
+  const projectId =
+    (window as any).__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
+  return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
+}
 
 export default function DataTab() {
   const { data: watchItems = [], isLoading: loadingWatch } =
@@ -38,6 +63,8 @@ export default function DataTab() {
     useGetAllPendingItems();
   const { data: mealMenus = [], isLoading: loadingMenus } =
     useGetAllMealMenus();
+  const { data: albumEntries = [], isLoading: loadingAlbum } =
+    useGetAllAlbumEntries();
   const deleteWatch = useDeleteWatchItem();
   const deletePending = useDeletePendingItem();
   const deleteMeal = useDeleteMealMenu();
@@ -46,7 +73,13 @@ export default function DataTab() {
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
 
-  const isLoading = loadingWatch || loadingPending || loadingMenus;
+  const isLoading =
+    loadingWatch || loadingPending || loadingMenus || loadingAlbum;
+
+  const totalPhotos = albumEntries.reduce(
+    (acc, e) => acc + e.blobIds.length,
+    0,
+  );
 
   const stats = {
     watching: watchItems.filter((i) => i.status === WatchStatus.watching)
@@ -56,7 +89,14 @@ export default function DataTab() {
       .length,
     pendingItems: pendingItems.length,
     menus: mealMenus.length,
+    photos: totalPhotos,
+    albumDays: albumEntries.length,
   };
+
+  // Sort entries newest first
+  const sortedAlbumEntries = [...albumEntries].sort((a, b) =>
+    a.date > b.date ? -1 : 1,
+  );
 
   const handleExport = () => {
     const data = {
@@ -64,6 +104,12 @@ export default function DataTab() {
       watchItems,
       pendingItems,
       mealMenus,
+      albumEntries: albumEntries.map((e) => ({
+        date: bigintToDate(e.date).toISOString(),
+        description: e.description,
+        photoCount: e.blobIds.length,
+        blobIds: e.blobIds,
+      })),
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json",
@@ -192,7 +238,7 @@ export default function DataTab() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-card rounded-xl p-4 card-shadow col-span-2"
+                className="bg-card rounded-xl p-4 card-shadow"
                 data-ocid="data.card"
               >
                 <div className="flex items-center gap-2 mb-1">
@@ -205,8 +251,86 @@ export default function DataTab() {
                   {stats.menus}
                 </p>
               </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="bg-card rounded-xl p-4 card-shadow"
+                data-ocid="data.card"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <Camera size={16} className="text-primary" />
+                  <span className="text-xs text-muted-foreground">Fotos</span>
+                </div>
+                <p className="text-2xl font-bold text-foreground">
+                  {stats.photos}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  en {stats.albumDays} día{stats.albumDays !== 1 ? "s" : ""}
+                </p>
+              </motion.div>
             </div>
           </section>
+
+          {/* Album Photos by Date */}
+          {sortedAlbumEntries.length > 0 && (
+            <section>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                Fotos del álbum
+              </h3>
+              <div className="space-y-4">
+                {sortedAlbumEntries.map((entry, idx) => {
+                  const date = bigintToDate(entry.date);
+                  return (
+                    <motion.div
+                      key={entry.date.toString()}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="bg-card rounded-xl card-shadow overflow-hidden"
+                      data-ocid={`data.album_entry.${idx + 1}`}
+                    >
+                      {/* Date header */}
+                      <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50">
+                        <Camera size={14} className="text-primary" />
+                        <div>
+                          <p className="text-sm font-semibold text-foreground capitalize">
+                            {formatDateES(date)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {entry.blobIds.length} foto
+                            {entry.blobIds.length !== 1 ? "s" : ""}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Photo grid */}
+                      <div className="p-3 grid grid-cols-3 gap-2">
+                        {entry.blobIds.map((blobId, photoIdx) => (
+                          <div key={blobId} className="relative aspect-square">
+                            <img
+                              src={getBlobUrl(blobId)}
+                              alt={`Foto ${photoIdx + 1} del ${formatDateES(date)}`}
+                              className="w-full h-full object-cover rounded-lg"
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      {entry.description && (
+                        <div className="px-4 pb-3">
+                          <p className="text-xs text-muted-foreground italic">
+                            {entry.description}
+                          </p>
+                        </div>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           {/* Export */}
           <section>
@@ -218,7 +342,8 @@ export default function DataTab() {
                 Descarga todos tus datos
               </p>
               <p className="text-xs text-muted-foreground mb-4">
-                Exporta películas, series, pendientes y menús en formato JSON.
+                Exporta películas, series, pendientes, menús y el registro del
+                álbum en formato JSON.
               </p>
               <Button
                 onClick={handleExport}

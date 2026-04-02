@@ -42166,10 +42166,10 @@ function dateToDayBigint(date) {
   d2.setHours(0, 0, 0, 0);
   return BigInt(d2.getTime()) * 1000000n;
 }
-function bigintToDate(ns) {
+function bigintToDate$1(ns) {
   return new Date(Number(ns / 1000000n));
 }
-function formatDateES(date) {
+function formatDateES$1(date) {
   return date.toLocaleDateString("es-ES", {
     day: "numeric",
     month: "long",
@@ -42188,7 +42188,7 @@ function PhotoViewer({
   date,
   onClose,
   onDelete,
-  getBlobUrl
+  getBlobUrl: getBlobUrl2
 }) {
   const [current, setCurrent] = reactExports.useState(initialIndex);
   const prev = () => setCurrent((c2) => c2 > 0 ? c2 - 1 : photos.length - 1);
@@ -42201,7 +42201,7 @@ function PhotoViewer({
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { className: "px-4 pt-4 pb-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "text-sm font-medium text-muted-foreground", children: formatDateES(date) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "text-sm font-medium text-muted-foreground", children: formatDateES$1(date) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               "button",
               {
@@ -42223,7 +42223,7 @@ function PhotoViewer({
           /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             motion.img,
             {
-              src: getBlobUrl(photos[current]),
+              src: getBlobUrl2(photos[current]),
               alt: `Foto ${current + 1}`,
               className: "w-full aspect-square object-cover",
               initial: { opacity: 0 },
@@ -42419,10 +42419,10 @@ function DayGroup({
   onPhotoClick,
   onAddPhoto,
   onDeletePhoto,
-  getBlobUrl,
+  getBlobUrl: getBlobUrl2,
   index: index2
 }) {
-  const date = bigintToDate(entry.date);
+  const date = bigintToDate$1(entry.date);
   const [hoveredPhoto, setHoveredPhoto] = reactExports.useState(null);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     motion.div,
@@ -42435,7 +42435,7 @@ function DayGroup({
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-4 py-3 border-b border-border/50", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground capitalize", children: formatDateES(date) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground capitalize", children: formatDateES$1(date) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
               entry.blobIds.length,
               " foto",
@@ -42468,7 +42468,7 @@ function DayGroup({
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "img",
                 {
-                  src: getBlobUrl(blobId),
+                  src: getBlobUrl2(blobId),
                   alt: `Foto ${photoIdx + 1}`,
                   className: "w-full h-full object-cover rounded-lg"
                 }
@@ -42516,7 +42516,7 @@ function AlbumTab() {
   const quickAddFileRef = reactExports.useRef(null);
   const quickAddDateRef = reactExports.useRef(null);
   const sortedEntries = entries ? [...entries].sort((a2, b2) => a2.date > b2.date ? -1 : 1) : [];
-  const getBlobUrl = (blobId) => {
+  const getBlobUrl2 = (blobId) => {
     const storageGatewayUrl = window.__caffeineStorageGatewayUrl || "https://blob.caffeine.ai";
     const backendCanisterId = window.__caffeineBackendCanisterId || "";
     const projectId = window.__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
@@ -42671,7 +42671,7 @@ function AlbumTab() {
       {
         entry,
         index: idx,
-        getBlobUrl,
+        getBlobUrl: getBlobUrl2,
         onPhotoClick: (photos, photoIdx, date) => setViewer({ photos, index: photoIdx, date }),
         onAddPhoto: handleAddPhotoForDate,
         onDeletePhoto: handleDeletePhoto
@@ -42731,7 +42731,7 @@ function AlbumTab() {
             );
           }
         },
-        getBlobUrl
+        getBlobUrl: getBlobUrl2
       }
     ) })
   ] });
@@ -43009,30 +43009,62 @@ var WatchType = /* @__PURE__ */ ((WatchType2) => {
   WatchType2["series"] = "series";
   return WatchType2;
 })(WatchType || {});
+function bigintToDate(ns) {
+  return new Date(Number(ns / 1000000n));
+}
+function formatDateES(date) {
+  return date.toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+function getBlobUrl(blobId) {
+  const storageGatewayUrl = window.__caffeineStorageGatewayUrl || "https://blob.caffeine.ai";
+  const backendCanisterId = window.__caffeineBackendCanisterId || "";
+  const projectId = window.__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
+  return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
+}
 function DataTab() {
   const { data: watchItems = [], isLoading: loadingWatch } = useGetAllWatchItems();
   const { data: pendingItems = [], isLoading: loadingPending } = useGetAllPendingItems();
   const { data: mealMenus = [], isLoading: loadingMenus } = useGetAllMealMenus();
+  const { data: albumEntries = [], isLoading: loadingAlbum } = useGetAllAlbumEntries();
   const deleteWatch = useDeleteWatchItem();
   const deletePending = useDeletePendingItem();
   const deleteMeal = useDeleteMealMenu();
   const queryClient2 = useQueryClient();
   const [showConfirmReset, setShowConfirmReset] = reactExports.useState(false);
   const [isResetting, setIsResetting] = reactExports.useState(false);
-  const isLoading = loadingWatch || loadingPending || loadingMenus;
+  const isLoading = loadingWatch || loadingPending || loadingMenus || loadingAlbum;
+  const totalPhotos = albumEntries.reduce(
+    (acc, e) => acc + e.blobIds.length,
+    0
+  );
   const stats = {
     watching: watchItems.filter((i) => i.status === WatchStatus.watching).length,
     pending: watchItems.filter((i) => i.status === WatchStatus.pending).length,
     completed: watchItems.filter((i) => i.status === WatchStatus.completed).length,
     pendingItems: pendingItems.length,
-    menus: mealMenus.length
+    menus: mealMenus.length,
+    photos: totalPhotos,
+    albumDays: albumEntries.length
   };
+  const sortedAlbumEntries = [...albumEntries].sort(
+    (a2, b2) => a2.date > b2.date ? -1 : 1
+  );
   const handleExport = () => {
     const data = {
       exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
       watchItems,
       pendingItems,
-      mealMenus
+      mealMenus,
+      albumEntries: albumEntries.map((e) => ({
+        date: bigintToDate(e.date).toISOString(),
+        description: e.description,
+        photoCount: e.blobIds.length,
+        blobIds: e.blobIds
+      }))
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: "application/json"
@@ -43147,7 +43179,7 @@ function DataTab() {
               initial: { opacity: 0, y: 8 },
               animate: { opacity: 1, y: 0 },
               transition: { delay: 0.2 },
-              className: "bg-card rounded-xl p-4 card-shadow col-span-2",
+              className: "bg-card rounded-xl p-4 card-shadow",
               "data-ocid": "data.card",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-1", children: [
@@ -43157,14 +43189,76 @@ function DataTab() {
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-foreground", children: stats.menus })
               ]
             }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            motion.div,
+            {
+              initial: { opacity: 0, y: 8 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: 0.25 },
+              className: "bg-card rounded-xl p-4 card-shadow",
+              "data-ocid": "data.card",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Camera, { size: 16, className: "text-primary" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: "Fotos" })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-foreground", children: stats.photos }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+                  "en ",
+                  stats.albumDays,
+                  " día",
+                  stats.albumDays !== 1 ? "s" : ""
+                ] })
+              ]
+            }
           )
         ] })
+      ] }),
+      sortedAlbumEntries.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3", children: "Fotos del álbum" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: sortedAlbumEntries.map((entry, idx) => {
+          const date = bigintToDate(entry.date);
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            motion.div,
+            {
+              initial: { opacity: 0, y: 8 },
+              animate: { opacity: 1, y: 0 },
+              transition: { delay: idx * 0.05 },
+              className: "bg-card rounded-xl card-shadow overflow-hidden",
+              "data-ocid": `data.album_entry.${idx + 1}`,
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 px-4 py-3 border-b border-border/50", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Camera, { size: 14, className: "text-primary" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground capitalize", children: formatDateES(date) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+                      entry.blobIds.length,
+                      " foto",
+                      entry.blobIds.length !== 1 ? "s" : ""
+                    ] })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 grid grid-cols-3 gap-2", children: entry.blobIds.map((blobId, photoIdx) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative aspect-square", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "img",
+                  {
+                    src: getBlobUrl(blobId),
+                    alt: `Foto ${photoIdx + 1} del ${formatDateES(date)}`,
+                    className: "w-full h-full object-cover rounded-lg"
+                  }
+                ) }, blobId)) }),
+                entry.description && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-4 pb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground italic", children: entry.description }) })
+              ]
+            },
+            entry.date.toString()
+          );
+        }) })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3", children: "Exportar" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card rounded-xl p-4 card-shadow", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground font-medium mb-1", children: "Descarga todos tus datos" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-4", children: "Exporta películas, series, pendientes y menús en formato JSON." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-4", children: "Exporta películas, series, pendientes, menús y el registro del álbum en formato JSON." }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             Button,
             {
