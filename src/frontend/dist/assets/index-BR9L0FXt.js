@@ -15172,17 +15172,17 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [
+const __iconNode$k = [
   ["path", { d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", key: "1fy3hk" }]
 ];
-const Bookmark = createLucideIcon("bookmark", __iconNode$j);
+const Bookmark = createLucideIcon("bookmark", __iconNode$k);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$i = [
+const __iconNode$j = [
   [
     "path",
     {
@@ -15192,47 +15192,58 @@ const __iconNode$i = [
   ],
   ["circle", { cx: "12", cy: "13", r: "3", key: "1vg3eu" }]
 ];
-const Camera = createLucideIcon("camera", __iconNode$i);
+const Camera = createLucideIcon("camera", __iconNode$j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$h = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$h);
+const __iconNode$i = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$i);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$g = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$g);
+const __iconNode$h = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$h);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$f = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$f);
+const __iconNode$g = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$g);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$e = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$e);
+const __iconNode$f = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$f);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$d = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$d);
+const __iconNode$e = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$e);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$d = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+];
+const Clock = createLucideIcon("clock", __iconNode$d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -15240,10 +15251,11 @@ const ChevronUp = createLucideIcon("chevron-up", __iconNode$d);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$c = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+  ["path", { d: "M12 15V3", key: "m9g1x1" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$c);
+const Download = createLucideIcon("download", __iconNode$c);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -15251,18 +15263,6 @@ const Clock = createLucideIcon("clock", __iconNode$c);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$b = [
-  ["path", { d: "M12 15V3", key: "m9g1x1" }],
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
-];
-const Download = createLucideIcon("download", __iconNode$b);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$a = [
   ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
   ["path", { d: "M7 3v18", key: "bbkbws" }],
   ["path", { d: "M3 7.5h4", key: "zfgn84" }],
@@ -15272,14 +15272,14 @@ const __iconNode$a = [
   ["path", { d: "M17 7.5h4", key: "myr1c1" }],
   ["path", { d: "M17 16.5h4", key: "go4c1d" }]
 ];
-const Film = createLucideIcon("film", __iconNode$a);
+const Film = createLucideIcon("film", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$9 = [
+const __iconNode$a = [
   [
     "path",
     {
@@ -15288,14 +15288,14 @@ const __iconNode$9 = [
     }
   ]
 ];
-const Heart = createLucideIcon("heart", __iconNode$9);
+const Heart = createLucideIcon("heart", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$8 = [
+const __iconNode$9 = [
   ["path", { d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8", key: "5wwlr5" }],
   [
     "path",
@@ -15305,7 +15305,26 @@ const __iconNode$8 = [
     }
   ]
 ];
-const House = createLucideIcon("house", __iconNode$8);
+const House = createLucideIcon("house", __iconNode$9);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$8 = [
+  [
+    "path",
+    {
+      d: "M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21",
+      key: "9csbqa"
+    }
+  ],
+  ["path", { d: "m14 19 3 3v-5.5", key: "9ldu5r" }],
+  ["path", { d: "m17 22 3-3", key: "1nkfve" }],
+  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }]
+];
+const ImageDown = createLucideIcon("image-down", __iconNode$8);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -43025,6 +43044,275 @@ function getBlobUrl(blobId) {
   const projectId = window.__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
   return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
 }
+function roundRectClip(ctx, x2, y2, w2, h2, r2) {
+  ctx.beginPath();
+  ctx.moveTo(x2 + r2, y2);
+  ctx.lineTo(x2 + w2 - r2, y2);
+  ctx.quadraticCurveTo(x2 + w2, y2, x2 + w2, y2 + r2);
+  ctx.lineTo(x2 + w2, y2 + h2 - r2);
+  ctx.quadraticCurveTo(x2 + w2, y2 + h2, x2 + w2 - r2, y2 + h2);
+  ctx.lineTo(x2 + r2, y2 + h2);
+  ctx.quadraticCurveTo(x2, y2 + h2, x2, y2 + h2 - r2);
+  ctx.lineTo(x2, y2 + r2);
+  ctx.quadraticCurveTo(x2, y2, x2 + r2, y2);
+  ctx.closePath();
+}
+async function generateRomanticCollage(albumEntries, stats) {
+  const W2 = 1080;
+  const H2 = 1920;
+  const canvas = document.createElement("canvas");
+  canvas.width = W2;
+  canvas.height = H2;
+  const ctx = canvas.getContext("2d");
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H2);
+  bgGrad.addColorStop(0, "#4a1530");
+  bgGrad.addColorStop(0.35, "#9b3a5c");
+  bgGrad.addColorStop(0.65, "#e8829a");
+  bgGrad.addColorStop(1, "#fde8d8");
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W2, H2);
+  const heartPositions = [
+    { x: 80, y: 160, size: 28, alpha: 0.18 },
+    { x: 980, y: 220, size: 20, alpha: 0.14 },
+    { x: 50, y: 450, size: 16, alpha: 0.12 },
+    { x: 1020, y: 500, size: 24, alpha: 0.16 },
+    { x: 140, y: 720, size: 18, alpha: 0.1 },
+    { x: 960, y: 780, size: 30, alpha: 0.13 },
+    { x: 60, y: 1e3, size: 22, alpha: 0.11 },
+    { x: 1e3, y: 1050, size: 16, alpha: 0.15 },
+    { x: 100, y: 1280, size: 26, alpha: 0.12 },
+    { x: 950, y: 1340, size: 20, alpha: 0.1 },
+    { x: 540, y: 90, size: 18, alpha: 0.09 },
+    { x: 300, y: 1700, size: 22, alpha: 0.1 },
+    { x: 750, y: 1750, size: 18, alpha: 0.08 },
+    { x: 540, y: 1850, size: 28, alpha: 0.1 }
+  ];
+  for (const h2 of heartPositions) {
+    ctx.save();
+    ctx.globalAlpha = h2.alpha;
+    ctx.fillStyle = "#ffffff";
+    ctx.font = `${h2.size * 2}px serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("♥", h2.x, h2.y);
+    ctx.restore();
+  }
+  const vignette = ctx.createRadialGradient(
+    W2 / 2,
+    H2 / 2,
+    H2 * 0.3,
+    W2 / 2,
+    H2 / 2,
+    H2 * 0.85
+  );
+  vignette.addColorStop(0, "rgba(0,0,0,0)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.45)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, W2, H2);
+  let cursorY = 90;
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.4)";
+  ctx.shadowBlur = 18;
+  ctx.fillStyle = "#fff8f0";
+  ctx.font = "italic bold 88px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText("CinePareja", W2 / 2, cursorY);
+  ctx.restore();
+  cursorY += 106;
+  ctx.save();
+  ctx.fillStyle = "rgba(255,240,230,0.85)";
+  ctx.font = "italic 42px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText("Nuestros Recuerdos", W2 / 2, cursorY);
+  ctx.restore();
+  cursorY += 64;
+  const lineY = cursorY + 12;
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,220,200,0.5)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(100, lineY);
+  ctx.lineTo(W2 / 2 - 30, lineY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(W2 / 2 + 30, lineY);
+  ctx.lineTo(W2 - 100, lineY);
+  ctx.stroke();
+  ctx.restore();
+  ctx.save();
+  ctx.fillStyle = "rgba(255,180,160,0.9)";
+  ctx.font = "26px serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("♥", W2 / 2, lineY);
+  ctx.restore();
+  cursorY += 40;
+  const today = /* @__PURE__ */ new Date();
+  const todayStr = today.toLocaleDateString("es-ES", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+  ctx.save();
+  ctx.fillStyle = "rgba(255,220,200,0.75)";
+  ctx.font = "italic 30px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText(todayStr, W2 / 2, cursorY);
+  ctx.restore();
+  cursorY += 60;
+  const sortedEntries = [...albumEntries].sort((a2, b2) => a2.date > b2.date ? -1 : 1).slice(0, 6);
+  for (const entry of sortedEntries) {
+    if (cursorY > H2 - 320) break;
+    const entryDate = bigintToDate(entry.date);
+    const dateLabel = formatDateES(entryDate);
+    ctx.save();
+    ctx.fillStyle = "rgba(255,240,230,0.9)";
+    ctx.font = "italic bold 34px Georgia, serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.shadowColor = "rgba(0,0,0,0.3)";
+    ctx.shadowBlur = 8;
+    ctx.fillText(dateLabel, 60, cursorY);
+    ctx.restore();
+    cursorY += 50;
+    if (entry.description) {
+      ctx.save();
+      ctx.fillStyle = "rgba(255,220,200,0.75)";
+      ctx.font = "italic 26px Georgia, serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      ctx.fillText(`“${entry.description}”`, 70, cursorY);
+      ctx.restore();
+      cursorY += 40;
+    }
+    const photosToShow = entry.blobIds.slice(0, 4);
+    const photoCount = photosToShow.length;
+    if (photoCount > 0) {
+      const padding = 60;
+      const gap = 14;
+      const totalGap = gap * (photoCount - 1);
+      const photoW = (W2 - padding * 2 - totalGap) / photoCount;
+      const photoH = photoW;
+      const cornerR = 18;
+      for (let i = 0; i < photoCount; i++) {
+        const px2 = padding + i * (photoW + gap);
+        const py = cursorY;
+        let bitmap = null;
+        try {
+          const url = getBlobUrl(photosToShow[i]);
+          const response = await fetch(url, { mode: "cors" });
+          const blob = await response.blob();
+          bitmap = await createImageBitmap(blob);
+        } catch {
+          bitmap = null;
+        }
+        ctx.save();
+        ctx.shadowColor = "rgba(0,0,0,0.35)";
+        ctx.shadowBlur = 14;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 4;
+        ctx.fillStyle = "rgba(255,255,255,0.9)";
+        roundRectClip(ctx, px2 - 4, py - 4, photoW + 8, photoH + 8, cornerR + 3);
+        ctx.fill();
+        ctx.restore();
+        ctx.save();
+        roundRectClip(ctx, px2, py, photoW, photoH, cornerR);
+        ctx.clip();
+        if (bitmap) {
+          const srcAspect = bitmap.width / bitmap.height;
+          const dstAspect = photoW / photoH;
+          let sx = 0;
+          let sy = 0;
+          let sw = bitmap.width;
+          let sh = bitmap.height;
+          if (srcAspect > dstAspect) {
+            sw = bitmap.height * dstAspect;
+            sx = (bitmap.width - sw) / 2;
+          } else {
+            sh = bitmap.width / dstAspect;
+            sy = (bitmap.height - sh) / 2;
+          }
+          ctx.drawImage(bitmap, sx, sy, sw, sh, px2, py, photoW, photoH);
+          bitmap.close();
+        } else {
+          const phGrad = ctx.createLinearGradient(
+            px2,
+            py,
+            px2 + photoW,
+            py + photoH
+          );
+          phGrad.addColorStop(0, "#e8829a");
+          phGrad.addColorStop(1, "#c45a78");
+          ctx.fillStyle = phGrad;
+          ctx.fillRect(px2, py, photoW, photoH);
+          ctx.fillStyle = "rgba(255,255,255,0.7)";
+          ctx.font = `${photoH * 0.35}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("♥", px2 + photoW / 2, py + photoH / 2);
+        }
+        ctx.restore();
+      }
+      cursorY += photoH + 28;
+    }
+    cursorY += 24;
+  }
+  const footerTop = H2 - 230;
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,200,180,0.35)";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8, 8]);
+  ctx.beginPath();
+  ctx.moveTo(80, footerTop);
+  ctx.lineTo(W2 - 80, footerTop);
+  ctx.stroke();
+  ctx.restore();
+  const statsY = footerTop + 30;
+  const statItems = [
+    { icon: "🎬", label: "Viendo", value: stats.watching },
+    { icon: "✅", label: "Completadas", value: stats.completed },
+    { icon: "📋", label: "Por ver", value: stats.pendingItems },
+    { icon: "📸", label: "Fotos", value: stats.photos }
+  ];
+  const colW = W2 / statItems.length;
+  ctx.save();
+  for (let i = 0; i < statItems.length; i++) {
+    const s2 = statItems[i];
+    const cx2 = colW * i + colW / 2;
+    ctx.font = "32px serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(s2.icon, cx2, statsY);
+    ctx.fillStyle = "#fff8f0";
+    ctx.font = "bold 38px Georgia, serif";
+    ctx.textBaseline = "top";
+    ctx.fillText(String(s2.value), cx2, statsY + 42);
+    ctx.fillStyle = "rgba(255,220,200,0.75)";
+    ctx.font = "italic 22px Georgia, serif";
+    ctx.fillText(s2.label, cx2, statsY + 86);
+  }
+  ctx.restore();
+  ctx.save();
+  ctx.fillStyle = "rgba(255,210,190,0.8)";
+  ctx.font = "italic 30px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "bottom";
+  ctx.shadowColor = "rgba(0,0,0,0.3)";
+  ctx.shadowBlur = 8;
+  ctx.fillText("❤  Creado con amor  ❤", W2 / 2, H2 - 50);
+  ctx.restore();
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("No se pudo generar la imagen"));
+    }, "image/png");
+  });
+}
 function DataTab() {
   const { data: watchItems = [], isLoading: loadingWatch } = useGetAllWatchItems();
   const { data: pendingItems = [], isLoading: loadingPending } = useGetAllPendingItems();
@@ -43036,6 +43324,7 @@ function DataTab() {
   const queryClient2 = useQueryClient();
   const [showConfirmReset, setShowConfirmReset] = reactExports.useState(false);
   const [isResetting, setIsResetting] = reactExports.useState(false);
+  const [isExporting, setIsExporting] = reactExports.useState(false);
   const isLoading = loadingWatch || loadingPending || loadingMenus || loadingAlbum;
   const totalPhotos = albumEntries.reduce(
     (acc, e) => acc + e.blobIds.length,
@@ -43053,31 +43342,25 @@ function DataTab() {
   const sortedAlbumEntries = [...albumEntries].sort(
     (a2, b2) => a2.date > b2.date ? -1 : 1
   );
-  const handleExport = () => {
-    const data = {
-      exportedAt: (/* @__PURE__ */ new Date()).toISOString(),
-      watchItems,
-      pendingItems,
-      mealMenus,
-      albumEntries: albumEntries.map((e) => ({
-        date: bigintToDate(e.date).toISOString(),
-        description: e.description,
-        photoCount: e.blobIds.length,
-        blobIds: e.blobIds
-      }))
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: "application/json"
-    });
-    const url = URL.createObjectURL(blob);
-    const a2 = document.createElement("a");
-    a2.href = url;
-    a2.download = `cinepareja-${(/* @__PURE__ */ new Date()).toISOString().split("T")[0]}.json`;
-    document.body.appendChild(a2);
-    a2.click();
-    document.body.removeChild(a2);
-    URL.revokeObjectURL(url);
-    ue.success("Datos exportados correctamente");
+  const handleExportPhoto = async () => {
+    setIsExporting(true);
+    try {
+      const blob = await generateRomanticCollage(albumEntries, stats);
+      const url = URL.createObjectURL(blob);
+      const a2 = document.createElement("a");
+      a2.href = url;
+      a2.download = `cinepareja-recuerdos-${(/* @__PURE__ */ new Date()).toISOString().split("T")[0]}.png`;
+      document.body.appendChild(a2);
+      a2.click();
+      document.body.removeChild(a2);
+      URL.revokeObjectURL(url);
+      ue.success("¡Imagen romántica descargada! 💕");
+    } catch (err) {
+      console.error(err);
+      ue.error("No se pudo generar la imagen");
+    } finally {
+      setIsExporting(false);
+    }
   };
   const handleReset = async () => {
     setIsResetting(true);
@@ -43098,7 +43381,7 @@ function DataTab() {
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 pt-6 pb-4", "data-ocid": "data.section", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-5", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 20, className: "text-primary" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(ImageDown, { size: 20, className: "text-primary" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-display font-bold text-foreground", children: "Mis datos" })
     ] }),
     isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3", "data-ocid": "data.loading_state", children: [1, 2, 3, 4].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-16 w-full rounded-xl" }, i)) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
@@ -43184,7 +43467,7 @@ function DataTab() {
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-1", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(UtensilsCrossed, { size: 16, className: "text-primary" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: "Menús guardados" })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: "Men\\u00fas guardados" })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-foreground", children: stats.menus })
               ]
@@ -43207,7 +43490,7 @@ function DataTab() {
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
                   "en ",
                   stats.albumDays,
-                  " día",
+                  " d\\u00eda",
                   stats.albumDays !== 1 ? "s" : ""
                 ] })
               ]
@@ -43216,7 +43499,7 @@ function DataTab() {
         ] })
       ] }),
       sortedAlbumEntries.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3", children: "Fotos del álbum" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3", children: "Fotos del \\u00e1lbum" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: sortedAlbumEntries.map((entry, idx) => {
           const date = bigintToDate(entry.date);
           return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -43257,18 +43540,22 @@ function DataTab() {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3", children: "Exportar" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card rounded-xl p-4 card-shadow", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground font-medium mb-1", children: "Descarga todos tus datos" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-4", children: "Exporta películas, series, pendientes, menús y el registro del álbum en formato JSON." }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground font-medium mb-1", children: "Descarga tus recuerdos" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-4", children: "Genera una imagen bonita con vuestros recuerdos: fotos del \\u00e1lbum, fechas y estad\\u00edsticas en un dise\\u00f1o rom\\u00e1ntico." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
             Button,
             {
-              onClick: handleExport,
+              onClick: handleExportPhoto,
+              disabled: isExporting,
               className: "w-full rounded-xl",
               "data-ocid": "data.primary_button",
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { size: 16, className: "mr-2" }),
-                "Descargar datos"
-              ]
+              children: isExporting ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { size: 16, className: "mr-2 animate-spin" }),
+                "Generando imagen..."
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ImageDown, { size: 16, className: "mr-2" }),
+                "Descargar como imagen"
+              ] })
             }
           )
         ] })
@@ -43277,7 +43564,7 @@ function DataTab() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3", children: "Zona de peligro" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card rounded-xl p-4 card-shadow border border-destructive/20", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground font-medium mb-1", children: "Eliminar todos los datos" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-4", children: "Borra permanentemente todas las listas, películas y menús." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-4", children: "Borra permanentemente todas las listas, pel\\u00edculas y men\\u00fas." }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             Button,
             {
@@ -43301,8 +43588,8 @@ function DataTab() {
         "data-ocid": "data.modal",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogHeader, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogTitle, { children: "¿Eliminar TODOS los datos?" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogDescription, { children: "Esta acción es irreversible. Se eliminarán todas las películas, series, listas de pendientes y menús." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogTitle, { children: "\\u00bfEliminar TODOS los datos?" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogDescription, { children: "Esta acci\\u00f3n es irreversible. Se eliminar\\u00e1n todas las pel\\u00edculas, series, listas de pendientes y men\\u00fas." })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogFooter, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(

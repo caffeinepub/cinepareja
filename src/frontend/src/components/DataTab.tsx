@@ -14,8 +14,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   Bookmark,
   Camera,
-  Download,
   Film,
+  ImageDown,
+  Loader2,
   Trash2,
   UtensilsCrossed,
 } from "lucide-react";
@@ -33,12 +34,10 @@ import {
   useGetAllWatchItems,
 } from "../hooks/useQueries";
 
-// Convert nanosecond bigint to JS Date
 function bigintToDate(ns: bigint): Date {
   return new Date(Number(ns / 1_000_000n));
 }
 
-// Format date in Spanish
 function formatDateES(date: Date): string {
   return date.toLocaleDateString("es-ES", {
     day: "numeric",
@@ -54,6 +53,341 @@ function getBlobUrl(blobId: string): string {
   const projectId =
     (window as any).__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
   return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
+}
+
+function roundRectClip(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+interface AlbumEntryData {
+  date: bigint;
+  description: string;
+  blobIds: string[];
+}
+
+interface StatsData {
+  watching: number;
+  pending: number;
+  completed: number;
+  pendingItems: number;
+  photos: number;
+}
+
+async function generateRomanticCollage(
+  albumEntries: AlbumEntryData[],
+  stats: StatsData,
+): Promise<Blob> {
+  const W = 1080;
+  const H = 1920;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+
+  // Background gradient
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+  bgGrad.addColorStop(0, "#4a1530");
+  bgGrad.addColorStop(0.35, "#9b3a5c");
+  bgGrad.addColorStop(0.65, "#e8829a");
+  bgGrad.addColorStop(1, "#fde8d8");
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Scattered hearts
+  const heartPositions = [
+    { x: 80, y: 160, size: 28, alpha: 0.18 },
+    { x: 980, y: 220, size: 20, alpha: 0.14 },
+    { x: 50, y: 450, size: 16, alpha: 0.12 },
+    { x: 1020, y: 500, size: 24, alpha: 0.16 },
+    { x: 140, y: 720, size: 18, alpha: 0.1 },
+    { x: 960, y: 780, size: 30, alpha: 0.13 },
+    { x: 60, y: 1000, size: 22, alpha: 0.11 },
+    { x: 1000, y: 1050, size: 16, alpha: 0.15 },
+    { x: 100, y: 1280, size: 26, alpha: 0.12 },
+    { x: 950, y: 1340, size: 20, alpha: 0.1 },
+    { x: 540, y: 90, size: 18, alpha: 0.09 },
+    { x: 300, y: 1700, size: 22, alpha: 0.1 },
+    { x: 750, y: 1750, size: 18, alpha: 0.08 },
+    { x: 540, y: 1850, size: 28, alpha: 0.1 },
+  ];
+  for (const h of heartPositions) {
+    ctx.save();
+    ctx.globalAlpha = h.alpha;
+    ctx.fillStyle = "#ffffff";
+    ctx.font = `${h.size * 2}px serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("\u2665", h.x, h.y);
+    ctx.restore();
+  }
+
+  // Vignette
+  const vignette = ctx.createRadialGradient(
+    W / 2,
+    H / 2,
+    H * 0.3,
+    W / 2,
+    H / 2,
+    H * 0.85,
+  );
+  vignette.addColorStop(0, "rgba(0,0,0,0)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.45)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, W, H);
+
+  // Header
+  let cursorY = 90;
+
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.4)";
+  ctx.shadowBlur = 18;
+  ctx.fillStyle = "#fff8f0";
+  ctx.font = "italic bold 88px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText("CinePareja", W / 2, cursorY);
+  ctx.restore();
+  cursorY += 106;
+
+  ctx.save();
+  ctx.fillStyle = "rgba(255,240,230,0.85)";
+  ctx.font = "italic 42px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText("Nuestros Recuerdos", W / 2, cursorY);
+  ctx.restore();
+  cursorY += 64;
+
+  // Decorative line with heart
+  const lineY = cursorY + 12;
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,220,200,0.5)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(100, lineY);
+  ctx.lineTo(W / 2 - 30, lineY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(W / 2 + 30, lineY);
+  ctx.lineTo(W - 100, lineY);
+  ctx.stroke();
+  ctx.restore();
+  ctx.save();
+  ctx.fillStyle = "rgba(255,180,160,0.9)";
+  ctx.font = "26px serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("\u2665", W / 2, lineY);
+  ctx.restore();
+  cursorY += 40;
+
+  // Date
+  const today = new Date();
+  const todayStr = today.toLocaleDateString("es-ES", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  ctx.save();
+  ctx.fillStyle = "rgba(255,220,200,0.75)";
+  ctx.font = "italic 30px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText(todayStr, W / 2, cursorY);
+  ctx.restore();
+  cursorY += 60;
+
+  // Album entries
+  const sortedEntries = [...albumEntries]
+    .sort((a, b) => (a.date > b.date ? -1 : 1))
+    .slice(0, 6);
+
+  for (const entry of sortedEntries) {
+    if (cursorY > H - 320) break;
+
+    const entryDate = bigintToDate(entry.date);
+    const dateLabel = formatDateES(entryDate);
+
+    ctx.save();
+    ctx.fillStyle = "rgba(255,240,230,0.9)";
+    ctx.font = "italic bold 34px Georgia, serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.shadowColor = "rgba(0,0,0,0.3)";
+    ctx.shadowBlur = 8;
+    ctx.fillText(dateLabel, 60, cursorY);
+    ctx.restore();
+    cursorY += 50;
+
+    if (entry.description) {
+      ctx.save();
+      ctx.fillStyle = "rgba(255,220,200,0.75)";
+      ctx.font = "italic 26px Georgia, serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      ctx.fillText(`\u201c${entry.description}\u201d`, 70, cursorY);
+      ctx.restore();
+      cursorY += 40;
+    }
+
+    const photosToShow = entry.blobIds.slice(0, 4);
+    const photoCount = photosToShow.length;
+    if (photoCount > 0) {
+      const padding = 60;
+      const gap = 14;
+      const totalGap = gap * (photoCount - 1);
+      const photoW = (W - padding * 2 - totalGap) / photoCount;
+      const photoH = photoW;
+      const cornerR = 18;
+
+      for (let i = 0; i < photoCount; i++) {
+        const px = padding + i * (photoW + gap);
+        const py = cursorY;
+
+        let bitmap: ImageBitmap | null = null;
+        try {
+          const url = getBlobUrl(photosToShow[i]);
+          const response = await fetch(url, { mode: "cors" });
+          const blob = await response.blob();
+          bitmap = await createImageBitmap(blob);
+        } catch {
+          bitmap = null;
+        }
+
+        // White border shadow
+        ctx.save();
+        ctx.shadowColor = "rgba(0,0,0,0.35)";
+        ctx.shadowBlur = 14;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 4;
+        ctx.fillStyle = "rgba(255,255,255,0.9)";
+        roundRectClip(ctx, px - 4, py - 4, photoW + 8, photoH + 8, cornerR + 3);
+        ctx.fill();
+        ctx.restore();
+
+        // Draw photo with rounded clip
+        ctx.save();
+        roundRectClip(ctx, px, py, photoW, photoH, cornerR);
+        ctx.clip();
+
+        if (bitmap) {
+          const srcAspect = bitmap.width / bitmap.height;
+          const dstAspect = photoW / photoH;
+          let sx = 0;
+          let sy = 0;
+          let sw = bitmap.width;
+          let sh = bitmap.height;
+          if (srcAspect > dstAspect) {
+            sw = bitmap.height * dstAspect;
+            sx = (bitmap.width - sw) / 2;
+          } else {
+            sh = bitmap.width / dstAspect;
+            sy = (bitmap.height - sh) / 2;
+          }
+          ctx.drawImage(bitmap, sx, sy, sw, sh, px, py, photoW, photoH);
+          bitmap.close();
+        } else {
+          const phGrad = ctx.createLinearGradient(
+            px,
+            py,
+            px + photoW,
+            py + photoH,
+          );
+          phGrad.addColorStop(0, "#e8829a");
+          phGrad.addColorStop(1, "#c45a78");
+          ctx.fillStyle = phGrad;
+          ctx.fillRect(px, py, photoW, photoH);
+          ctx.fillStyle = "rgba(255,255,255,0.7)";
+          ctx.font = `${photoH * 0.35}px serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("\u2665", px + photoW / 2, py + photoH / 2);
+        }
+
+        ctx.restore();
+      }
+
+      cursorY += photoH + 28;
+    }
+
+    cursorY += 24;
+  }
+
+  // Footer stats
+  const footerTop = H - 230;
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,200,180,0.35)";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8, 8]);
+  ctx.beginPath();
+  ctx.moveTo(80, footerTop);
+  ctx.lineTo(W - 80, footerTop);
+  ctx.stroke();
+  ctx.restore();
+
+  const statsY = footerTop + 30;
+  const statItems = [
+    { icon: "\uD83C\uDFAC", label: "Viendo", value: stats.watching },
+    { icon: "\u2705", label: "Completadas", value: stats.completed },
+    { icon: "\uD83D\uDCCB", label: "Por ver", value: stats.pendingItems },
+    { icon: "\uD83D\uDCF8", label: "Fotos", value: stats.photos },
+  ];
+  const colW = W / statItems.length;
+  ctx.save();
+  for (let i = 0; i < statItems.length; i++) {
+    const s = statItems[i];
+    const cx = colW * i + colW / 2;
+    ctx.font = "32px serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(s.icon, cx, statsY);
+    ctx.fillStyle = "#fff8f0";
+    ctx.font = "bold 38px Georgia, serif";
+    ctx.textBaseline = "top";
+    ctx.fillText(String(s.value), cx, statsY + 42);
+    ctx.fillStyle = "rgba(255,220,200,0.75)";
+    ctx.font = "italic 22px Georgia, serif";
+    ctx.fillText(s.label, cx, statsY + 86);
+  }
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = "rgba(255,210,190,0.8)";
+  ctx.font = "italic 30px Georgia, serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "bottom";
+  ctx.shadowColor = "rgba(0,0,0,0.3)";
+  ctx.shadowBlur = 8;
+  ctx.fillText("\u2764  Creado con amor  \u2764", W / 2, H - 50);
+  ctx.restore();
+
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("No se pudo generar la imagen"));
+    }, "image/png");
+  });
 }
 
 export default function DataTab() {
@@ -72,6 +406,7 @@ export default function DataTab() {
 
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const isLoading =
     loadingWatch || loadingPending || loadingMenus || loadingAlbum;
@@ -93,36 +428,29 @@ export default function DataTab() {
     albumDays: albumEntries.length,
   };
 
-  // Sort entries newest first
   const sortedAlbumEntries = [...albumEntries].sort((a, b) =>
     a.date > b.date ? -1 : 1,
   );
 
-  const handleExport = () => {
-    const data = {
-      exportedAt: new Date().toISOString(),
-      watchItems,
-      pendingItems,
-      mealMenus,
-      albumEntries: albumEntries.map((e) => ({
-        date: bigintToDate(e.date).toISOString(),
-        description: e.description,
-        photoCount: e.blobIds.length,
-        blobIds: e.blobIds,
-      })),
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `cinepareja-${new Date().toISOString().split("T")[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast.success("Datos exportados correctamente");
+  const handleExportPhoto = async () => {
+    setIsExporting(true);
+    try {
+      const blob = await generateRomanticCollage(albumEntries, stats);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cinepareja-recuerdos-${new Date().toISOString().split("T")[0]}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success("\u00a1Imagen rom\u00e1ntica descargada! \uD83D\uDC95");
+    } catch (err) {
+      console.error(err);
+      toast.error("No se pudo generar la imagen");
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const handleReset = async () => {
@@ -146,7 +474,7 @@ export default function DataTab() {
   return (
     <div className="px-4 pt-6 pb-4" data-ocid="data.section">
       <div className="flex items-center gap-2 mb-5">
-        <Download size={20} className="text-primary" />
+        <ImageDown size={20} className="text-primary" />
         <h2 className="text-xl font-display font-bold text-foreground">
           Mis datos
         </h2>
@@ -244,7 +572,7 @@ export default function DataTab() {
                 <div className="flex items-center gap-2 mb-1">
                   <UtensilsCrossed size={16} className="text-primary" />
                   <span className="text-xs text-muted-foreground">
-                    Menús guardados
+                    Men\u00fas guardados
                   </span>
                 </div>
                 <p className="text-2xl font-bold text-foreground">
@@ -267,7 +595,8 @@ export default function DataTab() {
                   {stats.photos}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  en {stats.albumDays} día{stats.albumDays !== 1 ? "s" : ""}
+                  en {stats.albumDays} d\u00eda
+                  {stats.albumDays !== 1 ? "s" : ""}
                 </p>
               </motion.div>
             </div>
@@ -277,7 +606,7 @@ export default function DataTab() {
           {sortedAlbumEntries.length > 0 && (
             <section>
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-                Fotos del álbum
+                Fotos del \u00e1lbum
               </h3>
               <div className="space-y-4">
                 {sortedAlbumEntries.map((entry, idx) => {
@@ -291,7 +620,6 @@ export default function DataTab() {
                       className="bg-card rounded-xl card-shadow overflow-hidden"
                       data-ocid={`data.album_entry.${idx + 1}`}
                     >
-                      {/* Date header */}
                       <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50">
                         <Camera size={14} className="text-primary" />
                         <div>
@@ -305,7 +633,6 @@ export default function DataTab() {
                         </div>
                       </div>
 
-                      {/* Photo grid */}
                       <div className="p-3 grid grid-cols-3 gap-2">
                         {entry.blobIds.map((blobId, photoIdx) => (
                           <div key={blobId} className="relative aspect-square">
@@ -332,26 +659,37 @@ export default function DataTab() {
             </section>
           )}
 
-          {/* Export */}
+          {/* Export as Photo */}
           <section>
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
               Exportar
             </h3>
             <div className="bg-card rounded-xl p-4 card-shadow">
               <p className="text-sm text-foreground font-medium mb-1">
-                Descarga todos tus datos
+                Descarga tus recuerdos
               </p>
               <p className="text-xs text-muted-foreground mb-4">
-                Exporta películas, series, pendientes, menús y el registro del
-                álbum en formato JSON.
+                Genera una imagen bonita con vuestros recuerdos: fotos del
+                \u00e1lbum, fechas y estad\u00edsticas en un dise\u00f1o
+                rom\u00e1ntico.
               </p>
               <Button
-                onClick={handleExport}
+                onClick={handleExportPhoto}
+                disabled={isExporting}
                 className="w-full rounded-xl"
                 data-ocid="data.primary_button"
               >
-                <Download size={16} className="mr-2" />
-                Descargar datos
+                {isExporting ? (
+                  <>
+                    <Loader2 size={16} className="mr-2 animate-spin" />
+                    Generando imagen...
+                  </>
+                ) : (
+                  <>
+                    <ImageDown size={16} className="mr-2" />
+                    Descargar como imagen
+                  </>
+                )}
               </Button>
             </div>
           </section>
@@ -366,7 +704,8 @@ export default function DataTab() {
                 Eliminar todos los datos
               </p>
               <p className="text-xs text-muted-foreground mb-4">
-                Borra permanentemente todas las listas, películas y menús.
+                Borra permanentemente todas las listas, pel\u00edculas y
+                men\u00fas.
               </p>
               <Button
                 variant="destructive"
@@ -382,17 +721,16 @@ export default function DataTab() {
         </div>
       )}
 
-      {/* Confirm Reset */}
       <AlertDialog open={showConfirmReset} onOpenChange={setShowConfirmReset}>
         <AlertDialogContent
           className="w-[calc(100%-32px)] max-w-sm rounded-2xl"
           data-ocid="data.modal"
         >
           <AlertDialogHeader>
-            <AlertDialogTitle>¿Eliminar TODOS los datos?</AlertDialogTitle>
+            <AlertDialogTitle>\u00bfEliminar TODOS los datos?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción es irreversible. Se eliminarán todas las películas,
-              series, listas de pendientes y menús.
+              Esta acci\u00f3n es irreversible. Se eliminar\u00e1n todas las
+              pel\u00edculas, series, listas de pendientes y men\u00fas.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -408,7 +746,7 @@ export default function DataTab() {
               className="rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90"
               data-ocid="data.confirm_button"
             >
-              {isResetting ? "Eliminando..." : "Sí, eliminar todo"}
+              {isResetting ? "Eliminando..." : "S\u00ed, eliminar todo"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
