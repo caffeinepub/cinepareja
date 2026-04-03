@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { AlbumEntry } from "../backend.d";
 import { loadConfig } from "../config";
@@ -56,6 +56,12 @@ function dateToInputValue(date: Date): string {
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const d = String(date.getDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
+}
+
+interface StorageConfig {
+  storageGatewayUrl: string;
+  backendCanisterId: string;
+  projectId: string;
 }
 
 interface PhotoViewerProps {
@@ -407,6 +413,13 @@ export default function AlbumTab() {
   const removePhoto = useRemovePhotoFromAlbumEntry();
   const { actor } = useActor();
 
+  const [configReady, setConfigReady] = useState(false);
+  const [storageConfig, setStorageConfig] = useState<StorageConfig>({
+    storageGatewayUrl: "https://blob.caffeine.ai",
+    backendCanisterId: "",
+    projectId: "0000000-0000-0000-0000-00000000000",
+  });
+
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -419,18 +432,32 @@ export default function AlbumTab() {
   const quickAddFileRef = useRef<HTMLInputElement>(null);
   const quickAddDateRef = useRef<bigint | null>(null);
 
+  // Load storage config on mount so photo URLs work even without prior upload
+  useEffect(() => {
+    loadConfig()
+      .then((config) => {
+        setStorageConfig({
+          storageGatewayUrl: config.storage_gateway_url,
+          backendCanisterId: config.backend_canister_id,
+          projectId: config.project_id,
+        });
+      })
+      .catch(() => {
+        // keep defaults if config fails
+      })
+      .finally(() => {
+        setConfigReady(true);
+      });
+  }, []);
+
   // Sort entries newest first
   const sortedEntries = entries
     ? [...entries].sort((a, b) => (a.date > b.date ? -1 : 1))
     : [];
 
   const getBlobUrl = (blobId: string): string => {
-    const storageGatewayUrl =
-      (window as any).__caffeineStorageGatewayUrl || "https://blob.caffeine.ai";
-    const backendCanisterId = (window as any).__caffeineBackendCanisterId || "";
-    const projectId =
-      (window as any).__caffeineProjectId ||
-      "0000000-0000-0000-0000-00000000000";
+    if (!configReady) return "";
+    const { storageGatewayUrl, backendCanisterId, projectId } = storageConfig;
     return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
   };
 
@@ -548,7 +575,7 @@ export default function AlbumTab() {
       </div>
 
       {/* Content */}
-      {isLoading ? (
+      {isLoading || !configReady ? (
         <div className="space-y-4" data-ocid="album.loading_state">
           {[1, 2].map((i) => (
             <div

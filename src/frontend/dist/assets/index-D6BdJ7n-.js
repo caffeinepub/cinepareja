@@ -42528,17 +42528,34 @@ function AlbumTab() {
   const addPhoto = useAddPhotoToAlbumEntry();
   const removePhoto = useRemovePhotoFromAlbumEntry();
   const { actor } = useActor();
+  const [configReady, setConfigReady] = reactExports.useState(false);
+  const [storageConfig, setStorageConfig] = reactExports.useState({
+    storageGatewayUrl: "https://blob.caffeine.ai",
+    backendCanisterId: "",
+    projectId: "0000000-0000-0000-0000-00000000000"
+  });
   const [showAddDialog, setShowAddDialog] = reactExports.useState(false);
   const [isUploading, setIsUploading] = reactExports.useState(false);
   const [uploadProgress, setUploadProgress] = reactExports.useState(0);
   const [viewer, setViewer] = reactExports.useState(null);
   const quickAddFileRef = reactExports.useRef(null);
   const quickAddDateRef = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    loadConfig().then((config) => {
+      setStorageConfig({
+        storageGatewayUrl: config.storage_gateway_url,
+        backendCanisterId: config.backend_canister_id,
+        projectId: config.project_id
+      });
+    }).catch(() => {
+    }).finally(() => {
+      setConfigReady(true);
+    });
+  }, []);
   const sortedEntries = entries ? [...entries].sort((a2, b2) => a2.date > b2.date ? -1 : 1) : [];
   const getBlobUrl2 = (blobId) => {
-    const storageGatewayUrl = window.__caffeineStorageGatewayUrl || "https://blob.caffeine.ai";
-    const backendCanisterId = window.__caffeineBackendCanisterId || "";
-    const projectId = window.__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
+    if (!configReady) return "";
+    const { storageGatewayUrl, backendCanisterId, projectId } = storageConfig;
     return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
   };
   const initStorageConfig = async () => {
@@ -42647,7 +42664,7 @@ function AlbumTab() {
         }
       )
     ] }),
-    isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", "data-ocid": "album.loading_state", children: [1, 2].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    isLoading || !configReady ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", "data-ocid": "album.loading_state", children: [1, 2].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
         className: "bg-card rounded-xl card-shadow overflow-hidden",
