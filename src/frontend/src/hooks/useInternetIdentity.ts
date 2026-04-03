@@ -155,6 +155,9 @@ export function InternetIdentityProvider({
   const [identity, setIdentity] = useState<Identity | undefined>(undefined);
   const [loginStatus, setStatus] = useState<Status>("initializing");
   const [loginError, setError] = useState<Error | undefined>(undefined);
+  const [derivationOrigin, setDerivationOrigin] = useState<string | undefined>(
+    undefined,
+  );
 
   const setErrorMessage = useCallback((message: string) => {
     setStatus("loginError");
@@ -198,6 +201,7 @@ export function InternetIdentityProvider({
 
     const options: AuthClientLoginOptions = {
       identityProvider: DEFAULT_IDENTITY_PROVIDER,
+      derivationOrigin: derivationOrigin,
       onSuccess: handleLoginSuccess,
       onError: handleLoginError,
       maxTimeToLive: ONE_HOUR_IN_NANOSECONDS * BigInt(24 * 30), // 30 days
@@ -205,7 +209,13 @@ export function InternetIdentityProvider({
 
     setStatus("logging-in");
     void authClient.login(options);
-  }, [authClient, handleLoginError, handleLoginSuccess, setErrorMessage]);
+  }, [
+    authClient,
+    derivationOrigin,
+    handleLoginError,
+    handleLoginSuccess,
+    setErrorMessage,
+  ]);
 
   const clear = useCallback(() => {
     if (!authClient) {
@@ -238,9 +248,11 @@ export function InternetIdentityProvider({
         setStatus("initializing");
         let existingClient = authClient;
         if (!existingClient) {
+          const config = await loadConfig();
           existingClient = await createAuthClient(createOptions);
           if (cancelled) return;
           setAuthClient(existingClient);
+          setDerivationOrigin(config.ii_derivation_origin);
         }
         const isAuthenticated = await existingClient.isAuthenticated();
         if (cancelled) return;

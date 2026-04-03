@@ -41811,6 +41811,9 @@ function InternetIdentityProvider({
   const [identity, setIdentity] = reactExports.useState(void 0);
   const [loginStatus, setStatus] = reactExports.useState("initializing");
   const [loginError, setError] = reactExports.useState(void 0);
+  const [derivationOrigin, setDerivationOrigin] = reactExports.useState(
+    void 0
+  );
   const setErrorMessage = reactExports.useCallback((message) => {
     setStatus("loginError");
     setError(new Error(message));
@@ -41844,6 +41847,7 @@ function InternetIdentityProvider({
     }
     const options = {
       identityProvider: DEFAULT_IDENTITY_PROVIDER,
+      derivationOrigin,
       onSuccess: handleLoginSuccess,
       onError: handleLoginError,
       maxTimeToLive: ONE_HOUR_IN_NANOSECONDS * BigInt(24 * 30)
@@ -41851,7 +41855,13 @@ function InternetIdentityProvider({
     };
     setStatus("logging-in");
     void authClient.login(options);
-  }, [authClient, handleLoginError, handleLoginSuccess, setErrorMessage]);
+  }, [
+    authClient,
+    derivationOrigin,
+    handleLoginError,
+    handleLoginSuccess,
+    setErrorMessage
+  ]);
   const clear = reactExports.useCallback(() => {
     if (!authClient) {
       setErrorMessage("Auth client not initialized");
@@ -41876,9 +41886,11 @@ function InternetIdentityProvider({
         setStatus("initializing");
         let existingClient = authClient;
         if (!existingClient) {
+          const config = await loadConfig();
           existingClient = await createAuthClient(createOptions);
           if (cancelled) return;
           setAuthClient(existingClient);
+          setDerivationOrigin(config.ii_derivation_origin);
         }
         const isAuthenticated = await existingClient.isAuthenticated();
         if (cancelled) return;
@@ -43221,9 +43233,13 @@ async function generateRomanticCollage(albumEntries, stats, getBlobUrl) {
         try {
           const url = getBlobUrl(photosToShow[i]);
           if (url) {
-            const response = await fetch(url, { mode: "cors" });
-            const blob = await response.blob();
-            bitmap = await createImageBitmap(blob);
+            bitmap = await new Promise((resolve, reject) => {
+              const img = new Image();
+              img.crossOrigin = "anonymous";
+              img.onload = () => resolve(img);
+              img.onerror = () => reject(new Error("Image load failed"));
+              img.src = `${url}${url.includes("?") ? "&" : "?"}_t=${Date.now()}`;
+            });
           }
         } catch {
           bitmap = null;
@@ -43241,21 +43257,20 @@ async function generateRomanticCollage(albumEntries, stats, getBlobUrl) {
         roundRectClip(ctx, px2, py, photoW, photoH, cornerR);
         ctx.clip();
         if (bitmap) {
-          const srcAspect = bitmap.width / bitmap.height;
+          const srcAspect = bitmap.naturalWidth / bitmap.naturalHeight;
           const dstAspect = photoW / photoH;
           let sx = 0;
           let sy = 0;
-          let sw = bitmap.width;
-          let sh = bitmap.height;
+          let sw = bitmap.naturalWidth;
+          let sh = bitmap.naturalHeight;
           if (srcAspect > dstAspect) {
-            sw = bitmap.height * dstAspect;
-            sx = (bitmap.width - sw) / 2;
+            sw = bitmap.naturalHeight * dstAspect;
+            sx = (bitmap.naturalWidth - sw) / 2;
           } else {
-            sh = bitmap.width / dstAspect;
-            sy = (bitmap.height - sh) / 2;
+            sh = bitmap.naturalWidth / dstAspect;
+            sy = (bitmap.naturalHeight - sh) / 2;
           }
           ctx.drawImage(bitmap, sx, sy, sw, sh, px2, py, photoW, photoH);
-          bitmap.close();
         } else {
           const phGrad = ctx.createLinearGradient(
             px2,

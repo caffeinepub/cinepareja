@@ -256,13 +256,18 @@ async function generateRomanticCollage(
         const px = padding + i * (photoW + gap);
         const py = cursorY;
 
-        let bitmap: ImageBitmap | null = null;
+        let bitmap: HTMLImageElement | null = null;
         try {
           const url = getBlobUrl(photosToShow[i]);
           if (url) {
-            const response = await fetch(url, { mode: "cors" });
-            const blob = await response.blob();
-            bitmap = await createImageBitmap(blob);
+            bitmap = await new Promise<HTMLImageElement>((resolve, reject) => {
+              const img = new Image();
+              img.crossOrigin = "anonymous";
+              img.onload = () => resolve(img);
+              img.onerror = () => reject(new Error("Image load failed"));
+              // Add cache-bust to force fresh load and avoid CORS cached responses
+              img.src = `${url}${url.includes("?") ? "&" : "?"}_t=${Date.now()}`;
+            });
           }
         } catch {
           bitmap = null;
@@ -285,21 +290,20 @@ async function generateRomanticCollage(
         ctx.clip();
 
         if (bitmap) {
-          const srcAspect = bitmap.width / bitmap.height;
+          const srcAspect = bitmap.naturalWidth / bitmap.naturalHeight;
           const dstAspect = photoW / photoH;
           let sx = 0;
           let sy = 0;
-          let sw = bitmap.width;
-          let sh = bitmap.height;
+          let sw = bitmap.naturalWidth;
+          let sh = bitmap.naturalHeight;
           if (srcAspect > dstAspect) {
-            sw = bitmap.height * dstAspect;
-            sx = (bitmap.width - sw) / 2;
+            sw = bitmap.naturalHeight * dstAspect;
+            sx = (bitmap.naturalWidth - sw) / 2;
           } else {
-            sh = bitmap.width / dstAspect;
-            sy = (bitmap.height - sh) / 2;
+            sh = bitmap.naturalWidth / dstAspect;
+            sy = (bitmap.naturalHeight - sh) / 2;
           }
           ctx.drawImage(bitmap, sx, sy, sw, sh, px, py, photoW, photoH);
-          bitmap.close();
         } else {
           const phGrad = ctx.createLinearGradient(
             px,
