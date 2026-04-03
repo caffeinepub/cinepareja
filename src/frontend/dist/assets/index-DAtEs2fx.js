@@ -42207,7 +42207,7 @@ function PhotoViewer({
   date,
   onClose,
   onDelete,
-  getBlobUrl: getBlobUrl2
+  getBlobUrl
 }) {
   const [current, setCurrent] = reactExports.useState(initialIndex);
   const prev = () => setCurrent((c2) => c2 > 0 ? c2 - 1 : photos.length - 1);
@@ -42242,7 +42242,7 @@ function PhotoViewer({
           /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             motion.img,
             {
-              src: getBlobUrl2(photos[current]),
+              src: getBlobUrl(photos[current]),
               alt: `Foto ${current + 1}`,
               className: "w-full aspect-square object-cover",
               initial: { opacity: 0 },
@@ -42304,10 +42304,12 @@ function AddPhotosDialog({
   onClose,
   onUpload,
   isUploading,
-  uploadProgress
+  uploadProgress,
+  initialDate
 }) {
   const today = /* @__PURE__ */ new Date();
-  const [selectedDate, setSelectedDate] = reactExports.useState(dateToInputValue(today));
+  const initialDateStr = initialDate ? dateToInputValue(bigintToDate$1(initialDate)) : dateToInputValue(today);
+  const [selectedDate, setSelectedDate] = reactExports.useState(initialDateStr);
   const [selectedFiles, setSelectedFiles] = reactExports.useState([]);
   const fileInputRef = reactExports.useRef(null);
   const handleSubmit = async () => {
@@ -42438,7 +42440,7 @@ function DayGroup({
   onPhotoClick,
   onAddPhoto,
   onDeletePhoto,
-  getBlobUrl: getBlobUrl2,
+  getBlobUrl,
   index: index2
 }) {
   const date = bigintToDate$1(entry.date);
@@ -42475,49 +42477,63 @@ function DayGroup({
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 grid grid-cols-3 gap-2", children: entry.blobIds.map((blobId, photoIdx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          "button",
-          {
-            type: "button",
-            className: "relative aspect-square cursor-pointer group",
-            onMouseEnter: () => setHoveredPhoto(blobId),
-            onMouseLeave: () => setHoveredPhoto(null),
-            onClick: () => onPhotoClick(entry.blobIds, photoIdx, date),
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "img",
-                {
-                  src: getBlobUrl2(blobId),
-                  alt: `Foto ${photoIdx + 1}`,
-                  className: "w-full h-full object-cover rounded-lg"
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: hoveredPhoto === blobId && /* @__PURE__ */ jsxRuntimeExports.jsx(
-                motion.div,
-                {
-                  initial: { opacity: 0 },
-                  animate: { opacity: 1 },
-                  exit: { opacity: 0 },
-                  className: "absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center",
-                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    "button",
-                    {
-                      type: "button",
-                      onClick: (e) => {
-                        e.stopPropagation();
-                        onDeletePhoto(entry.date, blobId);
-                      },
-                      className: "bg-destructive text-destructive-foreground rounded-full p-1.5 shadow-md",
-                      "data-ocid": "album.delete_button",
-                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 grid grid-cols-3 gap-2", children: entry.blobIds.map((blobId, photoIdx) => {
+          const url = getBlobUrl(blobId);
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              type: "button",
+              className: "relative aspect-square cursor-pointer group",
+              onMouseEnter: () => setHoveredPhoto(blobId),
+              onMouseLeave: () => setHoveredPhoto(null),
+              onClick: () => onPhotoClick(entry.blobIds, photoIdx, date),
+              children: [
+                url ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "img",
+                  {
+                    src: url,
+                    alt: `Foto ${photoIdx + 1}`,
+                    className: "w-full h-full object-cover rounded-lg",
+                    loading: "lazy",
+                    onError: (e) => {
+                      e.currentTarget.style.display = "none";
+                      const parent = e.currentTarget.parentElement;
+                      if (parent && !parent.querySelector(".photo-placeholder")) {
+                        const placeholder = document.createElement("div");
+                        placeholder.className = "photo-placeholder w-full h-full rounded-lg bg-muted flex items-center justify-center";
+                        placeholder.innerHTML = '<span style="font-size:1.5rem">📷</span>';
+                        parent.appendChild(placeholder);
+                      }
                     }
-                  )
-                }
-              ) })
-            ]
-          },
-          blobId
-        )) })
+                  }
+                ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full h-full rounded-lg bg-muted flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Camera, { size: 20, className: "text-muted-foreground" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: hoveredPhoto === blobId && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  motion.div,
+                  {
+                    initial: { opacity: 0 },
+                    animate: { opacity: 1 },
+                    exit: { opacity: 0 },
+                    className: "absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: (e) => {
+                          e.stopPropagation();
+                          onDeletePhoto(entry.date, blobId);
+                        },
+                        className: "bg-destructive text-destructive-foreground rounded-full p-1.5 shadow-md",
+                        "data-ocid": "album.delete_button",
+                        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 })
+                      }
+                    )
+                  }
+                ) })
+              ]
+            },
+            blobId
+          );
+        }) })
       ]
     }
   );
@@ -42535,11 +42551,10 @@ function AlbumTab() {
     projectId: "0000000-0000-0000-0000-00000000000"
   });
   const [showAddDialog, setShowAddDialog] = reactExports.useState(false);
+  const [addDialogInitialDate, setAddDialogInitialDate] = reactExports.useState(null);
   const [isUploading, setIsUploading] = reactExports.useState(false);
   const [uploadProgress, setUploadProgress] = reactExports.useState(0);
   const [viewer, setViewer] = reactExports.useState(null);
-  const quickAddFileRef = reactExports.useRef(null);
-  const quickAddDateRef = reactExports.useRef(null);
   reactExports.useEffect(() => {
     loadConfig().then((config) => {
       setStorageConfig({
@@ -42547,26 +42562,22 @@ function AlbumTab() {
         backendCanisterId: config.backend_canister_id,
         projectId: config.project_id
       });
+      window.__caffeineStorageGatewayUrl = config.storage_gateway_url;
+      window.__caffeineBackendCanisterId = config.backend_canister_id;
+      window.__caffeineProjectId = config.project_id;
     }).catch(() => {
     }).finally(() => {
       setConfigReady(true);
     });
   }, []);
-  const sortedEntries = entries ? [...entries].sort((a2, b2) => a2.date > b2.date ? -1 : 1) : [];
-  const getBlobUrl2 = (blobId) => {
-    if (!configReady) return "";
+  const sortedEntries = reactExports.useMemo(
+    () => entries ? [...entries].sort((a2, b2) => a2.date > b2.date ? -1 : 1) : [],
+    [entries]
+  );
+  const getBlobUrl = (blobId) => {
+    if (!blobId) return "";
     const { storageGatewayUrl, backendCanisterId, projectId } = storageConfig;
     return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
-  };
-  const initStorageConfig = async () => {
-    if (window.__caffeineStorageGatewayUrl) return;
-    try {
-      const config = await loadConfig();
-      window.__caffeineStorageGatewayUrl = config.storage_gateway_url;
-      window.__caffeineBackendCanisterId = config.backend_canister_id;
-      window.__caffeineProjectId = config.project_id;
-    } catch {
-    }
   };
   const uploadPhotos = async (dateBigint, files) => {
     var _a3;
@@ -42577,7 +42588,6 @@ function AlbumTab() {
     setIsUploading(true);
     setUploadProgress(0);
     try {
-      await initStorageConfig();
       const config = await loadConfig();
       const { HttpAgent: HttpAgent2 } = await __vitePreload(async () => {
         const { HttpAgent: HttpAgent3 } = await Promise.resolve().then(() => index);
@@ -42595,6 +42605,14 @@ function AlbumTab() {
         config.project_id,
         agent
       );
+      setStorageConfig({
+        storageGatewayUrl: config.storage_gateway_url,
+        backendCanisterId: config.backend_canister_id,
+        projectId: config.project_id
+      });
+      window.__caffeineStorageGatewayUrl = config.storage_gateway_url;
+      window.__caffeineBackendCanisterId = config.backend_canister_id;
+      window.__caffeineProjectId = config.project_id;
       const existingEntry = await actor.getAlbumEntryByDate(dateBigint);
       if (!existingEntry) {
         await createAlbumEntry.mutateAsync({
@@ -42613,9 +42631,6 @@ function AlbumTab() {
         await addPhoto.mutateAsync({ date: dateBigint, blobId: hash });
         setUploadProgress(Math.round((i + 1) / total * 100));
       }
-      window.__caffeineStorageGatewayUrl = config.storage_gateway_url;
-      window.__caffeineBackendCanisterId = config.backend_canister_id;
-      window.__caffeineProjectId = config.project_id;
       ue.success(
         `${files.length} foto${files.length !== 1 ? "s" : ""} añadida${files.length !== 1 ? "s" : ""} al álbum`
       );
@@ -42628,7 +42643,11 @@ function AlbumTab() {
     }
   };
   const handleAddPhotoForDate = (date) => {
-    quickAddDateRef.current = date;
+    setAddDialogInitialDate(date);
+    setShowAddDialog(true);
+  };
+  const handleOpenAddDialog = () => {
+    setAddDialogInitialDate(null);
     setShowAddDialog(true);
   };
   const handleDeletePhoto = async (date, blobId) => {
@@ -42642,6 +42661,7 @@ function AlbumTab() {
       ue.error("Error al eliminar la foto");
     }
   };
+  const showSkeleton = isLoading || !configReady;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 pt-6 pb-4", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -42651,9 +42671,7 @@ function AlbumTab() {
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         Button,
         {
-          onClick: () => {
-            setShowAddDialog(true);
-          },
+          onClick: handleOpenAddDialog,
           className: "rounded-xl gap-1.5",
           size: "sm",
           "data-ocid": "album.primary_button",
@@ -42664,7 +42682,7 @@ function AlbumTab() {
         }
       )
     ] }),
-    isLoading || !configReady ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", "data-ocid": "album.loading_state", children: [1, 2].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    showSkeleton ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", "data-ocid": "album.loading_state", children: [1, 2].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
         className: "bg-card rounded-xl card-shadow overflow-hidden",
@@ -42691,7 +42709,7 @@ function AlbumTab() {
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             Button,
             {
-              onClick: () => setShowAddDialog(true),
+              onClick: handleOpenAddDialog,
               className: "rounded-xl gap-2",
               "data-ocid": "album.open_modal_button",
               children: [
@@ -42707,37 +42725,24 @@ function AlbumTab() {
       {
         entry,
         index: idx,
-        getBlobUrl: getBlobUrl2,
+        getBlobUrl,
         onPhotoClick: (photos, photoIdx, date) => setViewer({ photos, index: photoIdx, date }),
         onAddPhoto: handleAddPhotoForDate,
         onDeletePhoto: handleDeletePhoto
       },
       entry.date.toString()
     )) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "input",
-      {
-        ref: quickAddFileRef,
-        type: "file",
-        accept: "image/*",
-        multiple: true,
-        className: "hidden",
-        onChange: async (e) => {
-          if (e.target.files && quickAddDateRef.current !== null) {
-            const files = Array.from(e.target.files);
-            await uploadPhotos(quickAddDateRef.current, files);
-          }
-          e.target.value = "";
-        }
-      }
-    ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: showAddDialog && /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddPhotosDialog,
       {
-        onClose: () => setShowAddDialog(false),
+        onClose: () => {
+          setShowAddDialog(false);
+          setAddDialogInitialDate(null);
+        },
         onUpload: uploadPhotos,
         isUploading,
-        uploadProgress
+        uploadProgress,
+        initialDate: addDialogInitialDate
       }
     ) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: viewer && /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -42767,7 +42772,7 @@ function AlbumTab() {
             );
           }
         },
-        getBlobUrl: getBlobUrl2
+        getBlobUrl
       }
     ) })
   ] });
@@ -43055,12 +43060,6 @@ function formatDateES(date) {
     year: "numeric"
   });
 }
-function getBlobUrl(blobId) {
-  const storageGatewayUrl = window.__caffeineStorageGatewayUrl || "https://blob.caffeine.ai";
-  const backendCanisterId = window.__caffeineBackendCanisterId || "";
-  const projectId = window.__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
-  return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
-}
 function roundRectClip(ctx, x2, y2, w2, h2, r2) {
   ctx.beginPath();
   ctx.moveTo(x2 + r2, y2);
@@ -43074,7 +43073,7 @@ function roundRectClip(ctx, x2, y2, w2, h2, r2) {
   ctx.quadraticCurveTo(x2, y2, x2 + r2, y2);
   ctx.closePath();
 }
-async function generateRomanticCollage(albumEntries, stats) {
+async function generateRomanticCollage(albumEntries, stats, getBlobUrl) {
   const W2 = 1080;
   const H2 = 1920;
   const canvas = document.createElement("canvas");
@@ -43221,9 +43220,11 @@ async function generateRomanticCollage(albumEntries, stats) {
         let bitmap = null;
         try {
           const url = getBlobUrl(photosToShow[i]);
-          const response = await fetch(url, { mode: "cors" });
-          const blob = await response.blob();
-          bitmap = await createImageBitmap(blob);
+          if (url) {
+            const response = await fetch(url, { mode: "cors" });
+            const blob = await response.blob();
+            bitmap = await createImageBitmap(blob);
+          }
         } catch {
           bitmap = null;
         }
@@ -43342,6 +43343,34 @@ function DataTab() {
   const [showConfirmReset, setShowConfirmReset] = reactExports.useState(false);
   const [isResetting, setIsResetting] = reactExports.useState(false);
   const [isExporting, setIsExporting] = reactExports.useState(false);
+  const [storageConfig, setStorageConfig] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    loadConfig().then((config) => {
+      setStorageConfig({
+        storageGatewayUrl: config.storage_gateway_url,
+        backendCanisterId: config.backend_canister_id,
+        projectId: config.project_id
+      });
+      window.__caffeineStorageGatewayUrl = config.storage_gateway_url;
+      window.__caffeineBackendCanisterId = config.backend_canister_id;
+      window.__caffeineProjectId = config.project_id;
+    }).catch(() => {
+      setStorageConfig({
+        storageGatewayUrl: window.__caffeineStorageGatewayUrl || "https://blob.caffeine.ai",
+        backendCanisterId: window.__caffeineBackendCanisterId || "",
+        projectId: window.__caffeineProjectId || "0000000-0000-0000-0000-00000000000"
+      });
+    });
+  }, []);
+  const getBlobUrl = (blobId) => {
+    if (!blobId) return "";
+    const cfg = storageConfig || {
+      storageGatewayUrl: window.__caffeineStorageGatewayUrl || "https://blob.caffeine.ai",
+      backendCanisterId: window.__caffeineBackendCanisterId || "",
+      projectId: window.__caffeineProjectId || "0000000-0000-0000-0000-00000000000"
+    };
+    return `${cfg.storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(cfg.backendCanisterId)}&project_id=${encodeURIComponent(cfg.projectId)}`;
+  };
   const isLoading = loadingWatch || loadingPending || loadingMenus || loadingAlbum;
   const totalPhotos = albumEntries.reduce(
     (acc, e) => acc + e.blobIds.length,
@@ -43362,7 +43391,11 @@ function DataTab() {
   const handleExportPhoto = async () => {
     setIsExporting(true);
     try {
-      const blob = await generateRomanticCollage(albumEntries, stats);
+      const blob = await generateRomanticCollage(
+        albumEntries,
+        stats,
+        getBlobUrl
+      );
       const url = URL.createObjectURL(blob);
       const a2 = document.createElement("a");
       a2.href = url;
@@ -43539,14 +43572,31 @@ function DataTab() {
                     ] })
                   ] })
                 ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 grid grid-cols-3 gap-2", children: entry.blobIds.map((blobId, photoIdx) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative aspect-square", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "img",
-                  {
-                    src: getBlobUrl(blobId),
-                    alt: `Foto ${photoIdx + 1} del ${formatDateES(date)}`,
-                    className: "w-full h-full object-cover rounded-lg"
-                  }
-                ) }, blobId)) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 grid grid-cols-3 gap-2", children: entry.blobIds.map((blobId, photoIdx) => {
+                  const url = getBlobUrl(blobId);
+                  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "div",
+                    {
+                      className: "relative aspect-square",
+                      children: url ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "img",
+                        {
+                          src: url,
+                          alt: `Foto ${photoIdx + 1} del ${formatDateES(date)}`,
+                          className: "w-full h-full object-cover rounded-lg",
+                          loading: "lazy"
+                        }
+                      ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full h-full rounded-lg bg-muted flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Camera,
+                        {
+                          size: 20,
+                          className: "text-muted-foreground"
+                        }
+                      ) })
+                    },
+                    blobId
+                  );
+                }) }),
                 entry.description && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-4 pb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground italic", children: entry.description }) })
               ]
             },

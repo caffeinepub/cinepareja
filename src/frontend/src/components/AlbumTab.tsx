@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { AlbumEntry } from "../backend.d";
 import { loadConfig } from "../config";
@@ -177,6 +177,7 @@ interface AddPhotosDialogProps {
   onUpload: (date: bigint, files: File[]) => Promise<void>;
   isUploading: boolean;
   uploadProgress: number;
+  initialDate?: bigint | null;
 }
 
 function AddPhotosDialog({
@@ -184,9 +185,13 @@ function AddPhotosDialog({
   onUpload,
   isUploading,
   uploadProgress,
+  initialDate,
 }: AddPhotosDialogProps) {
   const today = new Date();
-  const [selectedDate, setSelectedDate] = useState(dateToInputValue(today));
+  const initialDateStr = initialDate
+    ? dateToInputValue(bigintToDate(initialDate))
+    : dateToInputValue(today);
+  const [selectedDate, setSelectedDate] = useState(initialDateStr);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -362,45 +367,69 @@ function DayGroup({
 
       {/* Photo grid */}
       <div className="p-3 grid grid-cols-3 gap-2">
-        {entry.blobIds.map((blobId, photoIdx) => (
-          <button
-            key={blobId}
-            type="button"
-            className="relative aspect-square cursor-pointer group"
-            onMouseEnter={() => setHoveredPhoto(blobId)}
-            onMouseLeave={() => setHoveredPhoto(null)}
-            onClick={() => onPhotoClick(entry.blobIds, photoIdx, date)}
-          >
-            <img
-              src={getBlobUrl(blobId)}
-              alt={`Foto ${photoIdx + 1}`}
-              className="w-full h-full object-cover rounded-lg"
-            />
-            {/* Delete overlay */}
-            <AnimatePresence>
-              {hoveredPhoto === blobId && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center"
-                >
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDeletePhoto(entry.date, blobId);
-                    }}
-                    className="bg-destructive text-destructive-foreground rounded-full p-1.5 shadow-md"
-                    data-ocid="album.delete_button"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </motion.div>
+        {entry.blobIds.map((blobId, photoIdx) => {
+          const url = getBlobUrl(blobId);
+          return (
+            <button
+              key={blobId}
+              type="button"
+              className="relative aspect-square cursor-pointer group"
+              onMouseEnter={() => setHoveredPhoto(blobId)}
+              onMouseLeave={() => setHoveredPhoto(null)}
+              onClick={() => onPhotoClick(entry.blobIds, photoIdx, date)}
+            >
+              {url ? (
+                <img
+                  src={url}
+                  alt={`Foto ${photoIdx + 1}`}
+                  className="w-full h-full object-cover rounded-lg"
+                  loading="lazy"
+                  onError={(e) => {
+                    // On error, show a placeholder
+                    (e.currentTarget as HTMLImageElement).style.display =
+                      "none";
+                    const parent = e.currentTarget.parentElement;
+                    if (parent && !parent.querySelector(".photo-placeholder")) {
+                      const placeholder = document.createElement("div");
+                      placeholder.className =
+                        "photo-placeholder w-full h-full rounded-lg bg-muted flex items-center justify-center";
+                      placeholder.innerHTML =
+                        '<span style="font-size:1.5rem">📷</span>';
+                      parent.appendChild(placeholder);
+                    }
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full rounded-lg bg-muted flex items-center justify-center">
+                  <Camera size={20} className="text-muted-foreground" />
+                </div>
               )}
-            </AnimatePresence>
-          </button>
-        ))}
+              {/* Delete overlay */}
+              <AnimatePresence>
+                {hoveredPhoto === blobId && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center"
+                  >
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeletePhoto(entry.date, blobId);
+                      }}
+                      className="bg-destructive text-destructive-foreground rounded-full p-1.5 shadow-md"
+                      data-ocid="album.delete_button"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </button>
+          );
+        })}
       </div>
     </motion.div>
   );
@@ -421,6 +450,9 @@ export default function AlbumTab() {
   });
 
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [addDialogInitialDate, setAddDialogInitialDate] = useState<
+    bigint | null
+  >(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [viewer, setViewer] = useState<{
@@ -429,10 +461,7 @@ export default function AlbumTab() {
     date: Date;
   } | null>(null);
 
-  const quickAddFileRef = useRef<HTMLInputElement>(null);
-  const quickAddDateRef = useRef<bigint | null>(null);
-
-  // Load storage config on mount so photo URLs work even without prior upload
+  // Load storage config eagerly on mount — photos need config to display URLs
   useEffect(() => {
     loadConfig()
       .then((config) => {
@@ -441,9 +470,15 @@ export default function AlbumTab() {
           backendCanisterId: config.backend_canister_id,
           projectId: config.project_id,
         });
+        // Also populate window globals so DataTab can use them
+        (window as any).__caffeineStorageGatewayUrl =
+          config.storage_gateway_url;
+        (window as any).__caffeineBackendCanisterId =
+          config.backend_canister_id;
+        (window as any).__caffeineProjectId = config.project_id;
       })
       .catch(() => {
-        // keep defaults if config fails
+        // keep defaults if config fails; still mark ready so UI shows
       })
       .finally(() => {
         setConfigReady(true);
@@ -451,26 +486,16 @@ export default function AlbumTab() {
   }, []);
 
   // Sort entries newest first
-  const sortedEntries = entries
-    ? [...entries].sort((a, b) => (a.date > b.date ? -1 : 1))
-    : [];
+  const sortedEntries = useMemo(
+    () =>
+      entries ? [...entries].sort((a, b) => (a.date > b.date ? -1 : 1)) : [],
+    [entries],
+  );
 
   const getBlobUrl = (blobId: string): string => {
-    if (!configReady) return "";
+    if (!blobId) return "";
     const { storageGatewayUrl, backendCanisterId, projectId } = storageConfig;
     return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
-  };
-
-  const initStorageConfig = async () => {
-    if ((window as any).__caffeineStorageGatewayUrl) return;
-    try {
-      const config = await loadConfig();
-      (window as any).__caffeineStorageGatewayUrl = config.storage_gateway_url;
-      (window as any).__caffeineBackendCanisterId = config.backend_canister_id;
-      (window as any).__caffeineProjectId = config.project_id;
-    } catch {
-      // use defaults
-    }
   };
 
   const uploadPhotos = async (dateBigint: bigint, files: File[]) => {
@@ -481,7 +506,6 @@ export default function AlbumTab() {
     setIsUploading(true);
     setUploadProgress(0);
     try {
-      await initStorageConfig();
       const config = await loadConfig();
       const { HttpAgent } = await import("@icp-sdk/core/agent");
       const agent = new HttpAgent({ host: config.backend_host });
@@ -495,6 +519,16 @@ export default function AlbumTab() {
         config.project_id,
         agent,
       );
+
+      // Update storage config in state too (in case not loaded yet)
+      setStorageConfig({
+        storageGatewayUrl: config.storage_gateway_url,
+        backendCanisterId: config.backend_canister_id,
+        projectId: config.project_id,
+      });
+      (window as any).__caffeineStorageGatewayUrl = config.storage_gateway_url;
+      (window as any).__caffeineBackendCanisterId = config.backend_canister_id;
+      (window as any).__caffeineProjectId = config.project_id;
 
       const existingEntry = await actor.getAlbumEntryByDate(dateBigint);
       if (!existingEntry) {
@@ -516,10 +550,6 @@ export default function AlbumTab() {
         setUploadProgress(Math.round(((i + 1) / total) * 100));
       }
 
-      (window as any).__caffeineStorageGatewayUrl = config.storage_gateway_url;
-      (window as any).__caffeineBackendCanisterId = config.backend_canister_id;
-      (window as any).__caffeineProjectId = config.project_id;
-
       toast.success(
         `${files.length} foto${files.length !== 1 ? "s" : ""} añadida${files.length !== 1 ? "s" : ""} al álbum`,
       );
@@ -533,7 +563,12 @@ export default function AlbumTab() {
   };
 
   const handleAddPhotoForDate = (date: bigint) => {
-    quickAddDateRef.current = date;
+    setAddDialogInitialDate(date);
+    setShowAddDialog(true);
+  };
+
+  const handleOpenAddDialog = () => {
+    setAddDialogInitialDate(null);
     setShowAddDialog(true);
   };
 
@@ -549,6 +584,9 @@ export default function AlbumTab() {
     }
   };
 
+  // Show skeleton while both album entries and config are loading
+  const showSkeleton = isLoading || !configReady;
+
   return (
     <div className="px-4 pt-6 pb-4">
       {/* Header */}
@@ -562,9 +600,7 @@ export default function AlbumTab() {
           </p>
         </div>
         <Button
-          onClick={() => {
-            setShowAddDialog(true);
-          }}
+          onClick={handleOpenAddDialog}
           className="rounded-xl gap-1.5"
           size="sm"
           data-ocid="album.primary_button"
@@ -575,7 +611,7 @@ export default function AlbumTab() {
       </div>
 
       {/* Content */}
-      {isLoading || !configReady ? (
+      {showSkeleton ? (
         <div className="space-y-4" data-ocid="album.loading_state">
           {[1, 2].map((i) => (
             <div
@@ -609,7 +645,7 @@ export default function AlbumTab() {
             Añadid vuestras primeras fotos juntos y empezad a crear recuerdos
           </p>
           <Button
-            onClick={() => setShowAddDialog(true)}
+            onClick={handleOpenAddDialog}
             className="rounded-xl gap-2"
             data-ocid="album.open_modal_button"
           >
@@ -635,30 +671,18 @@ export default function AlbumTab() {
         </div>
       )}
 
-      {/* Hidden quick-add file input */}
-      <input
-        ref={quickAddFileRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={async (e) => {
-          if (e.target.files && quickAddDateRef.current !== null) {
-            const files = Array.from(e.target.files);
-            await uploadPhotos(quickAddDateRef.current, files);
-          }
-          e.target.value = "";
-        }}
-      />
-
       {/* Add Photos Dialog */}
       <AnimatePresence>
         {showAddDialog && (
           <AddPhotosDialog
-            onClose={() => setShowAddDialog(false)}
+            onClose={() => {
+              setShowAddDialog(false);
+              setAddDialogInitialDate(null);
+            }}
             onUpload={uploadPhotos}
             isUploading={isUploading}
             uploadProgress={uploadProgress}
+            initialDate={addDialogInitialDate}
           />
         )}
       </AnimatePresence>

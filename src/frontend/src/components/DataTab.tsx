@@ -21,9 +21,10 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { WatchStatus } from "../backend.d";
+import { loadConfig } from "../config";
 import {
   useDeleteMealMenu,
   useDeletePendingItem,
@@ -44,15 +45,6 @@ function formatDateES(date: Date): string {
     month: "long",
     year: "numeric",
   });
-}
-
-function getBlobUrl(blobId: string): string {
-  const storageGatewayUrl =
-    (window as any).__caffeineStorageGatewayUrl || "https://blob.caffeine.ai";
-  const backendCanisterId = (window as any).__caffeineBackendCanisterId || "";
-  const projectId =
-    (window as any).__caffeineProjectId || "0000000-0000-0000-0000-00000000000";
-  return `${storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(backendCanisterId)}&project_id=${encodeURIComponent(projectId)}`;
 }
 
 function roundRectClip(
@@ -93,6 +85,7 @@ interface StatsData {
 async function generateRomanticCollage(
   albumEntries: AlbumEntryData[],
   stats: StatsData,
+  getBlobUrl: (blobId: string) => string,
 ): Promise<Blob> {
   const W = 1080;
   const H = 1920;
@@ -266,9 +259,11 @@ async function generateRomanticCollage(
         let bitmap: ImageBitmap | null = null;
         try {
           const url = getBlobUrl(photosToShow[i]);
-          const response = await fetch(url, { mode: "cors" });
-          const blob = await response.blob();
-          bitmap = await createImageBitmap(blob);
+          if (url) {
+            const response = await fetch(url, { mode: "cors" });
+            const blob = await response.blob();
+            bitmap = await createImageBitmap(blob);
+          }
         } catch {
           bitmap = null;
         }
@@ -408,6 +403,56 @@ export default function DataTab() {
   const [isResetting, setIsResetting] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
+  // Load storage config on mount so album photos display correctly
+  const [storageConfig, setStorageConfig] = useState<{
+    storageGatewayUrl: string;
+    backendCanisterId: string;
+    projectId: string;
+  } | null>(null);
+
+  useEffect(() => {
+    loadConfig()
+      .then((config) => {
+        setStorageConfig({
+          storageGatewayUrl: config.storage_gateway_url,
+          backendCanisterId: config.backend_canister_id,
+          projectId: config.project_id,
+        });
+        // Keep window globals in sync
+        (window as any).__caffeineStorageGatewayUrl =
+          config.storage_gateway_url;
+        (window as any).__caffeineBackendCanisterId =
+          config.backend_canister_id;
+        (window as any).__caffeineProjectId = config.project_id;
+      })
+      .catch(() => {
+        // Fallback to window globals if available
+        setStorageConfig({
+          storageGatewayUrl:
+            (window as any).__caffeineStorageGatewayUrl ||
+            "https://blob.caffeine.ai",
+          backendCanisterId: (window as any).__caffeineBackendCanisterId || "",
+          projectId:
+            (window as any).__caffeineProjectId ||
+            "0000000-0000-0000-0000-00000000000",
+        });
+      });
+  }, []);
+
+  const getBlobUrl = (blobId: string): string => {
+    if (!blobId) return "";
+    const cfg = storageConfig || {
+      storageGatewayUrl:
+        (window as any).__caffeineStorageGatewayUrl ||
+        "https://blob.caffeine.ai",
+      backendCanisterId: (window as any).__caffeineBackendCanisterId || "",
+      projectId:
+        (window as any).__caffeineProjectId ||
+        "0000000-0000-0000-0000-00000000000",
+    };
+    return `${cfg.storageGatewayUrl}/v1/blob/?blob_hash=${encodeURIComponent(blobId)}&owner_id=${encodeURIComponent(cfg.backendCanisterId)}&project_id=${encodeURIComponent(cfg.projectId)}`;
+  };
+
   const isLoading =
     loadingWatch || loadingPending || loadingMenus || loadingAlbum;
 
@@ -435,11 +480,17 @@ export default function DataTab() {
   const handleExportPhoto = async () => {
     setIsExporting(true);
     try {
-      const blob = await generateRomanticCollage(albumEntries, stats);
+      const blob = await generateRomanticCollage(
+        albumEntries,
+        stats,
+        getBlobUrl,
+      );
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `cinepareja-recuerdos-${new Date().toISOString().split("T")[0]}.png`;
+      a.download = `cinepareja-recuerdos-${
+        new Date().toISOString().split("T")[0]
+      }.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -634,15 +685,31 @@ export default function DataTab() {
                       </div>
 
                       <div className="p-3 grid grid-cols-3 gap-2">
-                        {entry.blobIds.map((blobId, photoIdx) => (
-                          <div key={blobId} className="relative aspect-square">
-                            <img
-                              src={getBlobUrl(blobId)}
-                              alt={`Foto ${photoIdx + 1} del ${formatDateES(date)}`}
-                              className="w-full h-full object-cover rounded-lg"
-                            />
-                          </div>
-                        ))}
+                        {entry.blobIds.map((blobId, photoIdx) => {
+                          const url = getBlobUrl(blobId);
+                          return (
+                            <div
+                              key={blobId}
+                              className="relative aspect-square"
+                            >
+                              {url ? (
+                                <img
+                                  src={url}
+                                  alt={`Foto ${photoIdx + 1} del ${formatDateES(date)}`}
+                                  className="w-full h-full object-cover rounded-lg"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <div className="w-full h-full rounded-lg bg-muted flex items-center justify-center">
+                                  <Camera
+                                    size={20}
+                                    className="text-muted-foreground"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
 
                       {entry.description && (
