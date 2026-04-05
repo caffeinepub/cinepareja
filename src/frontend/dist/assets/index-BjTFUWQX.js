@@ -38923,16 +38923,17 @@ const WatchType$1 = Variant({
   "movie": Null,
   "series": Null
 });
-const PendingItem = Record({
-  "id": Id,
-  "title": Text,
-  "watchType": WatchType$1,
-  "notes": Text
-});
 const WatchStatus$1 = Variant({
   "pending": Null,
   "completed": Null,
   "watching": Null
+});
+const PendingItem = Record({
+  "id": Id,
+  "title": Text,
+  "watchType": WatchType$1,
+  "notes": Text,
+  "posterUrl": Opt(Text)
 });
 const WatchItem = Record({
   "id": Id,
@@ -38940,7 +38941,11 @@ const WatchItem = Record({
   "title": Text,
   "watchType": WatchType$1,
   "pausedAtMin": Opt(Nat),
-  "notes": Text
+  "notes": Text,
+  "currentEpisode": Opt(Text),
+  "review": Text,
+  "rating": Nat,
+  "posterUrl": Opt(Text)
 });
 const AlbumEntry = Record({
   "id": Id,
@@ -39040,16 +39045,17 @@ const idlFactory = ({ IDL: IDL2 }) => {
   });
   const Id2 = IDL2.Nat;
   const WatchType2 = IDL2.Variant({ "movie": IDL2.Null, "series": IDL2.Null });
-  const PendingItem2 = IDL2.Record({
-    "id": Id2,
-    "title": IDL2.Text,
-    "watchType": WatchType2,
-    "notes": IDL2.Text
-  });
   const WatchStatus2 = IDL2.Variant({
     "pending": IDL2.Null,
     "completed": IDL2.Null,
     "watching": IDL2.Null
+  });
+  const PendingItem2 = IDL2.Record({
+    "id": Id2,
+    "title": IDL2.Text,
+    "watchType": WatchType2,
+    "notes": IDL2.Text,
+    "posterUrl": IDL2.Opt(IDL2.Text)
   });
   const WatchItem2 = IDL2.Record({
     "id": Id2,
@@ -39057,7 +39063,11 @@ const idlFactory = ({ IDL: IDL2 }) => {
     "title": IDL2.Text,
     "watchType": WatchType2,
     "pausedAtMin": IDL2.Opt(IDL2.Nat),
-    "notes": IDL2.Text
+    "notes": IDL2.Text,
+    "currentEpisode": IDL2.Opt(IDL2.Text),
+    "review": IDL2.Text,
+    "rating": IDL2.Nat,
+    "posterUrl": IDL2.Opt(IDL2.Text)
   });
   const AlbumEntry2 = IDL2.Record({
     "id": Id2,

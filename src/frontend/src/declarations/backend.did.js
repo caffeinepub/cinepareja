@@ -30,16 +30,17 @@ export const WatchType = IDL.Variant({
   'movie' : IDL.Null,
   'series' : IDL.Null,
 });
+export const WatchStatus = IDL.Variant({
+  'pending' : IDL.Null,
+  'completed' : IDL.Null,
+  'watching' : IDL.Null,
+});
 export const PendingItem = IDL.Record({
   'id' : Id,
   'title' : IDL.Text,
   'watchType' : WatchType,
   'notes' : IDL.Text,
-});
-export const WatchStatus = IDL.Variant({
-  'pending' : IDL.Null,
-  'completed' : IDL.Null,
-  'watching' : IDL.Null,
+  'posterUrl' : IDL.Opt(IDL.Text),
 });
 export const WatchItem = IDL.Record({
   'id' : Id,
@@ -48,6 +49,10 @@ export const WatchItem = IDL.Record({
   'watchType' : WatchType,
   'pausedAtMin' : IDL.Opt(IDL.Nat),
   'notes' : IDL.Text,
+  'currentEpisode' : IDL.Opt(IDL.Text),
+  'review' : IDL.Text,
+  'rating' : IDL.Nat,
+  'posterUrl' : IDL.Opt(IDL.Text),
 });
 export const AlbumEntry = IDL.Record({
   'id' : Id,
@@ -151,16 +156,17 @@ export const idlFactory = ({ IDL }) => {
   });
   const Id = IDL.Nat;
   const WatchType = IDL.Variant({ 'movie' : IDL.Null, 'series' : IDL.Null });
+  const WatchStatus = IDL.Variant({
+    'pending' : IDL.Null,
+    'completed' : IDL.Null,
+    'watching' : IDL.Null,
+  });
   const PendingItem = IDL.Record({
     'id' : Id,
     'title' : IDL.Text,
     'watchType' : WatchType,
     'notes' : IDL.Text,
-  });
-  const WatchStatus = IDL.Variant({
-    'pending' : IDL.Null,
-    'completed' : IDL.Null,
-    'watching' : IDL.Null,
+    'posterUrl' : IDL.Opt(IDL.Text),
   });
   const WatchItem = IDL.Record({
     'id' : Id,
@@ -169,6 +175,10 @@ export const idlFactory = ({ IDL }) => {
     'watchType' : WatchType,
     'pausedAtMin' : IDL.Opt(IDL.Nat),
     'notes' : IDL.Text,
+    'currentEpisode' : IDL.Opt(IDL.Text),
+    'review' : IDL.Text,
+    'rating' : IDL.Nat,
+    'posterUrl' : IDL.Opt(IDL.Text),
   });
   const AlbumEntry = IDL.Record({
     'id' : Id,
