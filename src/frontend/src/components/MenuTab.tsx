@@ -108,8 +108,10 @@ export default function MenuTab() {
       await upsertMutation.mutateAsync(menu);
       toast.success("Menú guardado");
       setIsEditing(false);
-    } catch {
-      toast.error("Error al guardar el menú");
+    } catch (e) {
+      toast.error(
+        `Error al guardar el menú: ${e instanceof Error ? e.message : String(e)}`,
+      );
     }
   };
 
@@ -120,8 +122,10 @@ export default function MenuTab() {
       toast.success("Menú eliminado");
       setForm(DEFAULT_FORM);
       setIsEditing(true);
-    } catch {
-      toast.error("Error al eliminar");
+    } catch (e) {
+      toast.error(
+        `Error al eliminar: ${e instanceof Error ? e.message : String(e)}`,
+      );
     } finally {
       setShowDelete(false);
     }

@@ -579,8 +579,10 @@ export default function AlbumTab() {
         await actor.deletePhoto(blobId);
       }
       toast.success("Foto eliminada");
-    } catch {
-      toast.error("Error al eliminar la foto");
+    } catch (e) {
+      toast.error(
+        `Error al eliminar la foto: ${e instanceof Error ? e.message : String(e)}`,
+      );
     }
   };
 

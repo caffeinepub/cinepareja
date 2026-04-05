@@ -37,8 +37,21 @@ module {
     };
   };
 
+  // Auto-register a non-anonymous caller as #user if they are not yet registered.
+  func ensureRegistered(state : AccessControlState, caller : Principal) {
+    if (caller.isAnonymous()) { return };
+    switch (state.userRoles.get(caller)) {
+      case (?_) {};
+      case (null) {
+        state.userRoles.add(caller, #user);
+      };
+    };
+  };
+
   public func getUserRole(state : AccessControlState, caller : Principal) : UserRole {
     if (caller.isAnonymous()) { return #guest };
+    // Auto-register if not yet present so users who skip initialization still work
+    ensureRegistered(state, caller);
     switch (state.userRoles.get(caller)) {
       case (?role) { role };
       case (null) {

@@ -42715,8 +42715,10 @@ function AlbumTab() {
         await actor.deletePhoto(blobId);
       }
       ue.success("Foto eliminada");
-    } catch {
-      ue.error("Error al eliminar la foto");
+    } catch (e) {
+      ue.error(
+        `Error al eliminar la foto: ${e instanceof Error ? e.message : String(e)}`
+      );
     }
   };
   const showSkeleton = isLoading || !configReady;
@@ -44889,8 +44891,10 @@ function MenuTab() {
       await upsertMutation.mutateAsync(menu);
       ue.success("Menú guardado");
       setIsEditing(false);
-    } catch {
-      ue.error("Error al guardar el menú");
+    } catch (e) {
+      ue.error(
+        `Error al guardar el menú: ${e instanceof Error ? e.message : String(e)}`
+      );
     }
   };
   const handleDelete = async () => {
@@ -44900,8 +44904,10 @@ function MenuTab() {
       ue.success("Menú eliminado");
       setForm(DEFAULT_FORM$2);
       setIsEditing(true);
-    } catch {
-      ue.error("Error al eliminar");
+    } catch (e) {
+      ue.error(
+        `Error al eliminar: ${e instanceof Error ? e.message : String(e)}`
+      );
     } finally {
       setShowDelete(false);
     }
@@ -45303,8 +45309,10 @@ function PendingTab() {
       }
       setShowForm(false);
       setForm(DEFAULT_FORM$1);
-    } catch {
-      ue.error("Error al guardar");
+    } catch (e) {
+      ue.error(
+        `Error al guardar: ${e instanceof Error ? e.message : String(e)}`
+      );
     }
   };
   const handleDelete = async () => {
@@ -45312,8 +45320,10 @@ function PendingTab() {
     try {
       await deleteMutation.mutateAsync(deleteId);
       ue.success("Eliminado de pendientes");
-    } catch {
-      ue.error("Error al eliminar");
+    } catch (e) {
+      ue.error(
+        `Error al eliminar: ${e instanceof Error ? e.message : String(e)}`
+      );
     } finally {
       setDeleteId(null);
     }
@@ -45750,8 +45760,10 @@ function WatchingTab() {
       }
       setShowForm(false);
       setForm(DEFAULT_FORM);
-    } catch {
-      ue.error("Error al guardar");
+    } catch (e) {
+      ue.error(
+        `Error al guardar: ${e instanceof Error ? e.message : String(e)}`
+      );
     }
   };
   const handleDelete = async () => {
@@ -45759,8 +45771,10 @@ function WatchingTab() {
     try {
       await deleteMutation.mutateAsync(deleteId);
       ue.success("Eliminado");
-    } catch {
-      ue.error("Error al eliminar");
+    } catch (e) {
+      ue.error(
+        `Error al eliminar: ${e instanceof Error ? e.message : String(e)}`
+      );
     } finally {
       setDeleteId(null);
     }

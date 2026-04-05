@@ -151,8 +151,10 @@ export default function PendingTab() {
       }
       setShowForm(false);
       setForm(DEFAULT_FORM);
-    } catch {
-      toast.error("Error al guardar");
+    } catch (e) {
+      toast.error(
+        `Error al guardar: ${e instanceof Error ? e.message : String(e)}`,
+      );
     }
   };
 
@@ -161,8 +163,10 @@ export default function PendingTab() {
     try {
       await deleteMutation.mutateAsync(deleteId);
       toast.success("Eliminado de pendientes");
-    } catch {
-      toast.error("Error al eliminar");
+    } catch (e) {
+      toast.error(
+        `Error al eliminar: ${e instanceof Error ? e.message : String(e)}`,
+      );
     } finally {
       setDeleteId(null);
     }

@@ -263,8 +263,10 @@ export default function WatchingTab() {
       }
       setShowForm(false);
       setForm(DEFAULT_FORM);
-    } catch {
-      toast.error("Error al guardar");
+    } catch (e) {
+      toast.error(
+        `Error al guardar: ${e instanceof Error ? e.message : String(e)}`,
+      );
     }
   };
 
@@ -273,8 +275,10 @@ export default function WatchingTab() {
     try {
       await deleteMutation.mutateAsync(deleteId);
       toast.success("Eliminado");
-    } catch {
-      toast.error("Error al eliminar");
+    } catch (e) {
+      toast.error(
+        `Error al eliminar: ${e instanceof Error ? e.message : String(e)}`,
+      );
     } finally {
       setDeleteId(null);
     }
