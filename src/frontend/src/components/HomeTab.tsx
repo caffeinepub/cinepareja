@@ -35,6 +35,30 @@ interface HomeTabProps {
   onTabChange: (tab: TabId) => void;
 }
 
+// Poster image with error fallback
+function PosterImage({
+  src,
+  alt,
+  className,
+  fallback,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  fallback: React.ReactNode;
+}) {
+  const [error, setError] = useState(false);
+  if (error) return <>{fallback}</>;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => setError(true)}
+    />
+  );
+}
+
 export default function HomeTab({ onTabChange }: HomeTabProps) {
   const [editNames, setEditNames] = useState(false);
   const [name1, setName1] = useState(
@@ -149,7 +173,7 @@ export default function HomeTab({ onTabChange }: HomeTabProps) {
           className="hero-gradient rounded-2xl p-5 text-white card-shadow"
           data-ocid="home.card"
         >
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
               <p className="text-white/70 text-xs font-medium uppercase tracking-wide">
                 Viendo ahora
@@ -174,9 +198,25 @@ export default function HomeTab({ onTabChange }: HomeTabProps) {
                   )}
               </div>
             </div>
-            <div className="text-4xl ml-2">
-              {currentlyWatching.watchType === WatchType.movie ? "🎬" : "📺"}
-            </div>
+            {/* Poster or emoji */}
+            {currentlyWatching.posterUrl ? (
+              <PosterImage
+                src={currentlyWatching.posterUrl}
+                alt={currentlyWatching.title}
+                className="w-14 h-20 rounded-xl object-cover shadow-lg flex-shrink-0"
+                fallback={
+                  <div className="text-4xl ml-2 flex-shrink-0">
+                    {currentlyWatching.watchType === WatchType.movie
+                      ? "🎬"
+                      : "📺"}
+                  </div>
+                }
+              />
+            ) : (
+              <div className="text-4xl ml-2 flex-shrink-0">
+                {currentlyWatching.watchType === WatchType.movie ? "🎬" : "📺"}
+              </div>
+            )}
           </div>
           {currentlyWatching.notes && (
             <p className="mt-3 text-white/80 text-xs line-clamp-2">
@@ -275,7 +315,7 @@ export default function HomeTab({ onTabChange }: HomeTabProps) {
                 key={item.id.toString()}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card rounded-xl p-4 card-shadow flex items-center justify-between"
+                className="bg-card rounded-xl p-4 card-shadow flex items-center justify-between gap-3"
               >
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-foreground truncate">
@@ -296,9 +336,23 @@ export default function HomeTab({ onTabChange }: HomeTabProps) {
                       )}
                   </div>
                 </div>
-                <span className="text-2xl ml-2">
-                  {item.watchType === WatchType.movie ? "🎬" : "📺"}
-                </span>
+                {/* Poster or emoji */}
+                {item.posterUrl ? (
+                  <PosterImage
+                    src={item.posterUrl}
+                    alt={item.title}
+                    className="w-10 h-14 rounded-lg object-cover shadow-sm flex-shrink-0"
+                    fallback={
+                      <span className="text-2xl ml-2 flex-shrink-0">
+                        {item.watchType === WatchType.movie ? "🎬" : "📺"}
+                      </span>
+                    }
+                  />
+                ) : (
+                  <span className="text-2xl ml-2 flex-shrink-0">
+                    {item.watchType === WatchType.movie ? "🎬" : "📺"}
+                  </span>
+                )}
               </motion.div>
             ))}
           </div>

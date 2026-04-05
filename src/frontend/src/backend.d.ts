@@ -25,6 +25,7 @@ export interface WatchItem {
     currentEpisode?: string;
     review?: string;
     rating?: bigint; // 0 = sin puntuación, 1-5 = estrellas
+    posterUrl?: string; // TMDB poster URL
 }
 export type Id = bigint;
 export interface MealMenu {
@@ -39,6 +40,7 @@ export interface PendingItem {
     title: string;
     watchType: WatchType;
     notes: string;
+    posterUrl?: string; // TMDB poster URL
 }
 export interface UserProfile {
     name: string;

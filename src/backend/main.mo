@@ -63,6 +63,19 @@ actor {
   };
 
   // V3 type — adds rating (0-5 stars)
+  type WatchItemV3 = {
+    id : Id;
+    title : Text;
+    watchType : WatchType;
+    status : WatchStatus;
+    pausedAtMin : ?Nat;
+    notes : Text;
+    currentEpisode : ?Text;
+    review : Text;
+    rating : Nat;
+  };
+
+  // V4 type — adds posterUrl
   public type WatchItem = {
     id : Id;
     title : Text;
@@ -73,6 +86,7 @@ actor {
     currentEpisode : ?Text;
     review : Text;
     rating : Nat; // 0 = no rating, 1-5 = stars
+    posterUrl : ?Text;
   };
 
   module WatchItem {
@@ -87,14 +101,49 @@ actor {
   // V2 stable map (intermediate)
   let watchItemsV2 = Map.empty<Id, WatchItemV2>();
 
-  // V3 stable map (current)
-  let watchItemsV3 = Map.empty<Id, WatchItem>();
+  // V3 stable map (intermediate)
+  let watchItemsV3 = Map.empty<Id, WatchItemV3>();
+
+  // V4 stable map (current)
+  let watchItemsV4 = Map.empty<Id, WatchItem>();
 
   var watchItemsMigrated : Bool = false;
   var watchItemsV3Migrated : Bool = false;
+  var watchItemsV4Migrated : Bool = false;
+
+  // PendingItem V1 (old shape without posterUrl) — kept for stable compatibility
+  type PendingItemV1 = {
+    id : Id;
+    title : Text;
+    watchType : WatchType;
+    notes : Text;
+  };
+
+  // PendingItem V2 — adds posterUrl
+  public type PendingItem = {
+    id : Id;
+    title : Text;
+    watchType : WatchType;
+    notes : Text;
+    posterUrl : ?Text;
+  };
+
+  module PendingItem {
+    public func compare(a : PendingItem, b : PendingItem) : Order.Order {
+      Nat.compare(a.id, b.id);
+    };
+  };
+
+  // Old stable map for PendingItem V1 (kept for migration)
+  let pendingItems = Map.empty<Id, PendingItemV1>();
+
+  // New stable map for PendingItem V2
+  let pendingItemsV2 = Map.empty<Id, PendingItem>();
+
+  var pendingItemsMigrated : Bool = false;
 
   system func postupgrade() {
-    // Migrate V1 -> V2
+    // Migrate WatchItem V1 -> V2
     if (not watchItemsMigrated) {
       for ((k, v) in watchItems.entries()) {
         let migrated : WatchItemV2 = {
@@ -112,10 +161,10 @@ actor {
       watchItems.clear();
       watchItemsMigrated := true;
     };
-    // Migrate V2 -> V3
+    // Migrate WatchItem V2 -> V3
     if (not watchItemsV3Migrated) {
       for ((k, v) in watchItemsV2.entries()) {
-        let migrated : WatchItem = {
+        let migrated : WatchItemV3 = {
           id = v.id;
           title = v.title;
           watchType = v.watchType;
@@ -131,23 +180,42 @@ actor {
       watchItemsV2.clear();
       watchItemsV3Migrated := true;
     };
-  };
-
-  // PendingItem module
-  public type PendingItem = {
-    id : Id;
-    title : Text;
-    watchType : WatchType;
-    notes : Text;
-  };
-
-  module PendingItem {
-    public func compare(a : PendingItem, b : PendingItem) : Order.Order {
-      Nat.compare(a.id, b.id);
+    // Migrate WatchItem V3 -> V4
+    if (not watchItemsV4Migrated) {
+      for ((k, v) in watchItemsV3.entries()) {
+        let migrated : WatchItem = {
+          id = v.id;
+          title = v.title;
+          watchType = v.watchType;
+          status = v.status;
+          pausedAtMin = v.pausedAtMin;
+          notes = v.notes;
+          currentEpisode = v.currentEpisode;
+          review = v.review;
+          rating = v.rating;
+          posterUrl = null;
+        };
+        watchItemsV4.add(k, migrated);
+      };
+      watchItemsV3.clear();
+      watchItemsV4Migrated := true;
+    };
+    // Migrate PendingItem V1 -> V2
+    if (not pendingItemsMigrated) {
+      for ((k, v) in pendingItems.entries()) {
+        let migrated : PendingItem = {
+          id = v.id;
+          title = v.title;
+          watchType = v.watchType;
+          notes = v.notes;
+          posterUrl = null;
+        };
+        pendingItemsV2.add(k, migrated);
+      };
+      pendingItems.clear();
+      pendingItemsMigrated := true;
     };
   };
-
-  let pendingItems = Map.empty<Id, PendingItem>();
 
   // MealMenu module
   public type MealMenu = {
@@ -313,7 +381,7 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // WatchItem functions — all operate on watchItemsV3
+  // WatchItem functions — all operate on watchItemsV4
   public shared ({ caller }) func createWatchItem(input : WatchItem) : async Id {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can create watch items");
@@ -323,7 +391,7 @@ actor {
       input with
       id;
     };
-    watchItemsV3.add(id, newItem);
+    watchItemsV4.add(id, newItem);
     lastUpdated := Time.now();
     id;
   };
@@ -332,10 +400,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can update watch items");
     };
-    if (not watchItemsV3.containsKey(id)) {
+    if (not watchItemsV4.containsKey(id)) {
       Runtime.trap("WatchItem not found");
     };
-    watchItemsV3.add(id, item);
+    watchItemsV4.add(id, item);
     lastUpdated := Time.now();
   };
 
@@ -343,10 +411,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can delete watch items");
     };
-    if (not watchItemsV3.containsKey(id)) {
+    if (not watchItemsV4.containsKey(id)) {
       Runtime.trap("WatchItem not found");
     };
-    watchItemsV3.remove(id);
+    watchItemsV4.remove(id);
     lastUpdated := Time.now();
   };
 
@@ -354,7 +422,7 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view watch items");
     };
-    switch (watchItemsV3.get(id)) {
+    switch (watchItemsV4.get(id)) {
       case (null) { Runtime.trap("WatchItem not found") };
       case (?item) { item };
     };
@@ -364,10 +432,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view watch items");
     };
-    watchItemsV3.values().toArray().sort();
+    watchItemsV4.values().toArray().sort();
   };
 
-  // PendingItem functions
+  // PendingItem functions — all operate on pendingItemsV2
   public shared ({ caller }) func createPendingItem(input : PendingItem) : async Id {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can create pending items");
@@ -377,7 +445,7 @@ actor {
       input with
       id;
     };
-    pendingItems.add(id, newItem);
+    pendingItemsV2.add(id, newItem);
     lastUpdated := Time.now();
     id;
   };
@@ -386,10 +454,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can update pending items");
     };
-    if (not pendingItems.containsKey(id)) {
+    if (not pendingItemsV2.containsKey(id)) {
       Runtime.trap("PendingItem not found");
     };
-    pendingItems.add(id, item);
+    pendingItemsV2.add(id, item);
     lastUpdated := Time.now();
   };
 
@@ -397,10 +465,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can delete pending items");
     };
-    if (not pendingItems.containsKey(id)) {
+    if (not pendingItemsV2.containsKey(id)) {
       Runtime.trap("PendingItem not found");
     };
-    pendingItems.remove(id);
+    pendingItemsV2.remove(id);
     lastUpdated := Time.now();
   };
 
@@ -408,7 +476,7 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view pending items");
     };
-    switch (pendingItems.get(id)) {
+    switch (pendingItemsV2.get(id)) {
       case (null) { Runtime.trap("PendingItem not found") };
       case (?item) { item };
     };
@@ -418,7 +486,7 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view pending items");
     };
-    pendingItems.values().toArray().sort();
+    pendingItemsV2.values().toArray().sort();
   };
 
   // MealMenu functions

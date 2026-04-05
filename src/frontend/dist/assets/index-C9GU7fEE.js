@@ -43962,6 +43962,31 @@ function StarDisplay$1({ value }) {
     star
   )) });
 }
+function PosterImage$3({
+  src,
+  alt,
+  className,
+  fallback
+}) {
+  const [error, setError] = reactExports.useState(false);
+  const prevSrcRef = reactExports.useRef(src);
+  reactExports.useEffect(() => {
+    if (prevSrcRef.current !== src) {
+      setError(false);
+      prevSrcRef.current = src;
+    }
+  }, [src]);
+  if (error) return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: fallback });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "img",
+    {
+      src,
+      alt,
+      className,
+      onError: () => setError(true)
+    }
+  );
+}
 function FinishedTab() {
   const { data: allItems = [], isLoading } = useGetAllWatchItems();
   const updateMutation = useUpdateWatchItem();
@@ -44049,7 +44074,15 @@ function FinishedTab() {
         className: "bg-card rounded-2xl p-4 card-shadow border border-green-100/60 dark:border-green-900/20",
         "data-ocid": `finished.item.${idx + 1}`,
         children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl mt-0.5 flex-shrink-0", children: item.watchType === WatchType.movie ? "🎬" : "📺" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-shrink-0 mt-0.5", children: item.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+            PosterImage$3,
+            {
+              src: item.posterUrl,
+              alt: item.title,
+              className: "w-12 h-[68px] rounded-lg object-cover shadow-sm",
+              fallback: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType.movie ? "🎬" : "📺" })
+            }
+          ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType.movie ? "🎬" : "📺" }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground leading-snug", children: item.title }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5 mt-1.5", children: [
@@ -44118,7 +44151,17 @@ function FinishedTab() {
             "data-ocid": "finished.dialog",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { className: "flex items-center gap-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg", children: (editItem == null ? void 0 : editItem.watchType) === WatchType.movie ? "🎬" : "📺" }),
+                (editItem == null ? void 0 : editItem.posterUrl) ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "img",
+                  {
+                    src: editItem.posterUrl,
+                    alt: editItem.title,
+                    className: "w-8 h-11 rounded object-cover flex-shrink-0",
+                    onError: (e) => {
+                      e.currentTarget.style.display = "none";
+                    }
+                  }
+                ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg", children: (editItem == null ? void 0 : editItem.watchType) === WatchType.movie ? "🎬" : "📺" }),
                 editItem == null ? void 0 : editItem.title
               ] }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pt-1", children: [
@@ -44244,6 +44287,24 @@ function Input({ className, type, ...props }) {
     }
   );
 }
+function PosterImage$2({
+  src,
+  alt,
+  className,
+  fallback
+}) {
+  const [error, setError] = reactExports.useState(false);
+  if (error) return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: fallback });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "img",
+    {
+      src,
+      alt,
+      className,
+      onError: () => setError(true)
+    }
+  );
+}
 function HomeTab({ onTabChange }) {
   const [editNames, setEditNames] = reactExports.useState(false);
   const [name1, setName1] = reactExports.useState(
@@ -44348,7 +44409,7 @@ function HomeTab({ onTabChange }) {
         className: "hero-gradient rounded-2xl p-5 text-white card-shadow",
         "data-ocid": "home.card",
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-3", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-white/70 text-xs font-medium uppercase tracking-wide", children: "Viendo ahora" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-xl font-display font-bold mt-1 leading-tight", children: currentlyWatching.title }),
@@ -44363,7 +44424,15 @@ function HomeTab({ onTabChange }) {
                 ] })
               ] })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-4xl ml-2", children: currentlyWatching.watchType === WatchType.movie ? "🎬" : "📺" })
+            currentlyWatching.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PosterImage$2,
+              {
+                src: currentlyWatching.posterUrl,
+                alt: currentlyWatching.title,
+                className: "w-14 h-20 rounded-xl object-cover shadow-lg flex-shrink-0",
+                fallback: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-4xl ml-2 flex-shrink-0", children: currentlyWatching.watchType === WatchType.movie ? "🎬" : "📺" })
+              }
+            ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-4xl ml-2 flex-shrink-0", children: currentlyWatching.watchType === WatchType.movie ? "🎬" : "📺" })
           ] }),
           currentlyWatching.notes && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-white/80 text-xs line-clamp-2", children: currentlyWatching.notes })
         ]
@@ -44435,7 +44504,7 @@ function HomeTab({ onTabChange }) {
         {
           initial: { opacity: 0, y: 8 },
           animate: { opacity: 1, y: 0 },
-          className: "bg-card rounded-xl p-4 card-shadow flex items-center justify-between",
+          className: "bg-card rounded-xl p-4 card-shadow flex items-center justify-between gap-3",
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground truncate", children: item.title }),
@@ -44448,7 +44517,15 @@ function HomeTab({ onTabChange }) {
                 ] })
               ] })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl ml-2", children: item.watchType === WatchType.movie ? "🎬" : "📺" })
+            item.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PosterImage$2,
+              {
+                src: item.posterUrl,
+                alt: item.title,
+                className: "w-10 h-14 rounded-lg object-cover shadow-sm flex-shrink-0",
+                fallback: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl ml-2 flex-shrink-0", children: item.watchType === WatchType.movie ? "🎬" : "📺" })
+              }
+            ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl ml-2 flex-shrink-0", children: item.watchType === WatchType.movie ? "🎬" : "📺" })
           ]
         },
         item.id.toString()
@@ -45064,11 +45141,86 @@ function MenuTab() {
     ) })
   ] });
 }
+const TMDB_API_KEY = "8265bd1679663a7ea12ac168da84d2e8";
+const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w342";
+function useTMDBPoster(title, watchType) {
+  const [posterUrl, setPosterUrl] = reactExports.useState(null);
+  const [isLoading, setIsLoading] = reactExports.useState(false);
+  const debounceRef = reactExports.useRef(null);
+  const abortRef = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    if (!title.trim() || title.trim().length < 2) {
+      setPosterUrl(null);
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      var _a3;
+      if (abortRef.current) {
+        abortRef.current.abort();
+      }
+      abortRef.current = new AbortController();
+      const mediaType = watchType === WatchType.movie ? "movie" : "tv";
+      const url = `https://api.themoviedb.org/3/search/${mediaType}?api_key=${TMDB_API_KEY}&language=es-ES&query=${encodeURIComponent(title.trim())}&page=1`;
+      try {
+        const res = await fetch(url, { signal: abortRef.current.signal });
+        if (!res.ok) throw new Error("TMDB fetch failed");
+        const data = await res.json();
+        const first = (_a3 = data.results) == null ? void 0 : _a3[0];
+        if (first == null ? void 0 : first.poster_path) {
+          setPosterUrl(`${TMDB_IMAGE_BASE}${first.poster_path}`);
+        } else {
+          setPosterUrl(null);
+        }
+      } catch (err) {
+        if (err instanceof Error && err.name !== "AbortError") {
+          setPosterUrl(null);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    }, 600);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [title, watchType]);
+  return { posterUrl, isLoading };
+}
 const DEFAULT_FORM$1 = {
   title: "",
   watchType: WatchType.movie,
-  notes: ""
+  notes: "",
+  posterUrl: ""
 };
+function PosterImage$1({
+  src,
+  alt,
+  className,
+  fallback
+}) {
+  const [error, setError] = reactExports.useState(false);
+  const prevSrcRef = reactExports.useRef(src);
+  reactExports.useEffect(() => {
+    if (prevSrcRef.current !== src) {
+      setError(false);
+      prevSrcRef.current = src;
+    }
+  }, [src]);
+  if (error) return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: fallback });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "img",
+    {
+      src,
+      alt,
+      className,
+      onError: () => setError(true)
+    }
+  );
+}
 function PendingTab() {
   const { data: pendingItems = [], isLoading } = useGetAllPendingItems();
   const createMutation = useCreatePendingItem();
@@ -45078,9 +45230,20 @@ function PendingTab() {
   const [editItem, setEditItem] = reactExports.useState(null);
   const [deleteId, setDeleteId] = reactExports.useState(null);
   const [form, setForm] = reactExports.useState(DEFAULT_FORM$1);
+  const [posterManuallyCleared, setPosterManuallyCleared] = reactExports.useState(false);
+  const { posterUrl: tmdbPosterUrl, isLoading: tmdbLoading } = useTMDBPoster(
+    showForm ? form.title : "",
+    form.watchType
+  );
+  reactExports.useEffect(() => {
+    if (!posterManuallyCleared && tmdbPosterUrl && showForm) {
+      setForm((p2) => ({ ...p2, posterUrl: tmdbPosterUrl }));
+    }
+  }, [tmdbPosterUrl, posterManuallyCleared, showForm]);
   const openAdd = () => {
     setForm(DEFAULT_FORM$1);
     setEditItem(null);
+    setPosterManuallyCleared(false);
     setShowForm(true);
   };
   const openEdit = (item) => {
@@ -45088,9 +45251,15 @@ function PendingTab() {
     setForm({
       title: item.title,
       watchType: item.watchType,
-      notes: item.notes
+      notes: item.notes,
+      posterUrl: item.posterUrl ?? ""
     });
+    setPosterManuallyCleared(false);
     setShowForm(true);
+  };
+  const handleClearPoster = () => {
+    setForm((p2) => ({ ...p2, posterUrl: "" }));
+    setPosterManuallyCleared(true);
   };
   const handleSubmit = async () => {
     if (!form.title.trim()) {
@@ -45101,7 +45270,8 @@ function PendingTab() {
       id: (editItem == null ? void 0 : editItem.id) ?? 0n,
       title: form.title.trim(),
       watchType: form.watchType,
-      notes: form.notes.trim()
+      notes: form.notes.trim(),
+      posterUrl: form.posterUrl.trim() || void 0
     };
     try {
       if (editItem) {
@@ -45189,7 +45359,15 @@ function PendingTab() {
           className: "bg-card rounded-xl p-4 card-shadow",
           "data-ocid": `pending.item.${idx + 1}`,
           children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType.movie ? "🎬" : "📺" }),
+            item.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PosterImage$1,
+              {
+                src: item.posterUrl,
+                alt: item.title,
+                className: "w-12 h-[68px] rounded-lg object-cover shadow-sm",
+                fallback: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType.movie ? "🎬" : "📺" })
+              }
+            ) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType.movie ? "🎬" : "📺" }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground truncate", children: item.title }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-2 mt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs", children: item.watchType === WatchType.movie ? "Película" : "Serie" }) }),
@@ -45237,15 +45415,50 @@ function PendingTab() {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pt-1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Título *" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  placeholder: "Ej: Inception",
-                  value: form.title,
-                  onChange: (e) => setForm((p2) => ({ ...p2, title: e.target.value })),
-                  "data-ocid": "pending.input"
-                }
-              )
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    placeholder: "Ej: Inception",
+                    value: form.title,
+                    onChange: (e) => {
+                      setForm((p2) => ({ ...p2, title: e.target.value }));
+                      setPosterManuallyCleared(false);
+                    },
+                    "data-ocid": "pending.input",
+                    className: "flex-1"
+                  }
+                ),
+                (form.posterUrl || tmdbLoading) && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative flex-shrink-0", children: tmdbLoading && !form.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-[42px] h-[60px] rounded-lg bg-muted flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  LoaderCircle,
+                  {
+                    size: 14,
+                    className: "animate-spin text-muted-foreground"
+                  }
+                ) }) : form.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    PosterImage$1,
+                    {
+                      src: form.posterUrl,
+                      alt: "Póster",
+                      className: "w-[42px] h-[60px] rounded-lg object-cover shadow-md",
+                      fallback: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-[42px] h-[60px] rounded-lg bg-muted flex items-center justify-center text-lg", children: "🎬" })
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: handleClearPoster,
+                      className: "absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow",
+                      "aria-label": "Quitar póster",
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { size: 9 })
+                    }
+                  )
+                ] }) : null })
+              ] }),
+              form.posterUrl && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "🎞️ Carátula encontrada automáticamente" }),
+              tmdbLoading && !form.posterUrl && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Buscando carátula..." })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Tipo" }),
@@ -45375,7 +45588,8 @@ const DEFAULT_FORM = {
   notes: "",
   currentEpisode: "",
   review: "",
-  rating: 0
+  rating: 0,
+  posterUrl: ""
 };
 function StarSelector({
   value,
@@ -45419,6 +45633,31 @@ function StarDisplay({ value }) {
     star
   )) });
 }
+function PosterImage({
+  src,
+  alt,
+  className,
+  fallback
+}) {
+  const [error, setError] = reactExports.useState(false);
+  const prevSrcRef = reactExports.useRef(src);
+  reactExports.useEffect(() => {
+    if (prevSrcRef.current !== src) {
+      setError(false);
+      prevSrcRef.current = src;
+    }
+  }, [src]);
+  if (error) return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: fallback });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "img",
+    {
+      src,
+      alt,
+      className,
+      onError: () => setError(true)
+    }
+  );
+}
 function WatchingTab() {
   const { data: watchItems = [], isLoading } = useGetAllWatchItems();
   const createMutation = useCreateWatchItem();
@@ -45428,9 +45667,20 @@ function WatchingTab() {
   const [editItem, setEditItem] = reactExports.useState(null);
   const [deleteId, setDeleteId] = reactExports.useState(null);
   const [form, setForm] = reactExports.useState(DEFAULT_FORM);
+  const [posterManuallyCleared, setPosterManuallyCleared] = reactExports.useState(false);
+  const { posterUrl: tmdbPosterUrl, isLoading: tmdbLoading } = useTMDBPoster(
+    showForm ? form.title : "",
+    form.watchType
+  );
+  reactExports.useEffect(() => {
+    if (!posterManuallyCleared && tmdbPosterUrl && showForm) {
+      setForm((p2) => ({ ...p2, posterUrl: tmdbPosterUrl }));
+    }
+  }, [tmdbPosterUrl, posterManuallyCleared, showForm]);
   const openAdd = () => {
     setForm(DEFAULT_FORM);
     setEditItem(null);
+    setPosterManuallyCleared(false);
     setShowForm(true);
   };
   const openEdit = (item) => {
@@ -45443,9 +45693,15 @@ function WatchingTab() {
       notes: item.notes,
       currentEpisode: item.currentEpisode ?? "",
       review: item.review ?? "",
-      rating: Number(item.rating ?? 0n)
+      rating: Number(item.rating ?? 0n),
+      posterUrl: item.posterUrl ?? ""
     });
+    setPosterManuallyCleared(false);
     setShowForm(true);
+  };
+  const handleClearPoster = () => {
+    setForm((p2) => ({ ...p2, posterUrl: "" }));
+    setPosterManuallyCleared(true);
   };
   const handleSubmit = async () => {
     if (!form.title.trim()) {
@@ -45461,7 +45717,8 @@ function WatchingTab() {
       notes: form.notes.trim(),
       currentEpisode: form.currentEpisode.trim() || void 0,
       review: form.review.trim(),
-      rating: BigInt(form.rating)
+      rating: BigInt(form.rating),
+      posterUrl: form.posterUrl.trim() || void 0
     };
     try {
       if (editItem) {
@@ -45553,7 +45810,15 @@ function WatchingTab() {
           className: "bg-card rounded-xl p-4 card-shadow",
           "data-ocid": `watching.item.${idx + 1}`,
           children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl mt-0.5", children: item.watchType === WatchType.movie ? "🎬" : "📺" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-shrink-0 mt-0.5", children: item.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PosterImage,
+              {
+                src: item.posterUrl,
+                alt: item.title,
+                className: "w-12 h-[68px] rounded-lg object-cover shadow-sm",
+                fallback: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType.movie ? "🎬" : "📺" })
+              }
+            ) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl", children: item.watchType === WatchType.movie ? "🎬" : "📺" }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground truncate", children: item.title }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5 mt-1.5", children: [
@@ -45632,15 +45897,50 @@ function WatchingTab() {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pt-1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Título *" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  placeholder: "Ej: Breaking Bad",
-                  value: form.title,
-                  onChange: (e) => setForm((p2) => ({ ...p2, title: e.target.value })),
-                  "data-ocid": "watching.input"
-                }
-              )
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    placeholder: "Ej: Breaking Bad",
+                    value: form.title,
+                    onChange: (e) => {
+                      setForm((p2) => ({ ...p2, title: e.target.value }));
+                      setPosterManuallyCleared(false);
+                    },
+                    "data-ocid": "watching.input",
+                    className: "flex-1"
+                  }
+                ),
+                (form.posterUrl || tmdbLoading) && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative flex-shrink-0", children: tmdbLoading && !form.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-[42px] h-[60px] rounded-lg bg-muted flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  LoaderCircle,
+                  {
+                    size: 14,
+                    className: "animate-spin text-muted-foreground"
+                  }
+                ) }) : form.posterUrl ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    PosterImage,
+                    {
+                      src: form.posterUrl,
+                      alt: "Póster",
+                      className: "w-[42px] h-[60px] rounded-lg object-cover shadow-md",
+                      fallback: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-[42px] h-[60px] rounded-lg bg-muted flex items-center justify-center text-lg", children: "🎬" })
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: handleClearPoster,
+                      className: "absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow",
+                      "aria-label": "Quitar póster",
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { size: 9 })
+                    }
+                  )
+                ] }) : null })
+              ] }),
+              form.posterUrl && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "🎞️ Carátula encontrada automáticamente" }),
+              tmdbLoading && !form.posterUrl && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Buscando carátula..." })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Tipo" }),

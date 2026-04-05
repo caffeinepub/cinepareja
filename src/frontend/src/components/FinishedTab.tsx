@@ -21,7 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle2, Edit2, Star, Trash2, Tv } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { WatchItem } from "../backend.d";
 import { WatchStatus, WatchType } from "../backend.d";
@@ -104,6 +104,39 @@ function StarDisplay({ value }: { value: number }) {
         />
       ))}
     </span>
+  );
+}
+
+// Poster thumbnail with error fallback
+function PosterImage({
+  src,
+  alt,
+  className,
+  fallback,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  fallback: React.ReactNode;
+}) {
+  const [error, setError] = useState(false);
+  const prevSrcRef = useRef(src);
+
+  useEffect(() => {
+    if (prevSrcRef.current !== src) {
+      setError(false);
+      prevSrcRef.current = src;
+    }
+  }, [src]);
+
+  if (error) return <>{fallback}</>;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => setError(true)}
+    />
   );
 }
 
@@ -220,10 +253,25 @@ export default function FinishedTab() {
                 data-ocid={`finished.item.${idx + 1}`}
               >
                 <div className="flex items-start gap-3">
-                  {/* Type emoji */}
-                  <span className="text-2xl mt-0.5 flex-shrink-0">
-                    {item.watchType === WatchType.movie ? "🎬" : "📺"}
-                  </span>
+                  {/* Poster or emoji */}
+                  <div className="flex-shrink-0 mt-0.5">
+                    {item.posterUrl ? (
+                      <PosterImage
+                        src={item.posterUrl}
+                        alt={item.title}
+                        className="w-12 h-[68px] rounded-lg object-cover shadow-sm"
+                        fallback={
+                          <span className="text-2xl">
+                            {item.watchType === WatchType.movie ? "🎬" : "📺"}
+                          </span>
+                        }
+                      />
+                    ) : (
+                      <span className="text-2xl">
+                        {item.watchType === WatchType.movie ? "🎬" : "📺"}
+                      </span>
+                    )}
+                  </div>
 
                   <div className="flex-1 min-w-0">
                     {/* Title */}
@@ -310,9 +358,21 @@ export default function FinishedTab() {
         >
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <span className="text-lg">
-                {editItem?.watchType === WatchType.movie ? "🎬" : "📺"}
-              </span>
+              {editItem?.posterUrl ? (
+                <img
+                  src={editItem.posterUrl}
+                  alt={editItem.title}
+                  className="w-8 h-11 rounded object-cover flex-shrink-0"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display =
+                      "none";
+                  }}
+                />
+              ) : (
+                <span className="text-lg">
+                  {editItem?.watchType === WatchType.movie ? "🎬" : "📺"}
+                </span>
+              )}
               {editItem?.title}
             </DialogTitle>
           </DialogHeader>

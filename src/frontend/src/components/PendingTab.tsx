@@ -20,9 +20,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Bookmark, Edit2, Plus, Trash2 } from "lucide-react";
+import { Bookmark, Edit2, Loader2, Plus, Trash2, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { PendingItem } from "../backend.d";
 import { WatchType } from "../backend.d";
@@ -32,18 +32,54 @@ import {
   useGetAllPendingItems,
   useUpdatePendingItem,
 } from "../hooks/useQueries";
+import { useTMDBPoster } from "../hooks/useTMDBPoster";
 
 interface FormState {
   title: string;
   watchType: WatchType;
   notes: string;
+  posterUrl: string;
 }
 
 const DEFAULT_FORM: FormState = {
   title: "",
   watchType: WatchType.movie,
   notes: "",
+  posterUrl: "",
 };
+
+// Poster thumbnail with error fallback
+function PosterImage({
+  src,
+  alt,
+  className,
+  fallback,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  fallback: React.ReactNode;
+}) {
+  const [error, setError] = useState(false);
+  const prevSrcRef = useRef(src);
+
+  useEffect(() => {
+    if (prevSrcRef.current !== src) {
+      setError(false);
+      prevSrcRef.current = src;
+    }
+  }, [src]);
+
+  if (error) return <>{fallback}</>;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => setError(true)}
+    />
+  );
+}
 
 export default function PendingTab() {
   const { data: pendingItems = [], isLoading } = useGetAllPendingItems();
@@ -55,10 +91,24 @@ export default function PendingTab() {
   const [editItem, setEditItem] = useState<PendingItem | null>(null);
   const [deleteId, setDeleteId] = useState<bigint | null>(null);
   const [form, setForm] = useState<FormState>(DEFAULT_FORM);
+  const [posterManuallyCleared, setPosterManuallyCleared] = useState(false);
+
+  const { posterUrl: tmdbPosterUrl, isLoading: tmdbLoading } = useTMDBPoster(
+    showForm ? form.title : "",
+    form.watchType,
+  );
+
+  // Auto-fill poster from TMDB when it resolves (unless manually cleared)
+  useEffect(() => {
+    if (!posterManuallyCleared && tmdbPosterUrl && showForm) {
+      setForm((p) => ({ ...p, posterUrl: tmdbPosterUrl }));
+    }
+  }, [tmdbPosterUrl, posterManuallyCleared, showForm]);
 
   const openAdd = () => {
     setForm(DEFAULT_FORM);
     setEditItem(null);
+    setPosterManuallyCleared(false);
     setShowForm(true);
   };
 
@@ -68,8 +118,15 @@ export default function PendingTab() {
       title: item.title,
       watchType: item.watchType,
       notes: item.notes,
+      posterUrl: item.posterUrl ?? "",
     });
+    setPosterManuallyCleared(false);
     setShowForm(true);
+  };
+
+  const handleClearPoster = () => {
+    setForm((p) => ({ ...p, posterUrl: "" }));
+    setPosterManuallyCleared(true);
   };
 
   const handleSubmit = async () => {
@@ -82,6 +139,7 @@ export default function PendingTab() {
       title: form.title.trim(),
       watchType: form.watchType,
       notes: form.notes.trim(),
+      posterUrl: form.posterUrl.trim() || undefined,
     };
     try {
       if (editItem) {
@@ -174,9 +232,25 @@ export default function PendingTab() {
                 data-ocid={`pending.item.${idx + 1}`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">
-                    {item.watchType === WatchType.movie ? "🎬" : "📺"}
-                  </span>
+                  {/* Poster or emoji */}
+                  {item.posterUrl ? (
+                    <div className="flex-shrink-0">
+                      <PosterImage
+                        src={item.posterUrl}
+                        alt={item.title}
+                        className="w-12 h-[68px] rounded-lg object-cover shadow-sm"
+                        fallback={
+                          <span className="text-2xl">
+                            {item.watchType === WatchType.movie ? "🎬" : "📺"}
+                          </span>
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <span className="text-2xl">
+                      {item.watchType === WatchType.movie ? "🎬" : "📺"}
+                    </span>
+                  )}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-foreground truncate">
                       {item.title}
@@ -235,14 +309,62 @@ export default function PendingTab() {
           <div className="space-y-4 pt-1">
             <div className="space-y-1.5">
               <Label>Título *</Label>
-              <Input
-                placeholder="Ej: Inception"
-                value={form.title}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, title: e.target.value }))
-                }
-                data-ocid="pending.input"
-              />
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="Ej: Inception"
+                  value={form.title}
+                  onChange={(e) => {
+                    setForm((p) => ({ ...p, title: e.target.value }));
+                    setPosterManuallyCleared(false);
+                  }}
+                  data-ocid="pending.input"
+                  className="flex-1"
+                />
+                {/* Poster preview */}
+                {(form.posterUrl || tmdbLoading) && (
+                  <div className="relative flex-shrink-0">
+                    {tmdbLoading && !form.posterUrl ? (
+                      <div className="w-[42px] h-[60px] rounded-lg bg-muted flex items-center justify-center">
+                        <Loader2
+                          size={14}
+                          className="animate-spin text-muted-foreground"
+                        />
+                      </div>
+                    ) : form.posterUrl ? (
+                      <>
+                        <PosterImage
+                          src={form.posterUrl}
+                          alt="Póster"
+                          className="w-[42px] h-[60px] rounded-lg object-cover shadow-md"
+                          fallback={
+                            <div className="w-[42px] h-[60px] rounded-lg bg-muted flex items-center justify-center text-lg">
+                              🎬
+                            </div>
+                          }
+                        />
+                        <button
+                          type="button"
+                          onClick={handleClearPoster}
+                          className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow"
+                          aria-label="Quitar póster"
+                        >
+                          <X size={9} />
+                        </button>
+                      </>
+                    ) : null}
+                  </div>
+                )}
+              </div>
+              {form.posterUrl && (
+                <p className="text-xs text-muted-foreground">
+                  🎞️ Carátula encontrada automáticamente
+                </p>
+              )}
+              {tmdbLoading && !form.posterUrl && (
+                <p className="text-xs text-muted-foreground">
+                  Buscando carátula...
+                </p>
+              )}
             </div>
 
             <div className="space-y-1.5">

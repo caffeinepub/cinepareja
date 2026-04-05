@@ -1,26 +1,36 @@
 # CinePareja
 
 ## Current State
-La app tiene una pestaña "Viendo" (WatchingTab) que muestra todos los títulos agrupados por estado: Viendo, Pendiente y Completada. Los ítems con estado `completed` aparecen al final de esta sección junto a los demás. El backend ya soporta el campo `status: completed` en WatchItem, así como campos `review`, `rating` y `currentEpisode`.
+- App has WatchingTab, FinishedTab, PendingTab, HomeTab showing movie/series cards with emoji icons
+- WatchItem has: id, title, watchType, status, pausedAtMin, notes, currentEpisode, review, rating
+- PendingItem has: id, title, watchType, notes
+- No poster images for movies/series — only emoji (🎬/📺)
 
 ## Requested Changes (Diff)
 
 ### Add
-- Nueva pestaña "Terminados" en la barra de navegación inferior (entre Álbum y Datos, o al final)
-- Componente `FinishedTab` que muestra únicamente los WatchItems con `status === completed`
-- Dentro de cada tarjeta de título terminado, mostrar: título, tipo (película/serie), puntuación con estrellas, reseña/opinión completa (no truncada), episodio final si aplica
-- Botón para editar la reseña/puntuación directamente desde FinishedTab (reutilizar el dialog del WatchingTab o un dialog simplificado)
-- Posibilidad de volver a mover un título a "Viendo" si se quiere (cambiar estado desde el formulario)
-- Estado vacío amigable si no hay títulos terminados aún
+- Fetch movie/series poster from TMDB API when user types a title in the add/edit form
+- Show a small poster image in cards across WatchingTab, FinishedTab, PendingTab, and HomeTab
+- Store the poster URL in the WatchItem and PendingItem (as optional field `posterUrl`)
+- Auto-search TMDB when user finishes typing the title (debounced), show poster preview in the form
+- TMDB API key: use the public TMDB API with API key (free key) — use fetch from frontend directly
 
 ### Modify
-- App.tsx: añadir nueva tab `terminados` al array TABS con un icono apropiado (CheckCircle o Trophy)
-- WatchingTab: los ítems con estado `completed` pueden quedarse aquí también (no eliminarlos), pero la sección "Terminados" es el lugar principal para revisarlos con detalle
+- WatchItem type: add optional `posterUrl?: string` field
+- PendingItem type: add optional `posterUrl?: string` field  
+- WatchingTab form: show poster preview after title is typed; allow clearing it
+- FinishedTab card: show poster image if available
+- PendingTab form and card: show poster image if available
+- HomeTab hero card: show poster image if available for currently watching item
+- Backend: add `posterUrl` field to WatchItem V4 and PendingItem
 
 ### Remove
-- Nada se elimina
+- Nothing removed
 
 ## Implementation Plan
-1. Crear `src/frontend/src/components/FinishedTab.tsx` con la lista de títulos completados, tarjetas expandidas con reseña completa y estrellas, y dialog de edición de reseña/puntuación
-2. Modificar `App.tsx` para añadir `terminados` al tipo TabId, al array TABS (con icono CheckCircle) y al switch de renderizado de pestañas
-3. Asegurarse de que FinishedTab reutiliza los mismos hooks (useGetAllWatchItems, useUpdateWatchItem) que WatchingTab
+1. Update backend Motoko: add V4 WatchItem with posterUrl, migrate V3->V4; update PendingItem with posterUrl
+2. Create frontend TMDB hook: `useTMDBPoster(title, type)` — calls TMDB search API, returns first result's poster_path
+3. Update WatchingTab: add posterUrl to FormState; auto-fetch poster on title change; show poster preview in form; pass posterUrl when saving; show poster in cards
+4. Update FinishedTab: show poster in cards
+5. Update PendingTab: add posterUrl to FormState; auto-fetch poster; show poster in form and cards
+6. Update HomeTab: show poster in hero card if available
