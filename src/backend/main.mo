@@ -28,7 +28,7 @@ actor {
   // Timestamp
   var lastUpdated : Time.Time = Time.now();
 
-  // WatchItem module
+  // WatchItem types
   public type WatchType = {
     #movie;
     #series;
@@ -40,7 +40,9 @@ actor {
     #completed;
   };
 
-  public type WatchItem = {
+  // V1 type (old shape) — kept so the stable `watchItems` variable remains
+  // compatible with the previously deployed canister.
+  type WatchItemV1 = {
     id : Id;
     title : Text;
     watchType : WatchType;
@@ -49,13 +51,54 @@ actor {
     notes : Text;
   };
 
+  // V2 type — adds review and currentEpisode
+  public type WatchItem = {
+    id : Id;
+    title : Text;
+    watchType : WatchType;
+    status : WatchStatus;
+    pausedAtMin : ?Nat;
+    notes : Text;
+    currentEpisode : ?Text;
+    review : Text;
+  };
+
   module WatchItem {
     public func compare(a : WatchItem, b : WatchItem) : Order.Order {
       Nat.compare(a.id, b.id);
     };
   };
 
-  let watchItems = Map.empty<Id, WatchItem>();
+  // `watchItems` keeps the OLD V1 type so the upgrade from the deployed
+  // canister is stable-compatible.  After postupgrade it will be empty;
+  // all live data moves to `watchItemsV2`.
+  let watchItems = Map.empty<Id, WatchItemV1>();
+
+  // New stable map for V2 items.
+  let watchItemsV2 = Map.empty<Id, WatchItem>();
+
+  // Flag so we only run the one-time migration once.
+  var watchItemsMigrated : Bool = false;
+
+  system func postupgrade() {
+    if (not watchItemsMigrated) {
+      for ((k, v) in watchItems.entries()) {
+        let migrated : WatchItem = {
+          id = v.id;
+          title = v.title;
+          watchType = v.watchType;
+          status = v.status;
+          pausedAtMin = v.pausedAtMin;
+          notes = v.notes;
+          currentEpisode = null;
+          review = "";
+        };
+        watchItemsV2.add(k, migrated);
+      };
+      watchItems.clear();
+      watchItemsMigrated := true;
+    };
+  };
 
   // PendingItem module
   public type PendingItem = {
@@ -237,7 +280,7 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // WatchItem functions
+  // WatchItem functions — all operate on watchItemsV2
   public shared ({ caller }) func createWatchItem(input : WatchItem) : async Id {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can create watch items");
@@ -247,7 +290,7 @@ actor {
       input with
       id;
     };
-    watchItems.add(id, newItem);
+    watchItemsV2.add(id, newItem);
     lastUpdated := Time.now();
     id;
   };
@@ -256,10 +299,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can update watch items");
     };
-    if (not watchItems.containsKey(id)) {
+    if (not watchItemsV2.containsKey(id)) {
       Runtime.trap("WatchItem not found");
     };
-    watchItems.add(id, item);
+    watchItemsV2.add(id, item);
     lastUpdated := Time.now();
   };
 
@@ -267,10 +310,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can delete watch items");
     };
-    if (not watchItems.containsKey(id)) {
+    if (not watchItemsV2.containsKey(id)) {
       Runtime.trap("WatchItem not found");
     };
-    watchItems.remove(id);
+    watchItemsV2.remove(id);
     lastUpdated := Time.now();
   };
 
@@ -278,7 +321,7 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view watch items");
     };
-    switch (watchItems.get(id)) {
+    switch (watchItemsV2.get(id)) {
       case (null) { Runtime.trap("WatchItem not found") };
       case (?item) { item };
     };
@@ -288,7 +331,7 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view watch items");
     };
-    watchItems.values().toArray().sort();
+    watchItemsV2.values().toArray().sort();
   };
 
   // PendingItem functions
@@ -414,4 +457,3 @@ actor {
     lastUpdated := Time.now();
   };
 };
-

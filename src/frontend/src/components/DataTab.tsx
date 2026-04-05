@@ -18,12 +18,13 @@ import {
   ImageDown,
   Loader2,
   Trash2,
+  Tv,
   UtensilsCrossed,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { WatchStatus } from "../backend.d";
+import { WatchStatus, WatchType } from "../backend.d";
 import { loadConfig } from "../config";
 import {
   useDeleteMealMenu,
@@ -82,10 +83,18 @@ interface StatsData {
   photos: number;
 }
 
+interface WatchingItemData {
+  title: string;
+  watchType: string;
+  currentEpisode?: string;
+  review: string;
+}
+
 async function generateRomanticCollage(
   albumEntries: AlbumEntryData[],
   stats: StatsData,
   getBlobUrl: (blobId: string) => string,
+  watchingItems: WatchingItemData[],
 ): Promise<Blob> {
   const W = 1080;
   const H = 1920;
@@ -209,6 +218,66 @@ async function generateRomanticCollage(
   ctx.restore();
   cursorY += 60;
 
+  // ---- Viendo ahora section ----
+  const itemsToShow = watchingItems.slice(0, 3);
+  if (itemsToShow.length > 0) {
+    // Section header
+    ctx.save();
+    ctx.fillStyle = "rgba(255,240,230,0.95)";
+    ctx.font = "italic bold 38px Georgia, serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.shadowColor = "rgba(0,0,0,0.25)";
+    ctx.shadowBlur = 8;
+    ctx.fillText("\uD83D\uDCFA Viendo ahora", 60, cursorY);
+    ctx.restore();
+    cursorY += 54;
+
+    for (const wi of itemsToShow) {
+      if (cursorY > H - 400) break;
+
+      const typeEmoji =
+        wi.watchType === WatchType.movie ? "\uD83C\uDFAC" : "\uD83D\uDCFA";
+      const titleLine = `${typeEmoji} ${wi.title}${wi.currentEpisode ? ` — ${wi.currentEpisode}` : ""}`;
+
+      ctx.save();
+      ctx.fillStyle = "rgba(255,240,225,0.9)";
+      ctx.font = "bold 30px Georgia, serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      ctx.fillText(titleLine, 70, cursorY);
+      ctx.restore();
+      cursorY += 40;
+
+      if (wi.review) {
+        const snippet =
+          wi.review.length > 80 ? `${wi.review.slice(0, 80)}…` : wi.review;
+        ctx.save();
+        ctx.fillStyle = "rgba(255,215,195,0.8)";
+        ctx.font = "italic 26px Georgia, serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(`\u201c${snippet}\u201d`, 80, cursorY);
+        ctx.restore();
+        cursorY += 38;
+      }
+
+      cursorY += 12;
+    }
+
+    // Divider
+    ctx.save();
+    ctx.strokeStyle = "rgba(255,200,180,0.4)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(80, cursorY);
+    ctx.lineTo(W - 80, cursorY);
+    ctx.stroke();
+    ctx.restore();
+    cursorY += 28;
+  }
+
   // Album entries
   const sortedEntries = [...albumEntries]
     .sort((a, b) => (a.date > b.date ? -1 : 1))
@@ -265,7 +334,6 @@ async function generateRomanticCollage(
               img.crossOrigin = "anonymous";
               img.onload = () => resolve(img);
               img.onerror = () => reject(new Error("Image load failed"));
-              // Add cache-bust to force fresh load and avoid CORS cached responses
               img.src = `${url}${url.includes("?") ? "&" : "?"}_t=${Date.now()}`;
             });
           }
@@ -422,7 +490,6 @@ export default function DataTab() {
           backendCanisterId: config.backend_canister_id,
           projectId: config.project_id,
         });
-        // Keep window globals in sync
         (window as any).__caffeineStorageGatewayUrl =
           config.storage_gateway_url;
         (window as any).__caffeineBackendCanisterId =
@@ -430,7 +497,6 @@ export default function DataTab() {
         (window as any).__caffeineProjectId = config.project_id;
       })
       .catch(() => {
-        // Fallback to window globals if available
         setStorageConfig({
           storageGatewayUrl:
             (window as any).__caffeineStorageGatewayUrl ||
@@ -481,6 +547,10 @@ export default function DataTab() {
     a.date > b.date ? -1 : 1,
   );
 
+  const currentlyWatching = watchItems.filter(
+    (i) => i.status === WatchStatus.watching,
+  );
+
   const handleExportPhoto = async () => {
     setIsExporting(true);
     try {
@@ -488,6 +558,12 @@ export default function DataTab() {
         albumEntries,
         stats,
         getBlobUrl,
+        currentlyWatching.map((i) => ({
+          title: i.title,
+          watchType: i.watchType,
+          currentEpisode: i.currentEpisode,
+          review: i.review ?? "",
+        })),
       );
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -657,6 +733,53 @@ export default function DataTab() {
             </div>
           </section>
 
+          {/* Currently Watching */}
+          {currentlyWatching.length > 0 && (
+            <section>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+                Viendo ahora
+              </h3>
+              <div className="space-y-2.5">
+                {currentlyWatching.map((item, idx) => (
+                  <motion.div
+                    key={item.id.toString()}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="bg-card rounded-xl p-4 card-shadow"
+                    data-ocid={`data.item.${idx + 1}`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-xl mt-0.5">
+                        {item.watchType === WatchType.movie ? "🎬" : "📺"}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm text-foreground">
+                          {item.title}
+                        </p>
+                        {item.currentEpisode && (
+                          <p className="flex items-center gap-1 text-xs text-primary mt-0.5">
+                            <Tv size={10} />
+                            {item.currentEpisode}
+                          </p>
+                        )}
+                        {item.review && (
+                          <p className="text-xs text-muted-foreground italic mt-1.5 border-l-2 border-primary/30 pl-2 line-clamp-3">
+                            &ldquo;
+                            {item.review.length > 100
+                              ? `${item.review.slice(0, 100)}…`
+                              : item.review}
+                            &rdquo;
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Album Photos by Date */}
           {sortedAlbumEntries.length > 0 && (
             <section>
@@ -740,9 +863,9 @@ export default function DataTab() {
                 Descarga tus recuerdos
               </p>
               <p className="text-xs text-muted-foreground mb-4">
-                Genera una imagen bonita con vuestros recuerdos: fotos del
-                \u00e1lbum, fechas y estad\u00edsticas en un dise\u00f1o
-                rom\u00e1ntico.
+                Genera una imagen bonita con lo que estáis viendo, vuestros
+                recuerdos, fotos del álbum y estadísticas en un diseño
+                romántico.
               </p>
               <Button
                 onClick={handleExportPhoto}

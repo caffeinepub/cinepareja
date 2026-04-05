@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, Edit2, Film, Plus, Trash2 } from "lucide-react";
+import { Clock, Edit2, Film, Plus, Trash2, Tv } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -57,6 +57,8 @@ interface FormState {
   status: WatchStatus;
   pausedAtMin: string;
   notes: string;
+  currentEpisode: string;
+  review: string;
 }
 
 const DEFAULT_FORM: FormState = {
@@ -65,6 +67,8 @@ const DEFAULT_FORM: FormState = {
   status: WatchStatus.watching,
   pausedAtMin: "",
   notes: "",
+  currentEpisode: "",
+  review: "",
 };
 
 export default function WatchingTab() {
@@ -95,6 +99,8 @@ export default function WatchingTab() {
           ? String(Number(item.pausedAtMin))
           : "",
       notes: item.notes,
+      currentEpisode: item.currentEpisode ?? "",
+      review: item.review ?? "",
     });
     setShowForm(true);
   };
@@ -113,6 +119,8 @@ export default function WatchingTab() {
         ? BigInt(Math.max(0, Number.parseInt(form.pausedAtMin, 10)))
         : undefined,
       notes: form.notes.trim(),
+      currentEpisode: form.currentEpisode.trim() || undefined,
+      review: form.review.trim(),
     };
     try {
       if (editItem) {
@@ -238,10 +246,21 @@ export default function WatchingTab() {
                                   Min. {Number(item.pausedAtMin)}
                                 </span>
                               )}
+                            {item.currentEpisode && (
+                              <span className="flex items-center gap-1 text-xs bg-primary/8 text-primary border border-primary/20 rounded-full px-2 py-0.5">
+                                <Tv size={10} />
+                                {item.currentEpisode}
+                              </span>
+                            )}
                           </div>
                           {item.notes && (
                             <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">
                               {item.notes}
+                            </p>
+                          )}
+                          {item.review && (
+                            <p className="text-xs text-muted-foreground/80 italic mt-1.5 border-l-2 border-primary/30 pl-2 line-clamp-2">
+                              &ldquo;{item.review}&rdquo;
                             </p>
                           )}
                         </div>
@@ -376,6 +395,38 @@ export default function WatchingTab() {
                   data-ocid="watching.input"
                 />
               </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Episodio actual</Label>
+              <div className="relative">
+                <Tv
+                  size={14}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                />
+                <Input
+                  placeholder="Ej: T2 E5 o Episodio 12"
+                  value={form.currentEpisode}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, currentEpisode: e.target.value }))
+                  }
+                  className="pl-9"
+                  data-ocid="watching.input"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Reseña / Opinión</Label>
+              <Textarea
+                placeholder="¿Qué os está pareciendo?"
+                value={form.review}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, review: e.target.value }))
+                }
+                rows={3}
+                data-ocid="watching.textarea"
+              />
             </div>
 
             <div className="space-y-1.5">

@@ -22,6 +22,8 @@ export interface WatchItem {
     watchType: WatchType;
     pausedAtMin?: bigint;
     notes: string;
+    currentEpisode?: string;
+    review?: string;
 }
 export type Id = bigint;
 export interface MealMenu {
