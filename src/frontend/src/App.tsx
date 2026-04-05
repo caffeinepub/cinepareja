@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   Bookmark,
   Camera,
+  CheckCircle2,
   Download,
   Film,
   Home,
@@ -13,6 +14,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import AlbumTab from "./components/AlbumTab";
 import DataTab from "./components/DataTab";
+import FinishedTab from "./components/FinishedTab";
 import HomeTab from "./components/HomeTab";
 import LoginScreen from "./components/LoginScreen";
 import MenuTab from "./components/MenuTab";
@@ -22,7 +24,14 @@ import WelcomeModal from "./components/WelcomeModal";
 import { useInternetIdentity } from "./hooks/useInternetIdentity";
 import { useGetLastUpdated } from "./hooks/useQueries";
 
-type TabId = "inicio" | "viendo" | "pendientes" | "menu" | "album" | "datos";
+type TabId =
+  | "inicio"
+  | "viendo"
+  | "pendientes"
+  | "menu"
+  | "album"
+  | "terminados"
+  | "datos";
 
 const TABS = [
   { id: "inicio" as TabId, label: "Inicio", icon: Home },
@@ -30,6 +39,7 @@ const TABS = [
   { id: "pendientes" as TabId, label: "Pendientes", icon: Bookmark },
   { id: "menu" as TabId, label: "Menú", icon: UtensilsCrossed },
   { id: "album" as TabId, label: "Álbum", icon: Camera },
+  { id: "terminados" as TabId, label: "Terminados", icon: CheckCircle2 },
   { id: "datos" as TabId, label: "Datos", icon: Download },
 ];
 
@@ -165,6 +175,17 @@ export default function App() {
                 <AlbumTab />
               </motion.div>
             )}
+            {activeTab === "terminados" && (
+              <motion.div
+                key="terminados"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <FinishedTab />
+              </motion.div>
+            )}
             {activeTab === "datos" && (
               <motion.div
                 key="datos"
@@ -198,14 +219,14 @@ export default function App() {
                   aria-label={tab.label}
                 >
                   <Icon
-                    size={18}
+                    size={17}
                     className={
                       isActive ? "text-primary" : "text-muted-foreground"
                     }
                     strokeWidth={isActive ? 2.5 : 1.8}
                   />
                   <span
-                    className={`text-[9px] font-medium ${
+                    className={`text-[8px] font-medium ${
                       isActive ? "text-primary" : "text-muted-foreground"
                     }`}
                   >

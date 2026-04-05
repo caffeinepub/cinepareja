@@ -15172,17 +15172,17 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$m = [
+const __iconNode$n = [
   ["path", { d: "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", key: "1fy3hk" }]
 ];
-const Bookmark = createLucideIcon("bookmark", __iconNode$m);
+const Bookmark = createLucideIcon("bookmark", __iconNode$n);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$l = [
+const __iconNode$m = [
   [
     "path",
     {
@@ -15192,47 +15192,58 @@ const __iconNode$l = [
   ],
   ["circle", { cx: "12", cy: "13", r: "3", key: "1vg3eu" }]
 ];
-const Camera = createLucideIcon("camera", __iconNode$l);
+const Camera = createLucideIcon("camera", __iconNode$m);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$k = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$k);
+const __iconNode$l = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$l);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$j);
+const __iconNode$k = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$k);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$i = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$i);
+const __iconNode$j = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$h = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$h);
+const __iconNode$i = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$i);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$g = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$g);
+const __iconNode$h = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$h);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$g = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$g);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -43851,22 +43862,6 @@ function Badge({
     }
   );
 }
-function Input({ className, type, ...props }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "input",
-    {
-      type,
-      "data-slot": "input",
-      className: cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        className
-      ),
-      ...props
-    }
-  );
-}
 var NAME = "Label";
 var Label$1 = reactExports.forwardRef((props, forwardedRef) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -43896,6 +43891,353 @@ function Label({
       "data-slot": "label",
       className: cn(
         "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        className
+      ),
+      ...props
+    }
+  );
+}
+function Textarea({ className, ...props }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "textarea",
+    {
+      "data-slot": "textarea",
+      className: cn(
+        "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className
+      ),
+      ...props
+    }
+  );
+}
+const STATUS_LABELS$1 = {
+  [WatchStatus.watching]: "Viendo",
+  [WatchStatus.pending]: "Pendiente",
+  [WatchStatus.completed]: "Completada"
+};
+const STATUS_ORDER$1 = [
+  WatchStatus.watching,
+  WatchStatus.pending,
+  WatchStatus.completed
+];
+function StarSelector$1({
+  value,
+  onChange
+}) {
+  const [hovered, setHovered] = reactExports.useState(0);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+    [1, 2, 3, 4, 5].map((star) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        type: "button",
+        onMouseEnter: () => setHovered(star),
+        onMouseLeave: () => setHovered(0),
+        onClick: () => onChange(value === star ? 0 : star),
+        className: "p-0.5 transition-transform hover:scale-110 active:scale-95",
+        "aria-label": `${star} estrella${star !== 1 ? "s" : ""}`,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Star,
+          {
+            size: 22,
+            className: `transition-colors ${star <= (hovered || value) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/40"}`
+          }
+        )
+      },
+      star
+    )),
+    value > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground ml-1", children: [
+      value,
+      "/5"
+    ] })
+  ] });
+}
+function StarDisplay$1({ value }) {
+  if (!value || value <= 0) return null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "flex items-center gap-0.5", children: [1, 2, 3, 4, 5].map((star) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Star,
+    {
+      size: 12,
+      className: `${star <= value ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/25"}`
+    },
+    star
+  )) });
+}
+function FinishedTab() {
+  const { data: allItems = [], isLoading } = useGetAllWatchItems();
+  const updateMutation = useUpdateWatchItem();
+  const deleteMutation = useDeleteWatchItem();
+  const [editItem, setEditItem] = reactExports.useState(null);
+  const [editForm, setEditForm] = reactExports.useState({
+    rating: 0,
+    review: "",
+    status: WatchStatus.completed
+  });
+  const [deleteId, setDeleteId] = reactExports.useState(null);
+  const completedItems = allItems.filter(
+    (item) => item.status === WatchStatus.completed
+  );
+  const openEdit = (item) => {
+    setEditItem(item);
+    setEditForm({
+      rating: Number(item.rating ?? 0n),
+      review: item.review ?? "",
+      status: item.status
+    });
+  };
+  const handleSave = async () => {
+    if (!editItem) return;
+    const updated = {
+      ...editItem,
+      rating: BigInt(editForm.rating),
+      review: editForm.review.trim(),
+      status: editForm.status
+    };
+    try {
+      await updateMutation.mutateAsync({ id: editItem.id, item: updated });
+      ue.success("Reseña guardada");
+      setEditItem(null);
+    } catch {
+      ue.error("Error al guardar");
+    }
+  };
+  const handleDelete = async () => {
+    if (deleteId === null) return;
+    try {
+      await deleteMutation.mutateAsync(deleteId);
+      ue.success("Eliminado");
+    } catch {
+      ue.error("Error al eliminar");
+    } finally {
+      setDeleteId(null);
+    }
+  };
+  const isMutating = updateMutation.isPending;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 pt-6 pb-4", "data-ocid": "finished.section", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-5", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "text-xl font-display font-bold text-foreground flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 20, className: "text-green-500" }),
+        "Terminados"
+      ] }),
+      completedItems.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full font-medium", children: [
+        completedItems.length,
+        " título",
+        completedItems.length !== 1 ? "s" : ""
+      ] })
+    ] }),
+    isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3", "data-ocid": "finished.loading_state", children: [1, 2, 3].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-24 w-full rounded-xl" }, i)) }) : completedItems.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      motion.div,
+      {
+        initial: { opacity: 0, y: 12 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 0.3 },
+        className: "flex flex-col items-center justify-center py-16 text-center",
+        "data-ocid": "finished.empty_state",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-5xl mb-3", children: "🏆" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base font-semibold text-foreground", children: "Todavía no habéis terminado ningún título" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mt-1 max-w-[240px]", children: "¡A por ello! Cuando acabéis una película o serie aparecerá aquí." }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-primary mt-4 font-medium", children: 'Márcala como "Completada" desde la pestaña Viendo' })
+        ]
+      }
+    ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: completedItems.map((item, idx) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      motion.div,
+      {
+        initial: { opacity: 0, y: 8 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, x: -20 },
+        transition: { delay: idx * 0.04 },
+        className: "bg-card rounded-2xl p-4 card-shadow border border-green-100/60 dark:border-green-900/20",
+        "data-ocid": `finished.item.${idx + 1}`,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-2xl mt-0.5 flex-shrink-0", children: item.watchType === WatchType.movie ? "🎬" : "📺" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground leading-snug", children: item.title }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-1.5 mt-1.5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Badge,
+                {
+                  variant: "outline",
+                  className: "text-xs border bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-400 dark:border-green-800",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 9, className: "mr-1" }),
+                    "Completada"
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", className: "text-xs", children: item.watchType === WatchType.movie ? "Película" : "Serie" }),
+              item.currentEpisode && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1 text-xs bg-primary/8 text-primary border border-primary/20 rounded-full px-2 py-0.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Tv, { size: 10 }),
+                item.currentEpisode
+              ] }),
+              Number(item.rating ?? 0n) > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(StarDisplay$1, { value: Number(item.rating) })
+            ] }),
+            item.review && item.review.trim() !== "" && /* @__PURE__ */ jsxRuntimeExports.jsxs("blockquote", { className: "mt-2.5 pl-3 border-l-[3px] border-primary/50 italic text-xs text-muted-foreground leading-relaxed", children: [
+              "“",
+              item.review,
+              "”"
+            ] }),
+            item.notes && item.notes.trim() !== "" && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground/70 mt-1.5", children: item.notes })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1 ml-1 flex-shrink-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => openEdit(item),
+                className: "p-1.5 rounded-lg hover:bg-muted transition-colors",
+                "data-ocid": `finished.edit_button.${idx + 1}`,
+                "aria-label": "Editar reseña",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pen, { size: 14, className: "text-muted-foreground" })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => setDeleteId(item.id),
+                className: "p-1.5 rounded-lg hover:bg-destructive/10 transition-colors",
+                "data-ocid": `finished.delete_button.${idx + 1}`,
+                "aria-label": "Eliminar",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14, className: "text-destructive" })
+              }
+            )
+          ] })
+        ] })
+      },
+      item.id.toString()
+    )) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Dialog,
+      {
+        open: editItem !== null,
+        onOpenChange: (o2) => !o2 && setEditItem(null),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          DialogContent,
+          {
+            className: "w-[calc(100%-32px)] max-w-sm rounded-2xl max-h-[90vh] overflow-y-auto",
+            "data-ocid": "finished.dialog",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg", children: (editItem == null ? void 0 : editItem.watchType) === WatchType.movie ? "🎬" : "📺" }),
+                editItem == null ? void 0 : editItem.title
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pt-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Estado" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-2", children: STATUS_ORDER$1.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => setEditForm((p2) => ({ ...p2, status: s2 })),
+                      className: `py-2 rounded-xl text-xs font-medium border transition-all ${editForm.status === s2 ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground hover:bg-muted"}`,
+                      "data-ocid": "finished.toggle",
+                      children: STATUS_LABELS$1[s2]
+                    },
+                    s2
+                  )) })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Puntuación" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    StarSelector$1,
+                    {
+                      value: editForm.rating,
+                      onChange: (v2) => setEditForm((p2) => ({ ...p2, rating: v2 }))
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Reseña / Opinión" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Textarea,
+                    {
+                      placeholder: "¿Qué os pareció? ¿Lo recomendaríais?",
+                      value: editForm.review,
+                      onChange: (e) => setEditForm((p2) => ({ ...p2, review: e.target.value })),
+                      rows: 4,
+                      "data-ocid": "finished.textarea"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      variant: "outline",
+                      onClick: () => setEditItem(null),
+                      className: "flex-1 rounded-xl",
+                      "data-ocid": "finished.cancel_button",
+                      children: "Cancelar"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      onClick: handleSave,
+                      disabled: isMutating,
+                      className: "flex-1 rounded-xl",
+                      "data-ocid": "finished.save_button",
+                      children: isMutating ? "Guardando..." : "Guardar"
+                    }
+                  )
+                ] })
+              ] })
+            ]
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AlertDialog,
+      {
+        open: deleteId !== null,
+        onOpenChange: (o2) => !o2 && setDeleteId(null),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AlertDialogContent,
+          {
+            className: "w-[calc(100%-32px)] max-w-sm rounded-2xl",
+            "data-ocid": "finished.modal",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogHeader, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogTitle, { children: "¿Eliminar este título?" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogDescription, { children: "Esta acción no se puede deshacer." })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogFooter, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  AlertDialogCancel,
+                  {
+                    className: "rounded-xl",
+                    "data-ocid": "finished.cancel_button",
+                    children: "Cancelar"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  AlertDialogAction,
+                  {
+                    onClick: handleDelete,
+                    className: "rounded-xl bg-destructive text-destructive-foreground hover:bg-destructive/90",
+                    "data-ocid": "finished.confirm_button",
+                    children: "Eliminar"
+                  }
+                )
+              ] })
+            ]
+          }
+        )
+      }
+    )
+  ] });
+}
+function Input({ className, type, ...props }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "input",
+    {
+      type,
+      "data-slot": "input",
+      className: cn(
+        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
         className
       ),
       ...props
@@ -44385,19 +44727,6 @@ function LoginScreen() {
       )
     ] })
   ] }) });
-}
-function Textarea({ className, ...props }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "textarea",
-    {
-      "data-slot": "textarea",
-      className: cn(
-        "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        className
-      ),
-      ...props
-    }
-  );
 }
 function dateToNano(date) {
   return BigInt(date.getTime()) * 1000000n;
@@ -45571,6 +45900,7 @@ const TABS = [
   { id: "pendientes", label: "Pendientes", icon: Bookmark },
   { id: "menu", label: "Menú", icon: UtensilsCrossed },
   { id: "album", label: "Álbum", icon: Camera },
+  { id: "terminados", label: "Terminados", icon: CircleCheck },
   { id: "datos", label: "Datos", icon: Download }
 ];
 function App() {
@@ -45682,6 +46012,17 @@ function App() {
         },
         "album"
       ),
+      activeTab === "terminados" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        motion.div,
+        {
+          initial: { opacity: 0, x: -10 },
+          animate: { opacity: 1, x: 0 },
+          exit: { opacity: 0, x: 10 },
+          transition: { duration: 0.2 },
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(FinishedTab, {})
+        },
+        "terminados"
+      ),
       activeTab === "datos" && /* @__PURE__ */ jsxRuntimeExports.jsx(
         motion.div,
         {
@@ -45714,7 +46055,7 @@ function App() {
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Icon2,
                   {
-                    size: 18,
+                    size: 17,
                     className: isActive ? "text-primary" : "text-muted-foreground",
                     strokeWidth: isActive ? 2.5 : 1.8
                   }
@@ -45722,7 +46063,7 @@ function App() {
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "span",
                   {
-                    className: `text-[9px] font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`,
+                    className: `text-[8px] font-medium ${isActive ? "text-primary" : "text-muted-foreground"}`,
                     children: tab.label
                   }
                 ),
