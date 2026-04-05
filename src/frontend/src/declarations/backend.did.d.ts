@@ -30,6 +30,7 @@ export interface PendingItem {
   'title' : string,
   'watchType' : WatchType,
   'notes' : string,
+  'posterUrl' : [] | [string],
 }
 export type Time = bigint;
 export interface UserProfile { 'name' : string }
@@ -43,6 +44,10 @@ export interface WatchItem {
   'watchType' : WatchType,
   'pausedAtMin' : [] | [bigint],
   'notes' : string,
+  'currentEpisode' : [] | [string],
+  'review' : string,
+  'rating' : bigint,
+  'posterUrl' : [] | [string],
 }
 export type WatchStatus = { 'pending' : null } |
   { 'completed' : null } |

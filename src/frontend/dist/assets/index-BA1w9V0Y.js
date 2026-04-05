@@ -39755,7 +39755,8 @@ function from_candid_record_n21(_uploadFile, _downloadFile, value) {
     id: value.id,
     title: value.title,
     watchType: from_candid_WatchType_n22(_uploadFile, _downloadFile, value.watchType),
-    notes: value.notes
+    notes: value.notes,
+    posterUrl: record_opt_to_undefined(value.posterUrl.length === 0 ? null : value.posterUrl[0])
   };
 }
 function from_candid_record_n26(_uploadFile, _downloadFile, value) {
@@ -39765,7 +39766,11 @@ function from_candid_record_n26(_uploadFile, _downloadFile, value) {
     title: value.title,
     watchType: from_candid_WatchType_n22(_uploadFile, _downloadFile, value.watchType),
     pausedAtMin: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.pausedAtMin)),
-    notes: value.notes
+    notes: value.notes,
+    currentEpisode: record_opt_to_undefined(value.currentEpisode.length === 0 ? null : value.currentEpisode[0]),
+    review: value.review,
+    rating: value.rating,
+    posterUrl: record_opt_to_undefined(value.posterUrl.length === 0 ? null : value.posterUrl[0])
   };
 }
 function from_candid_record_n5(_uploadFile, _downloadFile, value) {
@@ -39815,7 +39820,8 @@ function to_candid_record_n11(_uploadFile, _downloadFile, value) {
     id: value.id,
     title: value.title,
     watchType: to_candid_WatchType_n12(_uploadFile, _downloadFile, value.watchType),
-    notes: value.notes
+    notes: value.notes,
+    posterUrl: value.posterUrl ? candid_some(value.posterUrl) : candid_none()
   };
 }
 function to_candid_record_n15(_uploadFile, _downloadFile, value) {
@@ -39825,7 +39831,11 @@ function to_candid_record_n15(_uploadFile, _downloadFile, value) {
     title: value.title,
     watchType: to_candid_WatchType_n12(_uploadFile, _downloadFile, value.watchType),
     pausedAtMin: value.pausedAtMin ? candid_some(value.pausedAtMin) : candid_none(),
-    notes: value.notes
+    notes: value.notes,
+    currentEpisode: value.currentEpisode ? candid_some(value.currentEpisode) : candid_none(),
+    review: value.review ?? "",
+    rating: value.rating ?? 0n,
+    posterUrl: value.posterUrl ? candid_some(value.posterUrl) : candid_none()
   };
 }
 function to_candid_record_n3(_uploadFile, _downloadFile, value) {
