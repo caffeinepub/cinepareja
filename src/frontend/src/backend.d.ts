@@ -24,6 +24,7 @@ export interface WatchItem {
     notes: string;
     currentEpisode?: string;
     review?: string;
+    rating?: bigint; // 0 = sin puntuación, 1-5 = estrellas
 }
 export type Id = bigint;
 export interface MealMenu {

@@ -17,6 +17,7 @@ import {
   Film,
   ImageDown,
   Loader2,
+  Star,
   Trash2,
   Tv,
   UtensilsCrossed,
@@ -88,6 +89,7 @@ interface WatchingItemData {
   watchType: string;
   currentEpisode?: string;
   review: string;
+  rating: number;
 }
 
 async function generateRomanticCollage(
@@ -260,6 +262,18 @@ async function generateRomanticCollage(
         ctx.fillText(`\u201c${snippet}\u201d`, 80, cursorY);
         ctx.restore();
         cursorY += 38;
+      }
+
+      if (wi.rating > 0) {
+        const stars = "★".repeat(wi.rating) + "☆".repeat(5 - wi.rating);
+        ctx.save();
+        ctx.fillStyle = "rgba(255,215,100,0.9)";
+        ctx.font = "28px serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(stars, 80, cursorY);
+        ctx.restore();
+        cursorY += 36;
       }
 
       cursorY += 12;
@@ -563,6 +577,7 @@ export default function DataTab() {
           watchType: i.watchType,
           currentEpisode: i.currentEpisode,
           review: i.review ?? "",
+          rating: Number(i.rating ?? 0n),
         })),
       );
       const url = URL.createObjectURL(blob);
@@ -771,6 +786,21 @@ export default function DataTab() {
                               : item.review}
                             &rdquo;
                           </p>
+                        )}
+                        {Number(item.rating ?? 0n) > 0 && (
+                          <div className="flex items-center gap-0.5 mt-1.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={star}
+                                size={12}
+                                className={
+                                  star <= Number(item.rating)
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-muted-foreground/25"
+                                }
+                              />
+                            ))}
+                          </div>
                         )}
                       </div>
                     </div>

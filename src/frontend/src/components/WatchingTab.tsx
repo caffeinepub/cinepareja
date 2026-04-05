@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, Edit2, Film, Plus, Trash2, Tv } from "lucide-react";
+import { Clock, Edit2, Film, Plus, Star, Trash2, Tv } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -59,6 +59,7 @@ interface FormState {
   notes: string;
   currentEpisode: string;
   review: string;
+  rating: number;
 }
 
 const DEFAULT_FORM: FormState = {
@@ -69,7 +70,66 @@ const DEFAULT_FORM: FormState = {
   notes: "",
   currentEpisode: "",
   review: "",
+  rating: 0,
 };
+
+// Star rating selector component
+function StarSelector({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+}) {
+  const [hovered, setHovered] = useState(0);
+  return (
+    <div className="flex items-center gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          onMouseEnter={() => setHovered(star)}
+          onMouseLeave={() => setHovered(0)}
+          onClick={() => onChange(value === star ? 0 : star)}
+          className="p-0.5 transition-transform hover:scale-110 active:scale-95"
+          aria-label={`${star} estrella${star !== 1 ? "s" : ""}`}
+        >
+          <Star
+            size={22}
+            className={`transition-colors ${
+              star <= (hovered || value)
+                ? "fill-yellow-400 text-yellow-400"
+                : "text-muted-foreground/40"
+            }`}
+          />
+        </button>
+      ))}
+      {value > 0 && (
+        <span className="text-xs text-muted-foreground ml-1">{value}/5</span>
+      )}
+    </div>
+  );
+}
+
+// Inline display of stars (read-only)
+function StarDisplay({ value }: { value: number }) {
+  if (!value || value <= 0) return null;
+  return (
+    <span className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <Star
+          key={star}
+          size={11}
+          className={`${
+            star <= value
+              ? "fill-yellow-400 text-yellow-400"
+              : "text-muted-foreground/25"
+          }`}
+        />
+      ))}
+    </span>
+  );
+}
 
 export default function WatchingTab() {
   const { data: watchItems = [], isLoading } = useGetAllWatchItems();
@@ -101,6 +161,7 @@ export default function WatchingTab() {
       notes: item.notes,
       currentEpisode: item.currentEpisode ?? "",
       review: item.review ?? "",
+      rating: Number(item.rating ?? 0n),
     });
     setShowForm(true);
   };
@@ -121,6 +182,7 @@ export default function WatchingTab() {
       notes: form.notes.trim(),
       currentEpisode: form.currentEpisode.trim() || undefined,
       review: form.review.trim(),
+      rating: BigInt(form.rating),
     };
     try {
       if (editItem) {
@@ -252,6 +314,9 @@ export default function WatchingTab() {
                                 {item.currentEpisode}
                               </span>
                             )}
+                            {Number(item.rating ?? 0n) > 0 && (
+                              <StarDisplay value={Number(item.rating)} />
+                            )}
                           </div>
                           {item.notes && (
                             <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2">
@@ -374,6 +439,14 @@ export default function WatchingTab() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Puntuación</Label>
+              <StarSelector
+                value={form.rating}
+                onChange={(v) => setForm((p) => ({ ...p, rating: v }))}
+              />
             </div>
 
             <div className="space-y-1.5">

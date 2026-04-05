@@ -40,8 +40,7 @@ actor {
     #completed;
   };
 
-  // V1 type (old shape) — kept so the stable `watchItems` variable remains
-  // compatible with the previously deployed canister.
+  // V1 type (old shape)
   type WatchItemV1 = {
     id : Id;
     title : Text;
@@ -52,7 +51,7 @@ actor {
   };
 
   // V2 type — adds review and currentEpisode
-  public type WatchItem = {
+  type WatchItemV2 = {
     id : Id;
     title : Text;
     watchType : WatchType;
@@ -63,27 +62,42 @@ actor {
     review : Text;
   };
 
+  // V3 type — adds rating (0-5 stars)
+  public type WatchItem = {
+    id : Id;
+    title : Text;
+    watchType : WatchType;
+    status : WatchStatus;
+    pausedAtMin : ?Nat;
+    notes : Text;
+    currentEpisode : ?Text;
+    review : Text;
+    rating : Nat; // 0 = no rating, 1-5 = stars
+  };
+
   module WatchItem {
     public func compare(a : WatchItem, b : WatchItem) : Order.Order {
       Nat.compare(a.id, b.id);
     };
   };
 
-  // `watchItems` keeps the OLD V1 type so the upgrade from the deployed
-  // canister is stable-compatible.  After postupgrade it will be empty;
-  // all live data moves to `watchItemsV2`.
+  // V1 stable map (migration source)
   let watchItems = Map.empty<Id, WatchItemV1>();
 
-  // New stable map for V2 items.
-  let watchItemsV2 = Map.empty<Id, WatchItem>();
+  // V2 stable map (intermediate)
+  let watchItemsV2 = Map.empty<Id, WatchItemV2>();
 
-  // Flag so we only run the one-time migration once.
+  // V3 stable map (current)
+  let watchItemsV3 = Map.empty<Id, WatchItem>();
+
   var watchItemsMigrated : Bool = false;
+  var watchItemsV3Migrated : Bool = false;
 
   system func postupgrade() {
+    // Migrate V1 -> V2
     if (not watchItemsMigrated) {
       for ((k, v) in watchItems.entries()) {
-        let migrated : WatchItem = {
+        let migrated : WatchItemV2 = {
           id = v.id;
           title = v.title;
           watchType = v.watchType;
@@ -97,6 +111,25 @@ actor {
       };
       watchItems.clear();
       watchItemsMigrated := true;
+    };
+    // Migrate V2 -> V3
+    if (not watchItemsV3Migrated) {
+      for ((k, v) in watchItemsV2.entries()) {
+        let migrated : WatchItem = {
+          id = v.id;
+          title = v.title;
+          watchType = v.watchType;
+          status = v.status;
+          pausedAtMin = v.pausedAtMin;
+          notes = v.notes;
+          currentEpisode = v.currentEpisode;
+          review = v.review;
+          rating = 0;
+        };
+        watchItemsV3.add(k, migrated);
+      };
+      watchItemsV2.clear();
+      watchItemsV3Migrated := true;
     };
   };
 
@@ -280,7 +313,7 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // WatchItem functions — all operate on watchItemsV2
+  // WatchItem functions — all operate on watchItemsV3
   public shared ({ caller }) func createWatchItem(input : WatchItem) : async Id {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can create watch items");
@@ -290,7 +323,7 @@ actor {
       input with
       id;
     };
-    watchItemsV2.add(id, newItem);
+    watchItemsV3.add(id, newItem);
     lastUpdated := Time.now();
     id;
   };
@@ -299,10 +332,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can update watch items");
     };
-    if (not watchItemsV2.containsKey(id)) {
+    if (not watchItemsV3.containsKey(id)) {
       Runtime.trap("WatchItem not found");
     };
-    watchItemsV2.add(id, item);
+    watchItemsV3.add(id, item);
     lastUpdated := Time.now();
   };
 
@@ -310,10 +343,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can delete watch items");
     };
-    if (not watchItemsV2.containsKey(id)) {
+    if (not watchItemsV3.containsKey(id)) {
       Runtime.trap("WatchItem not found");
     };
-    watchItemsV2.remove(id);
+    watchItemsV3.remove(id);
     lastUpdated := Time.now();
   };
 
@@ -321,7 +354,7 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view watch items");
     };
-    switch (watchItemsV2.get(id)) {
+    switch (watchItemsV3.get(id)) {
       case (null) { Runtime.trap("WatchItem not found") };
       case (?item) { item };
     };
@@ -331,7 +364,7 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view watch items");
     };
-    watchItemsV2.values().toArray().sort();
+    watchItemsV3.values().toArray().sort();
   };
 
   // PendingItem functions
