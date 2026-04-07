@@ -1,8 +1,14 @@
 import { Button } from "@/components/ui/button";
+import { useInternetIdentity } from "@caffeineai/core-infrastructure";
 import { Heart, Link2, Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useInternetIdentity } from "../hooks/useInternetIdentity";
-import { getUrlParameter } from "../utils/urlParams";
+
+function getUrlParameter(name: string): string | null {
+  const url = window.location.href;
+  const regex = new RegExp(`[?&&#]${name}=([^&#]*)`);
+  const results = regex.exec(url);
+  return results ? decodeURIComponent(results[1].replace(/\+/g, " ")) : null;
+}
 
 export default function LoginScreen() {
   const { login, isInitializing, isLoggingIn } = useInternetIdentity();

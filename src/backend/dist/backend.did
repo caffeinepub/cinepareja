@@ -1,0 +1,126 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type WatchType = 
+ variant {
+   movie;
+   series;
+ };
+type WatchStatus = 
+ variant {
+   completed;
+   pending;
+   watching;
+ };
+type WatchItem = 
+ record {
+   currentEpisode: opt text;
+   id: Id;
+   notes: text;
+   pausedAtMin: opt nat;
+   posterUrl: opt text;
+   rating: nat;
+   review: text;
+   status: WatchStatus;
+   title: text;
+   watchType: WatchType;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = record {name: text;};
+type Time = int;
+type PendingItem = 
+ record {
+   id: Id;
+   notes: text;
+   posterUrl: opt text;
+   title: text;
+   watchType: WatchType;
+ };
+type MealMenu = 
+ record {
+   breakfast: text;
+   date: int;
+   dinner: text;
+   lunch: text;
+   notes: text;
+ };
+type Id = nat;
+type ChatMessage = 
+ record {
+   content: text;
+   id: Id;
+   sender: principal;
+   senderName: text;
+   timestamp: int;
+ };
+type BlobId = text;
+type AlbumEntry = 
+ record {
+   blobIds: vec BlobId;
+   date: int;
+   description: text;
+   id: Id;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  addPhotoToAlbumEntry: (date: int, blobId: BlobId) -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createAlbumEntry: (date: int, description: text) -> (Id);
+  createChatMessage: (content: text) ->
+   (variant {
+      err: text;
+      ok: ChatMessage;
+    });
+  createPendingItem: (input: PendingItem) -> (Id);
+  createWatchItem: (input: WatchItem) -> (Id);
+  deleteAlbumEntry: (date: int) -> ();
+  deleteMealMenu: (date: int) -> ();
+  deletePendingItem: (id: Id) -> ();
+  deletePhoto: (blobId: BlobId) -> ();
+  deleteWatchItem: (id: Id) -> ();
+  getAlbumEntryByDate: (date: int) -> (opt AlbumEntry) query;
+  getAllAlbumEntries: () -> (vec AlbumEntry) query;
+  getAllChatMessages: () -> (vec ChatMessage) query;
+  getAllMealMenus: () -> (vec MealMenu) query;
+  getAllPendingItems: () -> (vec PendingItem) query;
+  getAllWatchItems: () -> (vec WatchItem) query;
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getLastUpdated: () -> (Time) query;
+  getMealMenuByDate: (date: int) -> (MealMenu) query;
+  getPendingItem: (id: nat) -> (PendingItem) query;
+  getTodaysMenu: () -> (opt MealMenu) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  getWatchItem: (id: Id) -> (WatchItem) query;
+  isCallerAdmin: () -> (bool) query;
+  removePhotoFromAlbumEntry: (date: int, blobId: BlobId) -> ();
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  updatePendingItem: (id: Id, item: PendingItem) -> ();
+  updateWatchItem: (id: Id, item: WatchItem) -> ();
+  uploadPhoto: (blobId: BlobId) -> (BlobId);
+  upsertMealMenu: (menu: MealMenu) -> ();
+}

@@ -1,0 +1,28 @@
+{
+  "overview": "CinePareja is a couples app for tracking movies and series together, managing a shared watchlist, planning meals, keeping a photo album, chatting, and viewing relationship statistics. Real-time sync between both partners via Internet Identity authentication.",
+  "features": [
+    "Movie and series progress tracking with reviews and star ratings",
+    "Shared watchlist and completed titles section",
+    "Internal chat between both partners",
+    "Statistics dashboard: completed titles, hours watched, top genres, average rating, best/worst rated",
+    "Daily photo album organized by date",
+    "Shared meal planner",
+    "Romantic data export to PNG",
+    "TMDB poster auto-fetch",
+    "Real-time sync via polling",
+    "PWA installable on mobile"
+  ],
+  "category": "lifestyle",
+  "tags": [
+    "couples",
+    "movies",
+    "series",
+    "chat",
+    "statistics",
+    "pwa",
+    "spanish",
+    "photo-album",
+    "watchlist"
+  ],
+  "last_updated": "2026-04-07T22:37:18.604Z"
+}

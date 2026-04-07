@@ -18,16 +18,23 @@ export interface AlbumEntry {
 export interface WatchItem {
     id: Id;
     status: WatchStatus;
+    review: string;
     title: string;
     watchType: WatchType;
     pausedAtMin?: bigint;
+    posterUrl?: string;
     notes: string;
+    rating: bigint;
     currentEpisode?: string;
-    review?: string;
-    rating?: bigint; // 0 = sin puntuación, 1-5 = estrellas
-    posterUrl?: string; // TMDB poster URL
 }
 export type Id = bigint;
+export interface ChatMessage {
+    id: Id;
+    content: string;
+    sender: Principal;
+    timestamp: bigint;
+    senderName: string;
+}
 export interface MealMenu {
     date: bigint;
     breakfast: string;
@@ -39,8 +46,8 @@ export interface PendingItem {
     id: Id;
     title: string;
     watchType: WatchType;
+    posterUrl?: string;
     notes: string;
-    posterUrl?: string; // TMDB poster URL
 }
 export interface UserProfile {
     name: string;
@@ -63,6 +70,13 @@ export interface backendInterface {
     addPhotoToAlbumEntry(date: bigint, blobId: BlobId): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createAlbumEntry(date: bigint, description: string): Promise<Id>;
+    createChatMessage(content: string): Promise<{
+        __kind__: "ok";
+        ok: ChatMessage;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     createPendingItem(input: PendingItem): Promise<Id>;
     createWatchItem(input: WatchItem): Promise<Id>;
     deleteAlbumEntry(date: bigint): Promise<void>;
@@ -72,6 +86,7 @@ export interface backendInterface {
     deleteWatchItem(id: Id): Promise<void>;
     getAlbumEntryByDate(date: bigint): Promise<AlbumEntry | null>;
     getAllAlbumEntries(): Promise<Array<AlbumEntry>>;
+    getAllChatMessages(): Promise<Array<ChatMessage>>;
     getAllMealMenus(): Promise<Array<MealMenu>>;
     getAllPendingItems(): Promise<Array<PendingItem>>;
     getAllWatchItems(): Promise<Array<WatchItem>>;

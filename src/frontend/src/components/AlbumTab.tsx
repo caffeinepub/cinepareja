@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { loadConfig } from "@caffeineai/core-infrastructure";
+import { StorageClient } from "@caffeineai/object-storage";
 import {
   Camera,
   ChevronLeft,
@@ -19,7 +21,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { AlbumEntry } from "../backend.d";
-import { loadConfig } from "../config";
 import { useActor } from "../hooks/useActor";
 import {
   useAddPhotoToAlbumEntry,
@@ -27,7 +28,6 @@ import {
   useGetAllAlbumEntries,
   useRemovePhotoFromAlbumEntry,
 } from "../hooks/useQueries";
-import { StorageClient } from "../utils/StorageClient";
 
 // Convert a JS Date (local) to a nanosecond bigint truncated to day
 function dateToDayBigint(date: Date): bigint {

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { loadConfig } from "@caffeineai/core-infrastructure";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Bookmark,
@@ -26,7 +27,6 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { WatchStatus, WatchType } from "../backend.d";
-import { loadConfig } from "../config";
 import {
   useDeleteMealMenu,
   useDeletePendingItem,

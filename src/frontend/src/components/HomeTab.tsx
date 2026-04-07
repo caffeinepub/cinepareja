@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useInternetIdentity } from "@caffeineai/core-infrastructure";
 import {
   Bookmark,
   Check,
@@ -22,7 +23,6 @@ import {
 import { motion } from "motion/react";
 import { useState } from "react";
 import { WatchStatus, WatchType } from "../backend.d";
-import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import {
   useGetAllPendingItems,
   useGetAllWatchItems,

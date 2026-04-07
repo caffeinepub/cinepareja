@@ -17,6 +17,13 @@ export interface AlbumEntry {
   'description' : string,
 }
 export type BlobId = string;
+export interface ChatMessage {
+  'id' : Id,
+  'content' : string,
+  'sender' : Principal,
+  'timestamp' : bigint,
+  'senderName' : string,
+}
 export type Id = bigint;
 export interface MealMenu {
   'date' : bigint,
@@ -29,8 +36,8 @@ export interface PendingItem {
   'id' : Id,
   'title' : string,
   'watchType' : WatchType,
-  'notes' : string,
   'posterUrl' : [] | [string],
+  'notes' : string,
 }
 export type Time = bigint;
 export interface UserProfile { 'name' : string }
@@ -40,51 +47,59 @@ export type UserRole = { 'admin' : null } |
 export interface WatchItem {
   'id' : Id,
   'status' : WatchStatus,
+  'review' : string,
   'title' : string,
   'watchType' : WatchType,
   'pausedAtMin' : [] | [bigint],
-  'notes' : string,
-  'currentEpisode' : [] | [string],
-  'review' : string,
-  'rating' : bigint,
   'posterUrl' : [] | [string],
+  'notes' : string,
+  'rating' : bigint,
+  'currentEpisode' : [] | [string],
 }
 export type WatchStatus = { 'pending' : null } |
   { 'completed' : null } |
   { 'watching' : null };
 export type WatchType = { 'movie' : null } |
   { 'series' : null };
-export interface _CaffeineStorageCreateCertificateResult {
+export interface _ImmutableObjectStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
 }
-export interface _CaffeineStorageRefillInformation {
+export interface _ImmutableObjectStorageRefillInformation {
   'proposed_top_up_amount' : [] | [bigint],
 }
-export interface _CaffeineStorageRefillResult {
+export interface _ImmutableObjectStorageRefillResult {
   'success' : [] | [boolean],
   'topped_up_amount' : [] | [bigint],
 }
 export interface _SERVICE {
-  '_caffeineStorageBlobIsLive' : ActorMethod<[Uint8Array], boolean>,
-  '_caffeineStorageBlobsToDelete' : ActorMethod<[], Array<Uint8Array>>,
-  '_caffeineStorageConfirmBlobDeletion' : ActorMethod<
+  '_immutableObjectStorageBlobsAreLive' : ActorMethod<
+    [Array<Uint8Array>],
+    Array<boolean>
+  >,
+  '_immutableObjectStorageBlobsToDelete' : ActorMethod<[], Array<Uint8Array>>,
+  '_immutableObjectStorageConfirmBlobDeletion' : ActorMethod<
     [Array<Uint8Array>],
     undefined
   >,
-  '_caffeineStorageCreateCertificate' : ActorMethod<
+  '_immutableObjectStorageCreateCertificate' : ActorMethod<
     [string],
-    _CaffeineStorageCreateCertificateResult
+    _ImmutableObjectStorageCreateCertificateResult
   >,
-  '_caffeineStorageRefillCashier' : ActorMethod<
-    [[] | [_CaffeineStorageRefillInformation]],
-    _CaffeineStorageRefillResult
+  '_immutableObjectStorageRefillCashier' : ActorMethod<
+    [[] | [_ImmutableObjectStorageRefillInformation]],
+    _ImmutableObjectStorageRefillResult
   >,
-  '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
-  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  '_immutableObjectStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
+  '_initializeAccessControl' : ActorMethod<[], undefined>,
   'addPhotoToAlbumEntry' : ActorMethod<[bigint, BlobId], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createAlbumEntry' : ActorMethod<[bigint, string], Id>,
+  'createChatMessage' : ActorMethod<
+    [string],
+    { 'ok' : ChatMessage } |
+      { 'err' : string }
+  >,
   'createPendingItem' : ActorMethod<[PendingItem], Id>,
   'createWatchItem' : ActorMethod<[WatchItem], Id>,
   'deleteAlbumEntry' : ActorMethod<[bigint], undefined>,
@@ -94,6 +109,7 @@ export interface _SERVICE {
   'deleteWatchItem' : ActorMethod<[Id], undefined>,
   'getAlbumEntryByDate' : ActorMethod<[bigint], [] | [AlbumEntry]>,
   'getAllAlbumEntries' : ActorMethod<[], Array<AlbumEntry>>,
+  'getAllChatMessages' : ActorMethod<[], Array<ChatMessage>>,
   'getAllMealMenus' : ActorMethod<[], Array<MealMenu>>,
   'getAllPendingItems' : ActorMethod<[], Array<PendingItem>>,
   'getAllWatchItems' : ActorMethod<[], Array<WatchItem>>,

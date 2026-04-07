@@ -1,0 +1,160 @@
+// Version: 1.0.0
+type AlbumEntry__36628067 =
+  {
+    blobIds : [BlobId__232505498];
+    date : Int;
+    description : Text;
+    id : Id__76783442
+  };
+type BlobId__232505498 = Text;
+type ChatMessage__1037536196 =
+  {
+    content : Text;
+    id : Id__76783442;
+    sender : Principal;
+    senderName : Text;
+    timestamp : Int
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Id__76783442 = Nat;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MealMenu__980822276 =
+  {breakfast : Text; date : Int; dinner : Text; lunch : Text; notes : Text};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PendingItemV1__998989221 =
+  {
+    id : Id__76783442;
+    notes : Text;
+    title : Text;
+    watchType : WatchType__129412351
+  };
+type PendingItem__586391492 =
+  {
+    id : Id__76783442;
+    notes : Text;
+    posterUrl : ?Text;
+    title : Text;
+    watchType : WatchType__129412351
+  };
+type UserProfile__491224006 = {name : Text};
+type UserRole__1054455867 = {#admin; #guest; #user};
+type WatchItemV1__602968499 =
+  {
+    id : Id__76783442;
+    notes : Text;
+    pausedAtMin : ?Nat;
+    status : WatchStatus__39234189;
+    title : Text;
+    watchType : WatchType__129412351
+  };
+type WatchItemV2__457624917 =
+  {
+    currentEpisode : ?Text;
+    id : Id__76783442;
+    notes : Text;
+    pausedAtMin : ?Nat;
+    review : Text;
+    status : WatchStatus__39234189;
+    title : Text;
+    watchType : WatchType__129412351
+  };
+type WatchItemV3__891930423 =
+  {
+    currentEpisode : ?Text;
+    id : Id__76783442;
+    notes : Text;
+    pausedAtMin : ?Nat;
+    rating : Nat;
+    review : Text;
+    status : WatchStatus__39234189;
+    title : Text;
+    watchType : WatchType__129412351
+  };
+type WatchItem__108015605 =
+  {
+    currentEpisode : ?Text;
+    id : Id__76783442;
+    notes : Text;
+    pausedAtMin : ?Nat;
+    posterUrl : ?Text;
+    rating : Nat;
+    review : Text;
+    status : WatchStatus__39234189;
+    title : Text;
+    watchType : WatchType__129412351
+  };
+type WatchStatus__39234189 = {#completed; #pending; #watching};
+type WatchType__129412351 = {#movie; #series};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable albumEntries :
+    {
+      var root : Node__46230540<Int, AlbumEntry__36628067>;
+      var size : Nat__490723111
+    };
+  stable chatMessages :
+    {
+      var root : Node__46230540<Id__76783442, ChatMessage__1037536196>;
+      var size : Nat__490723111
+    };
+  stable var lastUpdated : Int;
+  stable mealMenus :
+    {
+      var root : Node__46230540<Int, MealMenu__980822276>;
+      var size : Nat__490723111
+    };
+  stable var nextId : Nat;
+  stable pendingItems :
+    {
+      var root : Node__46230540<Id__76783442, PendingItemV1__998989221>;
+      var size : Nat__490723111
+    };
+  stable var pendingItemsMigrated : Bool;
+  stable pendingItemsV2 :
+    {
+      var root : Node__46230540<Id__76783442, PendingItem__586391492>;
+      var size : Nat__490723111
+    };
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__491224006>;
+      var size : Nat__490723111
+    };
+  stable watchItems :
+    {
+      var root : Node__46230540<Id__76783442, WatchItemV1__602968499>;
+      var size : Nat__490723111
+    };
+  stable var watchItemsMigrated : Bool;
+  stable watchItemsV2 :
+    {
+      var root : Node__46230540<Id__76783442, WatchItemV2__457624917>;
+      var size : Nat__490723111
+    };
+  stable watchItemsV3 :
+    {
+      var root : Node__46230540<Id__76783442, WatchItemV3__891930423>;
+      var size : Nat__490723111
+    };
+  stable var watchItemsV3Migrated : Bool;
+  stable watchItemsV4 :
+    {
+      var root : Node__46230540<Id__76783442, WatchItem__108015605>;
+      var size : Nat__490723111
+    };
+  stable var watchItemsV4Migrated : Bool
+};

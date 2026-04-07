@@ -1,6 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
+import { useInternetIdentity } from "@caffeineai/core-infrastructure";
 import { useQueryClient } from "@tanstack/react-query";
 import {
+  BarChart2,
   Bookmark,
   Camera,
   CheckCircle2,
@@ -8,20 +10,22 @@ import {
   Film,
   Home,
   Loader2,
+  MessageCircle,
   UtensilsCrossed,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import AlbumTab from "./components/AlbumTab";
+import ChatTab from "./components/ChatTab";
 import DataTab from "./components/DataTab";
 import FinishedTab from "./components/FinishedTab";
 import HomeTab from "./components/HomeTab";
 import LoginScreen from "./components/LoginScreen";
 import MenuTab from "./components/MenuTab";
 import PendingTab from "./components/PendingTab";
+import StatsTab from "./components/StatsTab";
 import WatchingTab from "./components/WatchingTab";
 import WelcomeModal from "./components/WelcomeModal";
-import { useInternetIdentity } from "./hooks/useInternetIdentity";
 import { useGetLastUpdated } from "./hooks/useQueries";
 
 type TabId =
@@ -30,7 +34,9 @@ type TabId =
   | "pendientes"
   | "menu"
   | "album"
+  | "chat"
   | "terminados"
+  | "estadisticas"
   | "datos";
 
 const TABS = [
@@ -39,7 +45,9 @@ const TABS = [
   { id: "pendientes" as TabId, label: "Pendientes", icon: Bookmark },
   { id: "menu" as TabId, label: "Menú", icon: UtensilsCrossed },
   { id: "album" as TabId, label: "Álbum", icon: Camera },
+  { id: "chat" as TabId, label: "Chat", icon: MessageCircle },
   { id: "terminados" as TabId, label: "Terminados", icon: CheckCircle2 },
+  { id: "estadisticas" as TabId, label: "Stats", icon: BarChart2 },
   { id: "datos" as TabId, label: "Datos", icon: Download },
 ];
 
@@ -77,6 +85,7 @@ export default function App() {
       queryClient.invalidateQueries({ queryKey: ["todaysMenu"] });
       queryClient.invalidateQueries({ queryKey: ["mealMenus"] });
       queryClient.invalidateQueries({ queryKey: ["albumEntries"] });
+      queryClient.invalidateQueries({ queryKey: ["chatMessages"] });
       setTimeout(() => setIsSyncing(false), 1500);
     }
   }, [lastUpdated, queryClient]);
@@ -175,6 +184,18 @@ export default function App() {
                 <AlbumTab />
               </motion.div>
             )}
+            {activeTab === "chat" && (
+              <motion.div
+                key="chat"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+                className="h-full"
+              >
+                <ChatTab />
+              </motion.div>
+            )}
             {activeTab === "terminados" && (
               <motion.div
                 key="terminados"
@@ -184,6 +205,17 @@ export default function App() {
                 transition={{ duration: 0.2 }}
               >
                 <FinishedTab />
+              </motion.div>
+            )}
+            {activeTab === "estadisticas" && (
+              <motion.div
+                key="estadisticas"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <StatsTab />
               </motion.div>
             )}
             {activeTab === "datos" && (

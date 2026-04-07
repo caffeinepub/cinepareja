@@ -8,14 +8,14 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const _CaffeineStorageCreateCertificateResult = IDL.Record({
+export const _ImmutableObjectStorageCreateCertificateResult = IDL.Record({
   'method' : IDL.Text,
   'blob_hash' : IDL.Text,
 });
-export const _CaffeineStorageRefillInformation = IDL.Record({
+export const _ImmutableObjectStorageRefillInformation = IDL.Record({
   'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
 });
-export const _CaffeineStorageRefillResult = IDL.Record({
+export const _ImmutableObjectStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
@@ -26,33 +26,40 @@ export const UserRole = IDL.Variant({
   'guest' : IDL.Null,
 });
 export const Id = IDL.Nat;
+export const ChatMessage = IDL.Record({
+  'id' : Id,
+  'content' : IDL.Text,
+  'sender' : IDL.Principal,
+  'timestamp' : IDL.Int,
+  'senderName' : IDL.Text,
+});
 export const WatchType = IDL.Variant({
   'movie' : IDL.Null,
   'series' : IDL.Null,
+});
+export const PendingItem = IDL.Record({
+  'id' : Id,
+  'title' : IDL.Text,
+  'watchType' : WatchType,
+  'posterUrl' : IDL.Opt(IDL.Text),
+  'notes' : IDL.Text,
 });
 export const WatchStatus = IDL.Variant({
   'pending' : IDL.Null,
   'completed' : IDL.Null,
   'watching' : IDL.Null,
 });
-export const PendingItem = IDL.Record({
-  'id' : Id,
-  'title' : IDL.Text,
-  'watchType' : WatchType,
-  'notes' : IDL.Text,
-  'posterUrl' : IDL.Opt(IDL.Text),
-});
 export const WatchItem = IDL.Record({
   'id' : Id,
   'status' : WatchStatus,
+  'review' : IDL.Text,
   'title' : IDL.Text,
   'watchType' : WatchType,
   'pausedAtMin' : IDL.Opt(IDL.Nat),
-  'notes' : IDL.Text,
-  'currentEpisode' : IDL.Opt(IDL.Text),
-  'review' : IDL.Text,
-  'rating' : IDL.Nat,
   'posterUrl' : IDL.Opt(IDL.Text),
+  'notes' : IDL.Text,
+  'rating' : IDL.Nat,
+  'currentEpisode' : IDL.Opt(IDL.Text),
 });
 export const AlbumEntry = IDL.Record({
   'id' : Id,
@@ -71,36 +78,41 @@ export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const Time = IDL.Int;
 
 export const idlService = IDL.Service({
-  '_caffeineStorageBlobIsLive' : IDL.Func(
-      [IDL.Vec(IDL.Nat8)],
-      [IDL.Bool],
+  '_immutableObjectStorageBlobsAreLive' : IDL.Func(
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      [IDL.Vec(IDL.Bool)],
       ['query'],
     ),
-  '_caffeineStorageBlobsToDelete' : IDL.Func(
+  '_immutableObjectStorageBlobsToDelete' : IDL.Func(
       [],
       [IDL.Vec(IDL.Vec(IDL.Nat8))],
       ['query'],
     ),
-  '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+  '_immutableObjectStorageConfirmBlobDeletion' : IDL.Func(
       [IDL.Vec(IDL.Vec(IDL.Nat8))],
       [],
       [],
     ),
-  '_caffeineStorageCreateCertificate' : IDL.Func(
+  '_immutableObjectStorageCreateCertificate' : IDL.Func(
       [IDL.Text],
-      [_CaffeineStorageCreateCertificateResult],
+      [_ImmutableObjectStorageCreateCertificateResult],
       [],
     ),
-  '_caffeineStorageRefillCashier' : IDL.Func(
-      [IDL.Opt(_CaffeineStorageRefillInformation)],
-      [_CaffeineStorageRefillResult],
+  '_immutableObjectStorageRefillCashier' : IDL.Func(
+      [IDL.Opt(_ImmutableObjectStorageRefillInformation)],
+      [_ImmutableObjectStorageRefillResult],
       [],
     ),
-  '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  '_immutableObjectStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+  '_initializeAccessControl' : IDL.Func([], [], []),
   'addPhotoToAlbumEntry' : IDL.Func([IDL.Int, BlobId], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createAlbumEntry' : IDL.Func([IDL.Int, IDL.Text], [Id], []),
+  'createChatMessage' : IDL.Func(
+      [IDL.Text],
+      [IDL.Variant({ 'ok' : ChatMessage, 'err' : IDL.Text })],
+      [],
+    ),
   'createPendingItem' : IDL.Func([PendingItem], [Id], []),
   'createWatchItem' : IDL.Func([WatchItem], [Id], []),
   'deleteAlbumEntry' : IDL.Func([IDL.Int], [], []),
@@ -110,6 +122,7 @@ export const idlService = IDL.Service({
   'deleteWatchItem' : IDL.Func([Id], [], []),
   'getAlbumEntryByDate' : IDL.Func([IDL.Int], [IDL.Opt(AlbumEntry)], ['query']),
   'getAllAlbumEntries' : IDL.Func([], [IDL.Vec(AlbumEntry)], ['query']),
+  'getAllChatMessages' : IDL.Func([], [IDL.Vec(ChatMessage)], ['query']),
   'getAllMealMenus' : IDL.Func([], [IDL.Vec(MealMenu)], ['query']),
   'getAllPendingItems' : IDL.Func([], [IDL.Vec(PendingItem)], ['query']),
   'getAllWatchItems' : IDL.Func([], [IDL.Vec(WatchItem)], ['query']),
@@ -137,14 +150,14 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
-  const _CaffeineStorageCreateCertificateResult = IDL.Record({
+  const _ImmutableObjectStorageCreateCertificateResult = IDL.Record({
     'method' : IDL.Text,
     'blob_hash' : IDL.Text,
   });
-  const _CaffeineStorageRefillInformation = IDL.Record({
+  const _ImmutableObjectStorageRefillInformation = IDL.Record({
     'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
   });
-  const _CaffeineStorageRefillResult = IDL.Record({
+  const _ImmutableObjectStorageRefillResult = IDL.Record({
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
@@ -155,30 +168,37 @@ export const idlFactory = ({ IDL }) => {
     'guest' : IDL.Null,
   });
   const Id = IDL.Nat;
+  const ChatMessage = IDL.Record({
+    'id' : Id,
+    'content' : IDL.Text,
+    'sender' : IDL.Principal,
+    'timestamp' : IDL.Int,
+    'senderName' : IDL.Text,
+  });
   const WatchType = IDL.Variant({ 'movie' : IDL.Null, 'series' : IDL.Null });
+  const PendingItem = IDL.Record({
+    'id' : Id,
+    'title' : IDL.Text,
+    'watchType' : WatchType,
+    'posterUrl' : IDL.Opt(IDL.Text),
+    'notes' : IDL.Text,
+  });
   const WatchStatus = IDL.Variant({
     'pending' : IDL.Null,
     'completed' : IDL.Null,
     'watching' : IDL.Null,
   });
-  const PendingItem = IDL.Record({
-    'id' : Id,
-    'title' : IDL.Text,
-    'watchType' : WatchType,
-    'notes' : IDL.Text,
-    'posterUrl' : IDL.Opt(IDL.Text),
-  });
   const WatchItem = IDL.Record({
     'id' : Id,
     'status' : WatchStatus,
+    'review' : IDL.Text,
     'title' : IDL.Text,
     'watchType' : WatchType,
     'pausedAtMin' : IDL.Opt(IDL.Nat),
-    'notes' : IDL.Text,
-    'currentEpisode' : IDL.Opt(IDL.Text),
-    'review' : IDL.Text,
-    'rating' : IDL.Nat,
     'posterUrl' : IDL.Opt(IDL.Text),
+    'notes' : IDL.Text,
+    'rating' : IDL.Nat,
+    'currentEpisode' : IDL.Opt(IDL.Text),
   });
   const AlbumEntry = IDL.Record({
     'id' : Id,
@@ -197,36 +217,41 @@ export const idlFactory = ({ IDL }) => {
   const Time = IDL.Int;
   
   return IDL.Service({
-    '_caffeineStorageBlobIsLive' : IDL.Func(
-        [IDL.Vec(IDL.Nat8)],
-        [IDL.Bool],
+    '_immutableObjectStorageBlobsAreLive' : IDL.Func(
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        [IDL.Vec(IDL.Bool)],
         ['query'],
       ),
-    '_caffeineStorageBlobsToDelete' : IDL.Func(
+    '_immutableObjectStorageBlobsToDelete' : IDL.Func(
         [],
         [IDL.Vec(IDL.Vec(IDL.Nat8))],
         ['query'],
       ),
-    '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+    '_immutableObjectStorageConfirmBlobDeletion' : IDL.Func(
         [IDL.Vec(IDL.Vec(IDL.Nat8))],
         [],
         [],
       ),
-    '_caffeineStorageCreateCertificate' : IDL.Func(
+    '_immutableObjectStorageCreateCertificate' : IDL.Func(
         [IDL.Text],
-        [_CaffeineStorageCreateCertificateResult],
+        [_ImmutableObjectStorageCreateCertificateResult],
         [],
       ),
-    '_caffeineStorageRefillCashier' : IDL.Func(
-        [IDL.Opt(_CaffeineStorageRefillInformation)],
-        [_CaffeineStorageRefillResult],
+    '_immutableObjectStorageRefillCashier' : IDL.Func(
+        [IDL.Opt(_ImmutableObjectStorageRefillInformation)],
+        [_ImmutableObjectStorageRefillResult],
         [],
       ),
-    '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    '_immutableObjectStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+    '_initializeAccessControl' : IDL.Func([], [], []),
     'addPhotoToAlbumEntry' : IDL.Func([IDL.Int, BlobId], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createAlbumEntry' : IDL.Func([IDL.Int, IDL.Text], [Id], []),
+    'createChatMessage' : IDL.Func(
+        [IDL.Text],
+        [IDL.Variant({ 'ok' : ChatMessage, 'err' : IDL.Text })],
+        [],
+      ),
     'createPendingItem' : IDL.Func([PendingItem], [Id], []),
     'createWatchItem' : IDL.Func([WatchItem], [Id], []),
     'deleteAlbumEntry' : IDL.Func([IDL.Int], [], []),
@@ -240,6 +265,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getAllAlbumEntries' : IDL.Func([], [IDL.Vec(AlbumEntry)], ['query']),
+    'getAllChatMessages' : IDL.Func([], [IDL.Vec(ChatMessage)], ['query']),
     'getAllMealMenus' : IDL.Func([], [IDL.Vec(MealMenu)], ['query']),
     'getAllPendingItems' : IDL.Func([], [IDL.Vec(PendingItem)], ['query']),
     'getAllWatchItems' : IDL.Func([], [IDL.Vec(WatchItem)], ['query']),

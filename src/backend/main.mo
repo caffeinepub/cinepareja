@@ -8,10 +8,10 @@ import Time "mo:core/Time";
 import Nat "mo:core/Nat";
 import Int "mo:core/Int";
 import Principal "mo:core/Principal";
-import AccessControl "authorization/access-control";
-import MixinAuthorization "authorization/MixinAuthorization";
-import Storage "blob-storage/Storage";
-import MixinStorage "blob-storage/Mixin";
+import AccessControl "mo:caffeineai-authorization/access-control";
+import MixinAuthorization "mo:caffeineai-authorization/MixinAuthorization";
+import Storage "mo:caffeineai-object-storage/Storage";
+import MixinObjectStorage "mo:caffeineai-object-storage/Mixin";
 
 actor {
   type Id = Nat;
@@ -239,7 +239,7 @@ actor {
   include MixinAuthorization(accessControlState);
 
   // Storage
-  include MixinStorage();
+  include MixinObjectStorage();
 
   type BlobId = Text;
 
@@ -532,6 +532,51 @@ actor {
     };
     let today = Time.now();
     mealMenus.get(today);
+  };
+
+  // ChatMessage
+  public type ChatMessage = {
+    id : Id;
+    sender : Principal;
+    senderName : Text;
+    content : Text;
+    timestamp : Int;
+  };
+
+  module ChatMessage {
+    public func compare(a : ChatMessage, b : ChatMessage) : Order.Order {
+      Int.compare(a.timestamp, b.timestamp);
+    };
+  };
+
+  let chatMessages = Map.empty<Id, ChatMessage>();
+
+  public shared ({ caller }) func createChatMessage(content : Text) : async { #ok : ChatMessage; #err : Text } {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      return #err("Unauthorized: Only users can send chat messages");
+    };
+    let senderName = switch (userProfiles.get(caller)) {
+      case (?profile) { profile.name };
+      case null { caller.toText() };
+    };
+    let id = generateId();
+    let msg : ChatMessage = {
+      id;
+      sender = caller;
+      senderName;
+      content;
+      timestamp = Time.now();
+    };
+    chatMessages.add(id, msg);
+    lastUpdated := Time.now();
+    #ok(msg);
+  };
+
+  public query ({ caller }) func getAllChatMessages() : async [ChatMessage] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view chat messages");
+    };
+    chatMessages.values().toArray().sort();
   };
 
   // Get last updated timestamp

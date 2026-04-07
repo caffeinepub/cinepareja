@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   AlbumEntry,
+  ChatMessage,
   MealMenu,
   PendingItem,
   WatchItem,
@@ -255,6 +256,35 @@ export function useDeleteAlbumEntry() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["albumEntries"] });
+    },
+  });
+}
+
+// Chat Messages
+export function useGetAllChatMessages(lastUpdated?: bigint) {
+  const { actor, isFetching } = useActor();
+  return useQuery<ChatMessage[]>({
+    queryKey: ["chatMessages", lastUpdated?.toString()],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllChatMessages();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useCreateChatMessage() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (content: string) => {
+      if (!actor) throw new Error("No actor");
+      const result = await actor.createChatMessage(content);
+      if (result.__kind__ === "err") throw new Error(result.err);
+      return result.ok;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chatMessages"] });
     },
   });
 }
